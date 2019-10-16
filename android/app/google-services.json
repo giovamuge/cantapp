@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "44505885939",
+    "firebase_url": "https://mgc-cantapp.firebaseio.com",
+    "project_id": "mgc-cantapp",
+    "storage_bucket": "mgc-cantapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44505885939:android:3432c80421d9bb637ddb86",
+        "android_client_info": {
+          "package_name": "com.mugellisoftware.cantapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "44505885939-b6uto98b0r7rc0n4vcmo5ohaseefcbrs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWn88HKvginNjhNTDTEW793s8Pf-Akvvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "44505885939-b6uto98b0r7rc0n4vcmo5ohaseefcbrs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "44505885939-v9e9dstqn0el740l5kcugj8r0v0civj0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mugellisoftware.cantapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

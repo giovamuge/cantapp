@@ -1,6 +1,5 @@
-import 'package:cantapp/song_model.dart';
+import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum CategoryEnum {
   ingresso,

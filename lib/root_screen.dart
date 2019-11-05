@@ -1,7 +1,7 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
-import 'package:cantapp/category_screen.dart';
-import 'package:cantapp/favorite_screen.dart';
-import 'package:cantapp/home_screen.dart';
+import 'package:cantapp/category/category_screen.dart';
+import 'package:cantapp/favorite/favorite_screen.dart';
+import 'package:cantapp/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class RootModel {

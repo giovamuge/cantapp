@@ -1,4 +1,4 @@
-import 'package:cantapp/song_model.dart';
+import 'package:cantapp/song/song_model.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
 /// Stores the logic for handling favorites throughout the app.

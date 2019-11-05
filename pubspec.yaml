@@ -24,8 +24,8 @@ dependencies:
   cloud_firestore: ^0.12.9+4
   firebase_core: ^0.4.0+6
 
-  bloc: ^0.15.0
-  flutter_bloc: ^0.21.0
+  bloc: ^2.0.0
+  flutter_bloc: ^2.0.0
   
   sqflite:
   path:

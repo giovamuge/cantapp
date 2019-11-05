@@ -1,10 +1,8 @@
 import 'package:cantapp/bloc_provider.dart';
-import 'package:cantapp/category_screen.dart';
-import 'package:cantapp/favorite_bloc.dart';
-import 'package:cantapp/favorite_repository.dart';
-import 'package:cantapp/list_songs_screen.dart';
-import 'package:cantapp/song_model.dart';
-import 'package:cantapp/song_screen.dart';
+import 'package:cantapp/favorite/favorite_bloc.dart';
+import 'package:cantapp/favorite/favorite_repository.dart';
+import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/song/song_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:cantapp/favorite_bloc.dart';
+import 'package:cantapp/favorite/favorite_bloc.dart';
 import "package:flutter/widgets.dart";
 // import "package:timeline/blocs/favorites_bloc.dart";
 // import 'package:timeline/search_manager.dart';

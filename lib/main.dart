@@ -1,5 +1,4 @@
 import 'package:cantapp/bloc_provider.dart';
-import 'package:cantapp/home_screen.dart';
 import 'package:cantapp/root_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

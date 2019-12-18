@@ -19,7 +19,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    implements AutomaticKeepAliveClientMixin<HomeScreen> {
   final Firestore _databaseReference = Firestore.instance;
   List<Song> _songs = new List<Song>();
   List<Song> _songListData = new List<Song>();
@@ -234,6 +235,19 @@ class _HomeScreenState extends State<HomeScreen> {
         ? FontAwesomeIcons.solidHeart
         : FontAwesomeIcons.heart;
   }
+
+  @override
+  void updateKeepAlive() {
+    print("onUpdateKeepAlive");
+    // if (wantKeepAlive) {
+    //   if (_keepAliveHandle == null) _ensureKeepAlive();
+    // } else {
+    //   if (_keepAliveHandle != null) _releaseKeepAlive();
+    // }
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 
   // bool _isFavorite(String uid) {
   //   return _favorites.map((x) => x.uid).toList().indexOf(uid) > -1;

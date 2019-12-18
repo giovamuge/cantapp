@@ -1,4 +1,4 @@
-name: cantapp
+name: shared
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -19,25 +19,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  shared:
-    path: _shared/
-    
-  # Add the dependency for the Firebase Core Flutter SDK
-  cloud_firestore: ^0.12.9+4
-  firebase_core: ^0.4.0+6
-
-  bloc: ^2.0.0
-  flutter_bloc: ^2.0.0
-  
-  sqflite:
-  path:
-  shared_preferences: ^0.4.3
-
-  font_awesome_flutter: ^8.5.0
-  flutter_slidable: ^0.5.3
-  bubble_bottom_bar: ^1.2.0
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

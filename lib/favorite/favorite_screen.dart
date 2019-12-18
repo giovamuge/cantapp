@@ -8,7 +8,8 @@ class FavoriteScreen extends StatefulWidget {
   _FavoriteScreenState createState() => _FavoriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen> {
+class _FavoriteScreenState extends State<FavoriteScreen>
+    implements AutomaticKeepAliveClientMixin<FavoriteScreen> {
   FavoritesBloc _favoriteBloc;
 
   @override
@@ -19,4 +20,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       title: "Preferiti",
     );
   }
+
+  @override
+  void updateKeepAlive() {}
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -3,8 +3,14 @@ import 'dart:math';
 import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
+import 'package:cantapp/song/song_bloc.dart';
+import 'package:cantapp/song/song_event.dart';
 import 'package:cantapp/widgets/navbar/navbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:http/http.dart' as http;
 
 class RootScreen extends StatefulWidget {
   @override
@@ -16,6 +22,8 @@ class _RootScreenState extends State<RootScreen> {
   int _selectedNavIndex = 0;
 
   List<Widget> _viewsByIndex;
+
+  final Firestore _databaseReference = Firestore.instance;
 
   @override
   void initState() {
@@ -29,7 +37,8 @@ class _RootScreenState extends State<RootScreen> {
 
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
-      HomeScreen(),
+      // HomeScreen(),
+      HomePage(),
       CategoryScreen(),
       FavoriteScreen(),
       Container(),
@@ -53,16 +62,20 @@ class _RootScreenState extends State<RootScreen> {
     //Wrap our custom navbar + contentView with the app Scaffold
     return Scaffold(
       backgroundColor: Color(0xffE6E6E6),
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 350),
-            //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-            child: Theme(
-              data: ThemeData(accentColor: accentColor),
-              child: contentView,
+      body: BlocProvider(
+        builder: (context) =>
+            SongBloc(databaseReference: _databaseReference)..add(Fetch()),
+        child: SafeArea(
+          child: Container(
+            width: double.infinity,
+            //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+            child: AnimatedSwitcher(
+              duration: Duration(milliseconds: 350),
+              //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+              child: Theme(
+                data: ThemeData(accentColor: accentColor),
+                child: contentView,
+              ),
             ),
           ),
         ),

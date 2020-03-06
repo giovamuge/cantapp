@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-class Song {
+class Song extends Equatable {
   String id;
   String title;
   String lyric;
@@ -12,10 +13,10 @@ class Song {
   Song.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.documentID,
         title = snapshot.data["title"],
-        lyric = snapshot.data["lyric"],
-        categories = snapshot.data["categories"] != null
-            ? new List<String>.from(snapshot.data["categories"])
-            : null;
+        lyric = snapshot.data["lyric"];
+        // categories = snapshot.data["categories"] != null
+        //     ? new List<String>.from(snapshot.data["categories"])
+        //     : null;
 
   Song.formMap(Map maps, String id)
       : id = id,
@@ -34,4 +35,10 @@ class Song {
       // "categories": categories
     };
   }
+
+  @override
+  List<Object> get props => [id, title, lyric, isFavorite, categories];
+
+  @override
+  String toString() => 'Song { id: $id }';
 }

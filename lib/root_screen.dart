@@ -2,15 +2,17 @@ import 'dart:math';
 
 import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
+import 'package:cantapp/favorite/heart.dart';
 import 'package:cantapp/home/home_screen.dart';
-import 'package:cantapp/song/song_bloc.dart';
-import 'package:cantapp/song/song_event.dart';
+import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/navbar/navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:nested/nested.dart';
+import 'package:provider/provider.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -38,7 +40,7 @@ class _RootScreenState extends State<RootScreen> {
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
       // HomeScreen(),
-      HomePage(),
+      HomeScreen(),
       CategoryScreen(),
       FavoriteScreen(),
       Container(),
@@ -62,9 +64,8 @@ class _RootScreenState extends State<RootScreen> {
     //Wrap our custom navbar + contentView with the app Scaffold
     return Scaffold(
       backgroundColor: Color(0xffE6E6E6),
-      body: BlocProvider(
-        builder: (context) =>
-            SongBloc(databaseReference: _databaseReference)..add(Fetch()),
+      body: MultiProvider(
+        providers: getProviders(),
         child: SafeArea(
           child: Container(
             width: double.infinity,
@@ -82,6 +83,14 @@ class _RootScreenState extends State<RootScreen> {
       ),
       bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
     );
+  }
+
+  List<SingleChildWidget> getProviders() {
+    return [
+      ChangeNotifierProvider<Hearts>(create: (_) => Hearts()),
+      ChangeNotifierProvider<Songs>(
+          create: (_) => Songs(databaseReference: _databaseReference))
+    ];
   }
 
   void _handleNavBtnTapped(int index) {

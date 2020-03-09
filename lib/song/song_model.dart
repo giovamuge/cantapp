@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class Song extends Equatable {
   String id;
@@ -14,9 +15,9 @@ class Song extends Equatable {
       : id = snapshot.documentID,
         title = snapshot.data["title"],
         lyric = snapshot.data["lyric"];
-        // categories = snapshot.data["categories"] != null
-        //     ? new List<String>.from(snapshot.data["categories"])
-        //     : null;
+  // categories = snapshot.data["categories"] != null
+  //     ? new List<String>.from(snapshot.data["categories"])
+  //     : null;
 
   Song.formMap(Map maps, String id)
       : id = id,
@@ -41,4 +42,30 @@ class Song extends Equatable {
 
   @override
   String toString() => 'Song { id: $id }';
+}
+
+class Songs with ChangeNotifier {
+  final Firestore databaseReference;
+
+  Songs({@required this.databaseReference});
+
+  List<Song> _items = [];
+
+  List<Song> get items {
+    return [..._items];
+  }
+
+  set items(List<Song> value) {
+    _items = value;
+  }
+
+  Future fetchSongs() async {
+    final docs = await databaseReference
+        .collection("songs")
+        .orderBy("title")
+        .getDocuments();
+    final songs = docs.documents.map((doc) => Song.fromSnapshot(doc)).toList();
+    _items = songs;
+    notifyListeners();
+  }
 }

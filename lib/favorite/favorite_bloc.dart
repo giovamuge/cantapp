@@ -1,74 +1,105 @@
-import 'package:cantapp/song/song_model.dart';
-import "package:shared_preferences/shared_preferences.dart";
+import 'package:bloc/bloc.dart';
+import 'package:cantapp/favorite/favorite.dart';
+import 'package:cantapp/favorite/favorite_event.dart';
+import 'package:cantapp/favorite/favorite_repository.dart';
+import 'package:cantapp/favorite/favorite_state.dart';
 
-/// Stores the logic for handling favorites throughout the app.
-/// Relies on the shared_preferences Flutter library to persist app data
-/// and retrieve it upon restart.
-/// This library interfaces correctly with both iOS & Android for full platform
-/// independence.
-/// It's available at: https://pub.dartlang.org/packages/shared_preferences
-class FavoritesBloc {
-  static const String FAVORITES_KEY = "Favorites";
-  final List<Song> _favorites = [];
+class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
+  final FavoriteRepository repository;
 
-  /// This method is called during the [BlocProvider] initialization.
-  /// It receives as input the full list of [TimelineEntry], so that it can
-  /// use those references to fill [_favorites].
-  init(List<Song> entries) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> favs = prefs.getStringList(FavoritesBloc.FAVORITES_KEY);
+  FavoriteBloc({this.repository});
 
-    /// A [Map] is used to optimize retrieval times when checking if a favorite
-    /// is already present - in fact the label's used as the key.
-    /// Checking if an element is in the map is O(1), making this process O(n)
-    /// with n entries.
-    Map<String, Song> entriesMap = Map();
-    for (Song e in entries) {
-      entriesMap.putIfAbsent(e.id, () => e);
-    }
-    if (favs != null) {
-      for (String f in favs) {
-        Song entry = entriesMap[f];
-        if (entry != null) {
-          _favorites.add(entry);
-        }
-      }
-    }
+  @override
+  FavoriteState get initialState => FavoriteLoading();
 
-    /// Sort by starting time, so the favorites' list is always displayed in ascending order.
-    _favorites.sort((Song a, Song b) {
-      return a.title.compareTo(b.title);
-    });
-  }
-
-  List<Song> get favorites {
-    return _favorites;
-  }
-
-  /// Save [e] into the list, re-sort it, and store to disk.
-  addFavorite(Song e) {
-    if (!_favorites.contains(e)) {
-      this._favorites.add(e);
-      _favorites.sort((Song a, Song b) {
-        return a.title.compareTo(b.title);
-      });
-      _save();
+  @override
+  Stream<FavoriteState> mapEventToState(FavoriteEvent event) async* {
+    // final FavoriteRepository repo = FavoriteRepository();
+    if (event is LoadFavorite) {
+      yield* _mapLoadFavoriteToState();
+    } else if (event is AddFavorite) {
+      yield* _mapAddFavoriteToState(event);
+    } else if (event is UpdateFavorite) {
+      yield* _mapUpdateFavoriteToState(event);
+    } else if (event is DeleteFavorite) {
+      yield* _mapDeleteFavoriteToState(event);
+    } else if (event is ToggleAll) {
+      // yield * _mapToggleAllToState();
+    } else if (event is ClearCompleted) {
+      // yield * _mapClearCompletedToState();
     }
   }
 
-  /// Remove the entry and save to disk.
-  removeFavorite(Song e) {
-    if (_favorites.contains(e)) {
-      this._favorites.remove(e);
-      _save();
+  Stream<FavoriteState> _mapLoadFavoriteToState() async* {
+    try {
+      final favorites = await this.repository.favorites();
+      yield FavoriteLoaded(
+        favorites.map((f) => Favorite.fromEntity(f)).toList(),
+      );
+    } catch (_) {
+      yield FavoriteNotLoaded();
     }
   }
 
-  /// Persists the data to disk.
-  _save() {
-    SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      List<String> favsList = _favorites.map((Song en) => en.title).toList();
-      prefs.setStringList(FavoritesBloc.FAVORITES_KEY, favsList);
-    });
+  Stream<FavoriteState> _mapAddFavoriteToState(AddFavorite event) async* {
+    if (state is FavoriteLoaded) {
+      final List<Favorite> updatedFavorite =
+          List.from((state as FavoriteLoaded).favorites)..add(event.favorite);
+      yield FavoriteLoaded(updatedFavorite);
+      _saveFavorite(updatedFavorite);
+    }
+  }
+
+  Stream<FavoriteState> _mapUpdateFavoriteToState(UpdateFavorite event) async* {
+    if (state is FavoriteLoaded) {
+      final List<Favorite> updatedFavorite =
+          (state as FavoriteLoaded).favorites.map((fav) {
+        return fav.id == event.updatedFavorite.id ? event.updatedFavorite : fav;
+      }).toList();
+      yield FavoriteLoaded(updatedFavorite);
+      _saveFavorite(updatedFavorite);
+    }
+  }
+
+  Stream<FavoriteState> _mapDeleteFavoriteToState(DeleteFavorite event) async* {
+    if (state is FavoriteLoaded) {
+      final updatedFavorite = (state as FavoriteLoaded)
+          .favorites
+          .where((fav) => fav.id != event.favorite.id)
+          .toList();
+      yield FavoriteLoaded(updatedFavorite);
+      _saveFavorite(updatedFavorite);
+    }
+  }
+
+  // Stream<FavoriteState> _mapToggleAllToState() async* {
+  //   if (state is FavoriteLoaded) {
+  //     final allComplete =
+  //         (state as FavoriteLoaded).favorites.every((fav) => fav.complete);
+  //     final List<Favorite> updatedFavorite = (state as FavoriteLoaded)
+  //         .favorites
+  //         .map((fav) => fav.copyWith(complete: !allComplete))
+  //         .toList();
+  //     yield FavoriteLoaded(updatedFavorite);
+  //     _saveFavorite(updatedFavorite);
+  //   }
+  // }
+
+  // Stream<FavoriteState> _mapClearCompletedToState() async* {
+  //   if (state is FavoriteLoaded) {
+  //     final List<Favorite> updatedFavorite = (state as FavoriteLoaded)
+  //         .favorites
+  //         .where((fav) => !fav.complete)
+  //         .toList();
+  //     yield FavoriteLoaded(updatedFavorite);
+  //     _saveFavorite(updatedFavorite);
+  //   }
+  // }
+
+  Future _saveFavorite(List<Favorite> favorites) {
+    // return favoriteRepository.add(
+    //   favorites.map((fav) => fav.toEntity()).toList(),
+    // );
+    // return favoriteRepository.add(favorites)
   }
 }

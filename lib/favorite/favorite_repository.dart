@@ -1,3 +1,4 @@
+import 'package:cantapp/favorite/favorite.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,7 +15,7 @@ class FavoriteRepository {
       onCreate: (db, version) {
         // Run the CREATE TABLE statement on the database.
         return db.execute(
-          "CREATE TABLE favorites(id INTEGER PRIMARY KEY, uid TEXT)",
+          "CREATE TABLE favorites(id INTEGER PRIMARY KEY, id TEXT)",
         );
       },
       // Set the version. This executes the onCreate function and provides a
@@ -24,11 +25,11 @@ class FavoriteRepository {
   }
 
 // Define a function that inserts songs into the database
-  Future<void> add(String uid) async {
+  Future<void> add(String id) async {
     // Get a reference to the database.
     final Database db = await database;
 
-    final Favorite fav = new Favorite(uid: uid);
+    final Favorite fav = new Favorite(id: id);
 
     // Insert the song into the correct table. You might also specify the
     // `conflictAlgorithm` to use in case the same song is inserted twice.
@@ -41,7 +42,7 @@ class FavoriteRepository {
     );
   }
 
-  Future<void> remove(String uid) async {
+  Future<void> remove(String id) async {
     // Get a reference to the database.
     final db = await database;
 
@@ -49,23 +50,23 @@ class FavoriteRepository {
     await db.delete(
       favoriteTable,
       // Use a `where` clause to delete a specific song.
-      where: "uid = ?",
+      where: "id = ?",
       // Pass the song's id as a whereArg to prevent SQL injection.
-      whereArgs: [uid],
+      whereArgs: [id],
     );
   }
 
-  Future<bool> exist(String uid) async {
+  Future<bool> exist(String id) async {
     // Get a reference to the database.
     final db = await database;
 
     // Check the song from the Database.
     final result = await db.query(
-      favoriteTable, columns: ['uid'],
+      favoriteTable, columns: ['id'],
       // Use a `where` clause to delete a specific song.
-      where: "uid = ?",
+      where: "id = ?",
       // Pass the song's id as a whereArg to prevent SQL injection.
-      whereArgs: [uid],
+      whereArgs: [id],
     );
 
     return result.isNotEmpty;
@@ -79,20 +80,7 @@ class FavoriteRepository {
     final List<Map<String, dynamic>> maps = await db.query(favoriteTable);
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
-    return List.generate(maps.length, (i) => Favorite(uid: maps[i]['uid']));
+    return List.generate(maps.length, (i) => Favorite(id: maps[i]['id']));
   }
 }
 
-// Update the song class to include a `toMap` method.
-class Favorite {
-  // final int id;
-  final String uid;
-
-  Favorite({/*this.id,*/ this.uid});
-
-  // Convert a song into a Map. The keys must correspond to the names of the
-  // columns in the database.
-  Map<String, dynamic> toMap() {
-    return {/*'id': id,*/ 'uid': uid};
-  }
-}

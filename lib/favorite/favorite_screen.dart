@@ -22,9 +22,12 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+
     _songsData = Provider.of<Songs>(context);
     _heartsData = Provider.of<Hearts>(context);
+
     await _songsData.fetchSongs();
+    await _heartsData.fetchHearts();
   }
 
   @override

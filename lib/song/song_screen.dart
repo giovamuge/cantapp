@@ -1,8 +1,9 @@
-import 'package:cantapp/favorite/favorite_repository.dart';
+import 'package:cantapp/favorite/heart.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class SongScreen extends StatefulWidget {
   final Song song;
@@ -23,7 +24,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   Animation<double> _sizeAnimation;
   bool _isFirst = true;
   bool _isPreferite = false;
-  FavoriteRepository _repo;
+  Hearts _hearts;
 
   EdgeInsets safeAreaChildScroll = const EdgeInsets.symmetric(horizontal: 15);
 
@@ -37,11 +38,16 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
         vsync: this, duration: const Duration(milliseconds: 120));
     _keyFoldChild = GlobalKey();
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+  }
 
-    _repo = new FavoriteRepository();
-    _repo
-        .exist(widget.song.id)
-        .then((value) => setState(() => _isPreferite = value));
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    _hearts = Provider.of<Hearts>(context);
+    await _hearts.fetchHearts();
+    var hasHeart = _hearts.exist(widget.song.id);
+    setState(() => _isPreferite = hasHeart);
   }
 
   void _afterLayout(_) {
@@ -55,120 +61,120 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // return SafeArea(
-    //   child: 
-      return Scaffold(
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      BackButton(),
-                      // IconButton(
-                      //   icon: Icon(FontAwesomeIcons.chevronDown),
-                      //   onPressed: () => Navigator.of(context).pop(),
-                      // ),
-                      Row(
+    //   child:
+    return Scaffold(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    BackButton(),
+                    // IconButton(
+                    //   icon: Icon(FontAwesomeIcons.chevronDown),
+                    //   onPressed: () => Navigator.of(context).pop(),
+                    // ),
+                    Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(_isPreferite
+                              ? FontAwesomeIcons.solidHeart
+                              : FontAwesomeIcons.heart),
+                          onPressed: () => _onPressedFavorite(),
+                        ),
+                        IconButton(
+                          icon: Icon(FontAwesomeIcons.font),
+                          onPressed: () => _openCloseFontSize(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return ClipRect(
+                      child: SizedOverflowBox(
+                        size: _isFirst || _sizeAnimation == null
+                            ? Size(MediaQuery.of(context).size.width, 0.00)
+                            : Size(_childWidth, _sizeAnimation.value),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: Container(
+                    key: _keyFoldChild,
+                    child: Slider(
+                      min: 10,
+                      max: 35,
+                      value: _fontSize,
+                      onChanged: (value) => setState(() => _fontSize = value),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: safeAreaChildScroll,
+                  child: Text(
+                    widget.song.title,
+                    style: TextStyle(
+                        fontSize: 25,
+                        // fontSize: _fontSize + (_fontSize * .66),
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: safeAreaChildScroll,
+                  child: Lyric(text: widget.song.lyric, fontSize: _fontSize),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: safeAreaChildScroll,
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.blue,
+                    type: MaterialType.card,
+                    // padding: const EdgeInsets.all(10),
+                    // decoration: BoxDecoration(
+                    //     color: Colors.blue,
+                    //     borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(_isPreferite
-                                ? FontAwesomeIcons.solidHeart
-                                : FontAwesomeIcons.heart),
-                            onPressed: () => _onPressedFavorite(),
+                            icon: Icon(FontAwesomeIcons.youtube),
+                            color: Colors.white,
+                            onPressed: () {},
                           ),
                           IconButton(
-                            icon: Icon(FontAwesomeIcons.font),
-                            onPressed: () => _openCloseFontSize(),
+                            icon: Icon(FontAwesomeIcons.headphones),
+                            color: Colors.white,
+                            onPressed: () {},
                           ),
+                          IconButton(
+                            icon: Icon(FontAwesomeIcons.guitar),
+                            color: Colors.white,
+                            onPressed: () {},
+                          )
                         ],
                       ),
-                    ],
-                  ),
-                  AnimatedBuilder(
-                    animation: _controller,
-                    builder: (context, child) {
-                      return ClipRect(
-                        child: SizedOverflowBox(
-                          size: _isFirst || _sizeAnimation == null
-                              ? Size(MediaQuery.of(context).size.width, 0.00)
-                              : Size(_childWidth, _sizeAnimation.value),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: Container(
-                      key: _keyFoldChild,
-                      child: Slider(
-                        min: 10,
-                        max: 35,
-                        value: _fontSize,
-                        onChanged: (value) => setState(() => _fontSize = value),
-                      ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: safeAreaChildScroll,
-                    child: Text(
-                      widget.song.title,
-                      style: TextStyle(
-                          fontSize: 25,
-                          // fontSize: _fontSize + (_fontSize * .66),
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: safeAreaChildScroll,
-                    child: Lyric(text: widget.song.lyric, fontSize: _fontSize),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: safeAreaChildScroll,
-                    child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.blue,
-                      type: MaterialType.card,
-                      // padding: const EdgeInsets.all(10),
-                      // decoration: BoxDecoration(
-                      //     color: Colors.blue,
-                      //     borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(FontAwesomeIcons.youtube),
-                              color: Colors.white,
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: Icon(FontAwesomeIcons.headphones),
-                              color: Colors.white,
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: Icon(FontAwesomeIcons.guitar),
-                              color: Colors.white,
-                              onPressed: () {},
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
+      ),
       // ),
     );
   }
@@ -184,12 +190,12 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
     }
   }
 
-  _onPressedFavorite() async {
+  _onPressedFavorite() {
     var uid = widget.song.id;
     if (_isPreferite) {
-      await _repo.remove(uid);
+      _hearts.removeHeart(uid);
     } else {
-      await _repo.add(uid);
+      _hearts.addHeart(uid);
     }
 
     setState(() => _isPreferite = !_isPreferite);

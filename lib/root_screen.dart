@@ -8,9 +8,6 @@ import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/navbar/navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:http/http.dart' as http;
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +36,6 @@ class _RootScreenState extends State<RootScreen> {
 
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
-      // HomeScreen(),
       HomeScreen(),
       CategoryScreen(),
       FavoriteScreen(),

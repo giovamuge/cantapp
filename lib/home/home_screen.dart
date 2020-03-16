@@ -101,7 +101,7 @@ class SongWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var heartsData = Provider.of<Hearts>(context);
     return ListTile(
-      title: Text('$number. ${song.title}'),
+      title: Text('${song.number}. ${song.title}'),
       // isThreeLine: true,
       // subtitle: Text("Prova"),
       dense: true,

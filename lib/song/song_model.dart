@@ -6,15 +6,17 @@ class Song extends Equatable {
   String id;
   String title;
   String lyric;
+  String number;
   bool isFavorite = false;
   List<dynamic> categories;
 
   Song(this.title, this.lyric);
 
-  Song.fromSnapshot(DocumentSnapshot snapshot)
+  Song.fromSnapshot(DocumentSnapshot snapshot, String number)
       : id = snapshot.documentID,
         title = snapshot.data["title"],
-        lyric = snapshot.data["lyric"];
+        lyric = snapshot.data["lyric"],
+        number = number;
   // categories = snapshot.data["categories"] != null
   //     ? new List<String>.from(snapshot.data["categories"])
   //     : null;
@@ -38,7 +40,7 @@ class Song extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, title, lyric, isFavorite, categories];
+  List<Object> get props => [id, title, lyric, isFavorite, categories, number];
 
   @override
   String toString() => 'Song { id: $id }';
@@ -60,11 +62,14 @@ class Songs with ChangeNotifier {
   }
 
   Future fetchSongs() async {
+    var count = 0;
     final docs = await databaseReference
         .collection("songs")
         .orderBy("title")
         .getDocuments();
-    final songs = docs.documents.map((doc) => Song.fromSnapshot(doc)).toList();
+    final songs = docs.documents
+        .map((doc) => Song.fromSnapshot(doc, '${count++}'))
+        .toList();
     _items = songs;
     notifyListeners();
   }

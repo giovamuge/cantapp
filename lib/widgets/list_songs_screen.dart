@@ -59,8 +59,8 @@ class _ListSongsScreenState extends State<ListSongsScreen> {
                   leading: SizedBox(
                       height: 45,
                       child: CircleAvatar(
-                          child:
-                              Text('$index', style: TextStyle(fontSize: 15)))),
+                          child: Text('${widget.songListData[index].number}',
+                              style: TextStyle(fontSize: 15)))),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       fullscreenDialog: true, // sono sicuro?
                       builder: (context) =>

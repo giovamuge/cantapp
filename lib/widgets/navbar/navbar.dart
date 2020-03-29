@@ -27,7 +27,7 @@ class NavBar extends StatelessWidget {
     //Create a container with a row, and add our btn widgets into the row
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).primaryColor,
         //Add some drop-shadow to our navbar, use 2 for a slightly nicer effect
         boxShadow: [
           BoxShadow(blurRadius: 16, color: Colors.black12),

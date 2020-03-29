@@ -1,14 +1,13 @@
+import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/song/song_model.dart';
-import 'package:cantapp/song/song_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ListSongsScreen extends StatefulWidget {
   final String title;
-  final List<Song> songListData;
+  final List<Song> items;
 
   ListSongsScreen({
-    @required this.songListData,
+    @required this.items,
     @required this.title,
   });
 
@@ -20,52 +19,29 @@ class _ListSongsScreenState extends State<ListSongsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(widget.title),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            TitleWidget(
+              widget.title,
+              padding: const EdgeInsets.only(left: 15, right: 15, top: 25),
+            ),
+            SizedBox(height: 15),
+            _buildListView(widget.items),
+          ],
+        ),
       ),
-      // body: Column(
-      //   mainAxisSize: MainAxisSize.max,
-      //   children: <Widget>[
-      // Container(
-      //   color: Colors.blue,
-      //   child: SearchTextField(
-      //     onChanged: (value) {},
-      //   ),
-      // ),
-      body: _buildListView(widget.songListData),
-
-      // ],
-      // ),
     );
   }
 
-  Widget _buildListView(list) {
-    return widget.songListData != null && widget.songListData.length > 0
-        ? ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-                  color: Colors.grey[500],
-                  indent: 15.00,
-                  thickness: .30,
-                  height: 0,
-                ),
-            itemCount: widget.songListData.length,
-            itemBuilder: (context, index) => ListTile(
-                  title: Text(widget.songListData[index].title),
-                  trailing: Icon(
-                    FontAwesomeIcons.chevronRight,
-                    size: 20.00,
-                  ),
-                  leading: SizedBox(
-                      height: 45,
-                      child: CircleAvatar(
-                          child: Text('${widget.songListData[index].number}',
-                              style: TextStyle(fontSize: 15)))),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      fullscreenDialog: true, // sono sicuro?
-                      builder: (context) =>
-                          SongScreen(song: widget.songListData[index]))),
-                ))
-        : Center(child: Text("Non ci sono preferiti ❤️"));
+  Widget _buildListView(List<Song> items) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        return SongWidget(song: items[index], number: index);
+      },
+      itemCount: items.length,
+    );
   }
 }

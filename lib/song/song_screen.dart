@@ -1,4 +1,4 @@
-import 'package:cantapp/favorite/heart.dart';
+import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   Animation<double> _sizeAnimation;
   bool _isFirst = true;
   bool _isPreferite = false;
-  Hearts _hearts;
+  Favorites _favorites;
 
   EdgeInsets safeAreaChildScroll = const EdgeInsets.symmetric(horizontal: 15);
 
@@ -44,10 +44,10 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   void didChangeDependencies() async {
     super.didChangeDependencies();
 
-    _hearts = Provider.of<Hearts>(context);
-    await _hearts.fetchHearts();
-    var hasHeart = _hearts.exist(widget.song.id);
-    setState(() => _isPreferite = hasHeart);
+    _favorites = Provider.of<Favorites>(context);
+    await _favorites.fetchFavorites();
+    var hasFavorite = _favorites.exist(widget.song.id);
+    setState(() => _isPreferite = hasFavorite);
   }
 
   void _afterLayout(_) {
@@ -193,9 +193,9 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   _onPressedFavorite() {
     var uid = widget.song.id;
     if (_isPreferite) {
-      _hearts.removeHeart(uid);
+      _favorites.removeFavorite(uid);
     } else {
-      _hearts.addHeart(uid);
+      _favorites.addFavorite(uid);
     }
 
     setState(() => _isPreferite = !_isPreferite);

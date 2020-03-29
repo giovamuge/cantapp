@@ -1,8 +1,9 @@
 import 'dart:math';
 
+import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
-import 'package:cantapp/favorite/heart.dart';
+import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/navbar/navbar.dart';
@@ -28,10 +29,10 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     //Declare some buttons for our tab bar
     _navBarItems = [
-      NavBarItemData("Home", Icons.home, 110, Color(0xff01b87d)),
-      NavBarItemData("Categoria", Icons.dashboard, 110, Color(0xff594ccf)),
-      NavBarItemData("Preferiti", Icons.favorite, 115, Color(0xff09a8d9)),
-      NavBarItemData("Settings", Icons.settings, 100, Color(0xffcf4c7a)),
+      NavBarItemData("Home", Icons.home, 110, Color(0xFFF3DFBF)),
+      NavBarItemData("Categoria", Icons.dashboard, 110, Color(0xFFF3DFBF)),
+      NavBarItemData("Preferiti", Icons.favorite, 115, Color(0xFFF3DFBF)),
+      NavBarItemData("Settings", Icons.settings, 100, Color(0xFFF3DFBF)),
     ];
 
     //Create the views which will be mapped to the indices for our nav btns
@@ -59,7 +60,7 @@ class _RootScreenState extends State<RootScreen> {
         _viewsByIndex[min(_selectedNavIndex, _viewsByIndex.length - 1)];
     //Wrap our custom navbar + contentView with the app Scaffold
     return Scaffold(
-      backgroundColor: Color(0xffE6E6E6),
+      // backgroundColor: Color(0xffE6E6E6),
       body: MultiProvider(
         providers: getProviders(),
         child: SafeArea(
@@ -69,10 +70,7 @@ class _RootScreenState extends State<RootScreen> {
             child: AnimatedSwitcher(
               duration: Duration(milliseconds: 350),
               //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-              child: Theme(
-                data: ThemeData(accentColor: accentColor),
-                child: contentView,
-              ),
+              child: contentView,
             ),
           ),
         ),
@@ -83,9 +81,16 @@ class _RootScreenState extends State<RootScreen> {
 
   List<SingleChildWidget> getProviders() {
     return [
-      ChangeNotifierProvider<Hearts>(create: (_) => Hearts()),
-      ChangeNotifierProvider<Songs>(
-          create: (_) => Songs(databaseReference: _databaseReference))
+      ChangeNotifierProvider.value(value: Categories()),
+      ChangeNotifierProvider.value(value: Favorites()),
+      ChangeNotifierProvider.value(
+          value: Songs(databaseReference: _databaseReference))
+      // ChangeNotifierProvider<Categories>(
+      //   create: (_) => Categories(),
+      // ),
+      // ChangeNotifierProvider<Favorites>(create: (_) => Favorites()),
+      // ChangeNotifierProvider<Songs>(
+      //     create: (_) => Songs(databaseReference: _databaseReference))
     ];
   }
 

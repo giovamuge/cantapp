@@ -1,4 +1,4 @@
-import 'package:cantapp/favorite/heart.dart';
+import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen>
     implements AutomaticKeepAliveClientMixin<FavoriteScreen> {
   Songs _songsData;
-  Hearts _heartsData;
+  Favorites _favoritesData;
 
   @override
   void initState() {
@@ -24,28 +24,28 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     super.didChangeDependencies();
 
     _songsData = Provider.of<Songs>(context);
-    _heartsData = Provider.of<Hearts>(context);
+    _favoritesData = Provider.of<Favorites>(context);
 
     await _songsData.fetchSongs();
-    await _heartsData.fetchHearts();
+    await _favoritesData.fetchFavorites();
   }
 
   @override
   Widget build(BuildContext context) {
-    final hearts = _heartsData.items;
+    final favorites = _favoritesData.items;
     final songs = _songsData.items;
 
-    if (songs.length == 0 || hearts.length == 0) {
+    if (songs.length == 0 || favorites.length == 0) {
       return Center(
         child: Text("Non ci sono preferiti ❤️"),
       );
     }
 
     var songFavorite =
-        songs.where((s) => hearts.any((f) => f == s.id)).toList();
+        songs.where((s) => favorites.any((f) => f == s.id)).toList();
 
     return ListSongsScreen(
-      songListData: songFavorite,
+      items: songFavorite,
       title: "Preferiti",
     );
   }

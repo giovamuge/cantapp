@@ -1,42 +1,60 @@
-// Update the song class to include a `toMap` method.
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Favorite {
   final String id;
 
   Favorite({this.id});
+}
 
-  Favorite copyWith({bool complete, String id, String note, String task}) {
-    return Favorite(
-      id: id ?? this.id,
-    );
-  }
+class Favorites with ChangeNotifier {
+  static const String FAVORITES_KEY = "Favorites";
 
-  // Convert a song into a Map. The keys must correspond to the names of the
-  // columns in the database.
-  Map<String, dynamic> toMap() {
-    return {/*'id': id,*/ 'id': id};
-  }
+  List<String> _items = [];
+
+  Favorites();
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [_items];
 
   @override
   String toString() {
-    return 'Favorite { id: $id }';
+    return 'Favorite { items: $_items }';
   }
 
-  FavoriteEntity toEntity() {
-    return FavoriteEntity(id);
+  List<String> get items {
+    return [..._items];
   }
 
-  static Favorite fromEntity(FavoriteEntity entity) {
-    return Favorite(
-      id: entity.id,
-    );
+  void addFavorite(String item) {
+    _items.add(item);
+    _save();
+    notifyListeners();
   }
-}
 
-class FavoriteEntity extends Favorite {
-  String id;
+  void removeFavorite(String item) {
+    _items.remove(item);
+    _save();
+    // repository.remove(item);
+    notifyListeners();
+  }
 
-  FavoriteEntity(this.id);
+  /// use those references to fill [_favorites].
+  Future fetchFavorites() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _items = prefs.getStringList(FAVORITES_KEY);
+    notifyListeners();
+  }
+
+  /// if exist heart in items
+  bool exist(String id) {
+    return _items.any((f) => f == id);
+  }
+
+  /// Persists the data to disk.
+  _save() {
+    SharedPreferences.getInstance().then((SharedPreferences prefs) {
+      prefs.setStringList(FAVORITES_KEY, _items);
+    });
+  }
 }

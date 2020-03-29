@@ -14,13 +14,14 @@ class NavbarButton extends StatefulWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const NavbarButton(this.data, this.isSelected, {@required this.onTap });
+  const NavbarButton(this.data, this.isSelected, {@required this.onTap});
 
   @override
   _NavbarButtonState createState() => _NavbarButtonState();
 }
 
-class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderStateMixin {
+class _NavbarButtonState extends State<NavbarButton>
+    with SingleTickerProviderStateMixin {
   AnimationController _iconAnimController;
   bool _wasSelected;
   double _animScale = 1;
@@ -55,7 +56,7 @@ class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderSt
           child: Icon(
             widget.data.icon,
             size: 24,
-            color: widget.isSelected ? Colors.white : Color(0xffcccccc),
+            color: widget.isSelected ? Colors.white : Color(0xffffffff),
           ),
         ),
         //Add some hz spacing
@@ -63,7 +64,10 @@ class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderSt
         //Label
         Text(
           widget.data.title,
-          style: TextStyle(color: Colors.white, fontFamily: "Montserrat", package: MyApp.pkg),
+          style: TextStyle(
+              color: Colors.white,
+              fontFamily: "Montserrat",
+              package: MyApp.pkg),
         ),
       ],
     );
@@ -84,7 +88,9 @@ class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderSt
           duration: Duration(milliseconds: (700 / _animScale).round()),
           //Use BoxDecoration top create a rounded container
           decoration: BoxDecoration(
-            color: widget.isSelected ? widget.data.selectedColor : Colors.white,
+            color: widget.isSelected
+                ? widget.data.selectedColor
+                : Theme.of(context).primaryColor,
             borderRadius: BorderRadius.all(Radius.circular(24)),
           ),
           //Wrap the row in a ClippedView to suppress any overflow errors if we momentarily exceed the screen size
@@ -99,7 +105,9 @@ class _NavbarButtonState extends State<NavbarButton> with SingleTickerProviderSt
   void _startAnimIfSelectedChanged(bool isSelected) {
     if (_wasSelected != widget.isSelected) {
       //Go forward or reverse, depending on the isSelected state
-      widget.isSelected ? _iconAnimController.forward() : _iconAnimController.reverse();
+      widget.isSelected
+          ? _iconAnimController.forward()
+          : _iconAnimController.reverse();
     }
     _wasSelected = widget.isSelected;
   }

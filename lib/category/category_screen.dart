@@ -1,75 +1,91 @@
+import 'package:cantapp/category/category_model.dart';
+import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-enum CategoryEnum {
-  ingresso,
-  pace,
-  agnellodidio,
-  comunione,
-  mariani,
-  canoni,
-  inni,
-  quaresima,
-  natale,
-  finali,
-  offertorio,
-  credo,
-  alleluia,
-  gloria,
-  signorepieta
-}
-
-class Category {
-  Category({@required this.title, @required this.value, this.songs});
-
-  String title;
-  CategoryEnum value;
-  List<Song> songs;
-}
-
-final List<Category> categories = [
-  new Category(value: CategoryEnum.agnellodidio, title: 'Agnello di Dio'),
-  new Category(value: CategoryEnum.alleluia, title: 'Alleluia'),
-  new Category(value: CategoryEnum.canoni, title: 'Canoni'),
-  new Category(value: CategoryEnum.comunione, title: 'Comunione'),
-  new Category(value: CategoryEnum.credo, title: 'Credo'),
-  new Category(value: CategoryEnum.finali, title: 'Finali'),
-  new Category(value: CategoryEnum.gloria, title: 'Gloria'),
-  new Category(value: CategoryEnum.ingresso, title: 'Ingresso'),
-  new Category(value: CategoryEnum.inni, title: 'Inni'),
-  new Category(value: CategoryEnum.mariani, title: 'Mariani'),
-  new Category(value: CategoryEnum.natale, title: 'Natale'),
-  new Category(value: CategoryEnum.offertorio, title: 'Offertorio'),
-  new Category(value: CategoryEnum.pace, title: 'Pace'),
-  new Category(value: CategoryEnum.quaresima, title: 'Quaresima'),
-  new Category(value: CategoryEnum.signorepieta, title: 'Signore Pietà'),
-];
+// class CategoryScreen extends StatefulWidget {
+//   @override
+//   _CategoryScreenState createState() => _CategoryScreenState();
+// }
 
 class CategoryScreen extends StatelessWidget {
+  // Categories _categoriesData;
+  // Songs _songsData;
+
   @override
   Widget build(BuildContext context) {
+    var categoriesData = Provider.of<Categories>(context);
+    var songsData = Provider.of<Songs>(context);
+    categoriesData.fetchSongsToCategories(songsData.items);
+    var categories = categoriesData.items;
+
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text('Categorie'),
-      ),
-      body: ListView.separated(
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.grey[500],
-          indent: 15.00,
-          thickness: .30,
-          height: 0,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            TitleWidget(
+              "Cantapp",
+              padding: const EdgeInsets.only(
+                  top: 30, left: 15, right: 15, bottom: 15),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: categories.length,
+              itemBuilder: (context, i) => ListTile(
+                dense: true,
+                trailing: Icon(
+                  Icons.chevron_right,
+                  size: 20.00,
+                ),
+                title: Text(categories[i].title),
+                enabled: categories[i].songs != null,
+                onTap: () {
+                  // print(categories[i].songs);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CategorySongsScreen(
+                        songs: categories[i].songs,
+                        title: categories[i].title,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
         ),
-        itemCount: categories.length,
-        itemBuilder: (context, i) => ListTile(
-          trailing: Icon(
-            Icons.chevron_right,
-            size: 20.00,
-          ),
-          title: Text(categories[i].title),
-          onTap: () => {},
-        ),
       ),
+    );
+  }
+
+  // Widget _buildListView(List<Category> categories) {
+  //   // var categories = _categoriesData.items;
+  //   if (categories == null || categories.length == 0)
+  //     return Center(
+  //       child: Text("Non ci sono categorie"),
+  //     );
+  //   else
+  //     return ;
+  // }
+}
+
+class CategorySongsScreen extends StatelessWidget {
+  final String title;
+  final List<Song> songs;
+
+  CategorySongsScreen({this.songs, this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListSongsScreen(
+      items: songs,
+      title: title,
     );
   }
 }

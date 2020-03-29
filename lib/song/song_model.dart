@@ -8,7 +8,7 @@ class Song extends Equatable {
   String lyric;
   String number;
   bool isFavorite = false;
-  List<dynamic> categories;
+  List<String> categories;
 
   Song(this.title, this.lyric);
 
@@ -16,10 +16,10 @@ class Song extends Equatable {
       : id = snapshot.documentID,
         title = snapshot.data["title"],
         lyric = snapshot.data["lyric"],
-        number = number;
-  // categories = snapshot.data["categories"] != null
-  //     ? new List<String>.from(snapshot.data["categories"])
-  //     : null;
+        number = number,
+        categories = snapshot.data["categories"] != null
+            ? new List<String>.from(snapshot.data["categories"])
+            : new List<String>();
 
   Song.formMap(Map maps, String id)
       : id = id,
@@ -27,16 +27,11 @@ class Song extends Equatable {
         lyric = maps["lyric"],
         categories = maps["categories"] != null
             ? new List<String>.from(maps["categories"])
-            : null;
+            : new List<String>();
   // categories = maps["categories"];
 
   toJson() {
-    return {
-      "id": id,
-      "title": title,
-      "lyric": lyric,
-      // "categories": categories
-    };
+    return {"id": id, "title": title, "lyric": lyric, "categories": categories};
   }
 
   @override

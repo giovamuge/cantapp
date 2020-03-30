@@ -1,3 +1,4 @@
+import 'package:cantapp/category/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,6 @@ class Song extends Equatable {
         categories = maps["categories"] != null
             ? new List<String>.from(maps["categories"])
             : new List<String>();
-  // categories = maps["categories"];
 
   toJson() {
     return {"id": id, "title": title, "lyric": lyric, "categories": categories};
@@ -54,6 +54,19 @@ class Songs with ChangeNotifier {
 
   set items(List<Song> value) {
     _items = value;
+  }
+
+  List<Song> findByCategory(Category category) {
+    var k = _items
+        .where((s) => s.categories.indexOf(category.toString()) > -1)
+        .toList();
+    return k;
+  }
+
+  List<Song> findByFavorite(List<String> favs) {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var favs = prefs.getStringList("Favorites");
+    return _items.where((s) => favs.any((f) => f == s.id)).toList();
   }
 
   Future fetchSongs() async {

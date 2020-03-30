@@ -1,16 +1,10 @@
 import 'dart:math';
 
-import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
-import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/home/home_screen.dart';
-import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/navbar/navbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:nested/nested.dart';
-import 'package:provider/provider.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -20,10 +14,7 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   List<NavBarItemData> _navBarItems;
   int _selectedNavIndex = 0;
-
   List<Widget> _viewsByIndex;
-
-  final Firestore _databaseReference = Firestore.instance;
 
   @override
   void initState() {
@@ -61,37 +52,19 @@ class _RootScreenState extends State<RootScreen> {
     //Wrap our custom navbar + contentView with the app Scaffold
     return Scaffold(
       // backgroundColor: Color(0xffE6E6E6),
-      body: MultiProvider(
-        providers: getProviders(),
-        child: SafeArea(
-          child: Container(
-            width: double.infinity,
-            //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 350),
-              //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-              child: contentView,
-            ),
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+          child: AnimatedSwitcher(
+            duration: Duration(milliseconds: 350),
+            //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+            child: contentView,
           ),
         ),
       ),
       bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
     );
-  }
-
-  List<SingleChildWidget> getProviders() {
-    return [
-      ChangeNotifierProvider.value(value: Categories()),
-      ChangeNotifierProvider.value(value: Favorites()),
-      ChangeNotifierProvider.value(
-          value: Songs(databaseReference: _databaseReference))
-      // ChangeNotifierProvider<Categories>(
-      //   create: (_) => Categories(),
-      // ),
-      // ChangeNotifierProvider<Favorites>(create: (_) => Favorites()),
-      // ChangeNotifierProvider<Songs>(
-      //     create: (_) => Songs(databaseReference: _databaseReference))
-    ];
   }
 
   void _handleNavBtnTapped(int index) {

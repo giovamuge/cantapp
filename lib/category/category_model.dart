@@ -33,7 +33,7 @@ class Category {
   }
 }
 
-class Categories with ChangeNotifier {
+class Categories {
   List<Category> _items = [
     new Category(value: CategoryEnum.agnellodidio, title: 'Agnello di Dio'),
     new Category(value: CategoryEnum.alleluia, title: 'Alleluia'),
@@ -56,25 +56,25 @@ class Categories with ChangeNotifier {
     return [..._items];
   }
 
-  fetchSongsToCategories(List<Song> songs) {
-    songs.forEach((s) {
-      _items.forEach((c) {
-        if (s.categories.length > 0) {
-          var cat = c.toString();
-          var index = s.categories.indexOf(cat.toLowerCase());
-          if (index > -1) {
-            var songs = c.songs;
-            if (songs == null) {
-              songs = [];
-            }
-            songs.add(s);
-            c.songs = songs;
-            // print('songs: ${s.title}, added to ${c.title}');
-          }
-        }
-      });
-    });
+  // Future<void> fetchSongsToCategories(List<Song> songs) async {
+  //   songs.forEach((s) {
+  //     _items.forEach((c) {
+  //       if (s.categories.length > 0) {
+  //         var cat = c.toString();
+  //         var index = s.categories.indexOf(cat.toLowerCase());
+  //         if (index > -1) {
+  //           var songs = c.songs;
+  //           if (songs == null) {
+  //             songs = [];
+  //           }
+  //           songs.add(s);
+  //           c.songs = songs;
+  //           // print('songs: ${s.title}, added to ${c.title}');
+  //         }
+  //       }
+  //     });
+  //   });
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 }

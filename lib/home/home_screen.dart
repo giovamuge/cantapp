@@ -12,7 +12,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    implements AutomaticKeepAliveClientMixin<HomeScreen> {
   Songs _songsData;
 
   @override
@@ -29,149 +30,75 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (_songsData.items.length == 0) {
-    //   return Center(
-    //     child: Text("Non esistono canzoni"),
-    //   );
-    // }
-
     return Scaffold(
-      // backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
+                color: appTheme.primaryColor),
+            child: Column(
               children: <Widget>[
-                // TitleWidget(
-                //   "Cantapp",
-                //   padding: const EdgeInsets.only(
-                //       top: 30, left: 15, right: 15, bottom: 15),
-                // ),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    return ClipPath(
-                      clipper: BackgroundClipper(),
-                      child: Container(
-                        color: appTheme.primaryColor,
-                        width: constraints.maxWidth,
-                        height: 250,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Text("Cantapp",
-                                      style:
-                                          Theme.of(context).textTheme.display4),
-                                  Text(
-                                      "Ciao, \nquale canto liturgico stai cercando?"),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: RaisedButton(
-                                onPressed: () => showSearch(
-                                  context: context,
-                                  delegate:
-                                      SongSearchDelegate(songsData: _songsData),
-                                ),
-                                elevation: 0,
-                                hoverElevation: 0,
-                                focusElevation: 0,
-                                highlightElevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.search,
-                                      size: 17.00,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text("Cerca")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                RichText(
+                  text: TextSpan(children: [
+                    TextSpan(
+                        text: "Cantapp\n",
+                        style: Theme.of(context).textTheme.display4),
+                    TextSpan(
+                        text: "Ciao, \nquale canto liturgico stai cercando?",
+                        style: Theme.of(context).textTheme.subhead)
+                  ]),
                 ),
-
-                // ClipRRect(
-                //   child: Container(
-                //     padding: const EdgeInsets.only(bottom: 50),
-                //     decoration:
-                //         BoxDecoration(color: Theme.of(context).primaryColor),
-                //     child: Column(
-                //       children: <Widget>[
-                //         Padding(
-                //           padding: const EdgeInsets.symmetric(horizontal: 15),
-                //           child: RaisedButton(
-                //             onPressed: () => showSearch(
-                //               context: context,
-                //               delegate:
-                //                   SongSearchDelegate(songsData: _songsData),
-                //             ),
-                //             elevation: 0,
-                //             hoverElevation: 0,
-                //             focusElevation: 0,
-                //             highlightElevation: 0,
-                //             shape: RoundedRectangleBorder(
-                //                 borderRadius: BorderRadius.circular(10)),
-                //             child: Row(
-                //               children: <Widget>[
-                //                 Icon(
-                //                   Icons.search,
-                //                   size: 17.00,
-                //                 ),
-                //                 SizedBox(
-                //                   width: 5,
-                //                 ),
-                //                 Text("Cerca")
-                //               ],
-                //             ),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                //   borderRadius: BorderRadius.only(
-                //       bottomLeft: Radius.circular(100),
-                //       bottomRight: Radius.circular(100)),
-                // ),
-
-                SizedBox(height: 10),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return SongWidget(
-                        song: _songsData.items[index], number: index);
-                  },
-                  itemCount: _songsData.items.length,
+                RaisedButton(
+                  onPressed: () => showSearch(
+                    context: context,
+                    delegate: SongSearchDelegate(songsData: _songsData),
+                  ),
+                  elevation: 0,
+                  hoverElevation: 0,
+                  focusElevation: 0,
+                  highlightElevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.search,
+                        size: 17.00,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Cerca")
+                    ],
+                  ),
                 ),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+          SizedBox(height: 10),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return SongWidget(song: _songsData.items[index], number: index);
+            },
+            itemCount: _songsData.items.length,
+          ),
+        ],
+      )),
     );
   }
+
+  @override
+  void updateKeepAlive() {}
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class TitleWidget extends StatelessWidget {

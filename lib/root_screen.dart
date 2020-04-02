@@ -4,7 +4,6 @@ import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/setting/setting_screen.dart';
-import 'package:cantapp/widgets/navbar/navbar.dart';
 import 'package:cantapp/widgets/navbar_bottom.dart';
 import 'package:flutter/material.dart';
 
@@ -14,20 +13,11 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> {
-  List<NavBarItemData> _navBarItems;
   int _selectedNavIndex = 0;
   List<Widget> _viewsByIndex;
 
   @override
   void initState() {
-    //Declare some buttons for our tab bar
-    _navBarItems = [
-      NavBarItemData("Home", Icons.home, 110, Color(0xFFF3DFBF)),
-      NavBarItemData("Categoria", Icons.dashboard, 110, Color(0xFFF3DFBF)),
-      NavBarItemData("Preferiti", Icons.favorite, 115, Color(0xFFF3DFBF)),
-      NavBarItemData("Settings", Icons.settings, 100, Color(0xFFF3DFBF)),
-    ];
-
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
       HomeScreen(),
@@ -40,14 +30,6 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var accentColor = _navBarItems[_selectedNavIndex].selectedColor;
-
-    //Create custom navBar, pass in a list of buttons, and listen for tap event
-    var navBar = NavBar(
-      items: _navBarItems,
-      itemTapped: _handleNavBtnTapped,
-      currentIndex: _selectedNavIndex,
-    );
     //Display the correct child view for the current index
     var contentView =
         _viewsByIndex[min(_selectedNavIndex, _viewsByIndex.length - 1)];

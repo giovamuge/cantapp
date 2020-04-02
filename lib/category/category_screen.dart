@@ -1,7 +1,7 @@
 import 'package:cantapp/category/category_model.dart' as cat;
-import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
+import 'package:cantapp/widgets/title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   didChangeDependencies() async {
     super.didChangeDependencies();
 
-    // _songsData = Provider.of<Songs>(context);
+    _songsData = Provider.of<Songs>(context);
     // _categoriesData = Provider.of<Categories>(context);
     // await _categoriesData.fetchSongsToCategories(_songsData.items);
   }
@@ -33,7 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             TitleWidget(
-              "Cantapp",
+              "Categoria",
               padding: const EdgeInsets.only(
                   top: 30, left: 15, right: 15, bottom: 15),
             ),
@@ -55,8 +55,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          CategorySongsScreen(category: categories[i]),
+                      builder: (context) {
+                        return ListSongsScreen(
+                          items: _songsData.findByCategory(categories[i]),
+                          title: categories[i].title,
+                        );
+                      },
                     ),
                   );
                 },
@@ -65,24 +69,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class CategorySongsScreen extends StatelessWidget {
-  // final String title;
-  // final List<Song> songs;
-  final cat.Category category;
-
-  CategorySongsScreen({this.category});
-
-  @override
-  Widget build(BuildContext context) {
-    var songsData = Provider.of<Songs>(context);
-
-    return ListSongsScreen(
-      items: songsData.findByCategory(category),
-      title: category.title,
     );
   }
 }

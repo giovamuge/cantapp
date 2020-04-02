@@ -46,8 +46,6 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
 
     _favorites = Provider.of<Favorites>(context);
     await _favorites.fetchFavorites();
-    var hasFavorite = _favorites.exist(widget.song.id);
-    setState(() => _isPreferite = hasFavorite);
   }
 
   void _afterLayout(_) {
@@ -56,6 +54,9 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
     _childWidth = renderBox.size.width;
     _sizeAnimation =
         Tween<double>(begin: 0.0, end: _childHeight).animate(_controller);
+
+    var hasFavorite = _favorites.exist(widget.song.id);
+    _isPreferite = hasFavorite;
   }
 
   @override

@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
+import 'package:cantapp/setting/setting_screen.dart';
 import 'package:cantapp/widgets/navbar/navbar.dart';
+import 'package:cantapp/widgets/navbar_bottom.dart';
 import 'package:flutter/material.dart';
 
 class RootScreen extends StatefulWidget {
@@ -31,7 +33,7 @@ class _RootScreenState extends State<RootScreen> {
       HomeScreen(),
       CategoryScreen(),
       FavoriteScreen(),
-      Container(),
+      SettingScreen(),
     ];
     super.initState();
   }
@@ -63,7 +65,11 @@ class _RootScreenState extends State<RootScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
+      // bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
+      bottomNavigationBar: NavbarBottomWidget(
+        itemTapped: _handleNavBtnTapped,
+        currentIndex: _selectedNavIndex,
+      ),
     );
   }
 

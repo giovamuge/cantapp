@@ -1,3 +1,4 @@
+import 'package:cantapp/app.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/root_screen.dart';
@@ -22,11 +23,16 @@ class MyApp extends StatelessWidget {
 
   final Firestore _databaseReference = Firestore.instance;
 
+  // Custom navigator takes a global key if you want to access the
+  // navigator from outside it's widget tree subtree
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: getProviders(),
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         title: 'Cantapp',
         theme: appTheme,
         home: RootScreen(),

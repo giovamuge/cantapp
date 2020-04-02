@@ -1,5 +1,7 @@
 import 'package:cantapp/home/home_screen.dart';
+import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/widgets/title.dart';
 import 'package:flutter/material.dart';
 
 class ListSongsScreen extends StatefulWidget {

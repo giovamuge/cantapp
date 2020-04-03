@@ -4,8 +4,10 @@ import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/setting/setting_screen.dart';
+import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/widgets/navbar_bottom.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -63,3 +65,4 @@ class _RootScreenState extends State<RootScreen> {
     });
   }
 }
+

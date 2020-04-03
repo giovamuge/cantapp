@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cantapp/home/widgets/particle_field_painter.dart';
 import 'package:cantapp/main.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/sprite_sheet.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/scheduler.dart';
 
 import 'list_model.dart';
 import 'particle_field.dart';
+import 'particle_field_painter.dart';
 import 'swipe_item.dart';
 
 class ParticleSwipeDemo extends StatefulWidget {

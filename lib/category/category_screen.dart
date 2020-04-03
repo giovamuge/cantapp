@@ -1,5 +1,5 @@
 import 'package:cantapp/category/category_model.dart' as cat;
-import 'package:cantapp/home/widgets/song_search.dart';
+import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:cantapp/widgets/title.dart';

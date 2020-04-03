@@ -1,0 +1,120 @@
+import 'package:cantapp/song/song_item.dart';
+import 'package:cantapp/song/song_model.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class ActivityScreen extends StatefulWidget {
+  final int index;
+  final String title;
+  final MaterialColor color;
+
+  ActivityScreen(
+      {@required this.index, @required this.color, @required this.title});
+
+  @override
+  _ActivityScreenState createState() => _ActivityScreenState();
+}
+
+class _ActivityScreenState extends State<ActivityScreen> {
+  Songs _songsData;
+  bool _visible;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    _songsData = Provider.of<Songs>(context);
+    await _songsData.fetchSongs();
+  }
+
+  @override
+  void initState() {
+    _visible = false;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _visible = false;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Hero(
+            tag: "background-${widget.index}",
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [widget.color[200], widget.color[400]],
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                ),
+              ),
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 10),
+                  child: IconButton(
+                      icon: Icon(Icons.close),
+                      color: widget.color[800],
+                      onPressed: () => Navigator.pop(context)),
+                ),
+                // Align(
+                //   alignment: Alignment.topRight,
+                //   child: Hero(
+                //       tag: "image-$index",
+                //       child: Image.asset(widget.character.imagePath,
+                //           height: screenHeight * 0.45)),
+                // ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                  child: Hero(
+                    tag: "name-${widget.index}",
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        child: Text(
+                          widget.title ?? "",
+                          style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: widget.color[800]),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 1000),
+                  opacity: _songsData.items.length > 0 ? 1.00 : 0.00,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 8, 32),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return SongWidget(
+                            song: _songsData.items[index], number: index);
+                      },
+                      itemCount: _songsData.items.length,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

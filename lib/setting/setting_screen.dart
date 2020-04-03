@@ -1,3 +1,4 @@
+import 'package:cantapp/common/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -12,6 +13,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: lightBG,
       appBar: AppBar(
         title: Text("Setting"),
       ),

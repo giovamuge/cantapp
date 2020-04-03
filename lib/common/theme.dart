@@ -4,18 +4,42 @@
 
 import 'package:flutter/material.dart';
 
+//Colors for theme
+final Color lightPrimary = Color(0xfffcfcff);
+final Color darkPrimary = Colors.black;
+final Color lightAccent = Colors.orange;
+final Color darkAccent = Colors.orangeAccent;
+final Color lightBG = Color(0xfffcfcff);
+final Color darkBG = Colors.black;
+
 final appTheme = ThemeData(
   primarySwatch: Colors.yellow,
   accentColor: Colors.yellow,
   accentColorBrightness: Brightness.light,
-  textTheme: TextTheme(
-    display4: TextStyle(
-      fontFamily: 'Corben',
-      fontWeight: FontWeight.w700,
-      fontSize: 24,
-      color: Colors.black,
+  backgroundColor: lightBG,
+  primaryColor: lightPrimary,
+  // accentColor: lightAccent,
+  cursorColor: lightAccent,
+  scaffoldBackgroundColor: lightBG,
+  appBarTheme: AppBarTheme(
+    elevation: 0,
+    textTheme: TextTheme(
+      title: TextStyle(
+        color: Colors.black,
+        fontSize: 18.0,
+        fontWeight: FontWeight.w800,
+      ),
     ),
   ),
+
+  // textTheme: TextTheme(
+  //   display4: TextStyle(
+  //     fontFamily: 'Corben',
+  //     fontWeight: FontWeight.w700,
+  //     fontSize: 24,
+  //     color: Colors.black,
+  //   ),
+  // ),
 );
 
 // final appTheme = ThemeData(
@@ -42,23 +66,3 @@ final appTheme = ThemeData(
 //     platform: Theme.of(context).platform
 //     // primaryColor: Colors.blue
 //     );
-
-// THIS IS A SAMPLE FILE. Get the full content at the link above.
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/widgets.dart';
-
-// abstract class Styles {
-//   static const TextStyle productRowItemName = TextStyle(
-//     color: Color.fromRGBO(0, 0, 0, 0.8),
-//     fontSize: 18,
-//     fontStyle: FontStyle.normal,
-//     fontWeight: FontWeight.normal,
-//   );
-
-//   static const TextStyle productRowTotal = TextStyle(
-//     color: Color.fromRGBO(0, 0, 0, 0.8),
-//     fontSize: 18,
-//     fontStyle: FontStyle.normal,
-//     fontWeight: FontWeight.bold,
-//   );
-// }

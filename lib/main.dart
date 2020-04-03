@@ -1,7 +1,9 @@
 import 'package:cantapp/app.dart';
+import 'package:cantapp/common/providers.dart';
+import 'package:cantapp/common/route.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';
-import 'package:cantapp/root_screen.dart';
+import 'package:cantapp/root.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,8 +23,6 @@ class MyApp extends StatelessWidget {
   static String _pkg = "bubble_tab_bar";
   static String get pkg => Env.getPackage(_pkg);
 
-  final Firestore _databaseReference = Firestore.instance;
-
   // Custom navigator takes a global key if you want to access the
   // navigator from outside it's widget tree subtree
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -30,13 +30,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: getProviders(),
+      providers: appProviders,
       child: MaterialApp(
-        navigatorKey: navigatorKey,
+        // navigatorKey: navigatorKey,
         title: 'Cantapp',
         theme: appTheme,
-        home: RootScreen(),
+        // home: RootScreen(),
         localeResolutionCallback: onLocaleResolutionCallback,
+        routes: appRoutes,
       ),
     );
   }
@@ -58,20 +59,5 @@ class MyApp extends StatelessWidget {
 
     debugPrint("*language to fallback ${supportedLocales.first}");
     return supportedLocales.first;
-  }
-
-  List<SingleChildWidget> getProviders() {
-    return [
-      // ChangeNotifierProvider.value(value: Categories()),
-      ChangeNotifierProvider.value(value: Favorites()),
-      ChangeNotifierProvider.value(
-          value: Songs(databaseReference: _databaseReference))
-      // ChangeNotifierProvider<Categories>(
-      //   create: (_) => Categories(),
-      // ),
-      // ChangeNotifierProvider<Favorites>(create: (_) => Favorites()),
-      // ChangeNotifierProvider<Songs>(
-      //     create: (_) => Songs(databaseReference: _databaseReference))
-    ];
   }
 }

@@ -1,9 +1,6 @@
-import 'package:cantapp/common/theme.dart';
-import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/home/widgets/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
-import 'package:cantapp/song/song_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -16,68 +13,100 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     implements AutomaticKeepAliveClientMixin<HomeScreen> {
   Songs _songsData;
+  bool _visible;
+  ScrollController _controller;
 
   @override
   void initState() {
+    _visible = false;
+    _controller = ScrollController();
+    _controller.addListener(_onScrolling);
     super.initState();
   }
 
   @override
-  didChangeDependencies() async {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     _songsData = Provider.of<Songs>(context);
     await _songsData.fetchSongs();
   }
 
+  void _onScrolling() {
+    // Mostra il bottone search quando raggiungo
+    // 120 di altezza, dove si trovara il bottone
+    // grande search.
+    if (_controller.offset <= 120 && _visible) {
+      setState(() => _visible = false);
+    }
+
+    // Nascondi in caso contrario
+    // Controllo su _visible per non ripete il set continuamente
+    if (_controller.offset > 120 && !_visible) {
+      setState(() => _visible = true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-          child: Column(
+      appBar: AppBar(
+        actions: <Widget>[
+          AnimatedOpacity(
+            // If the widget is visible, animate to 0.0 (invisible).
+            // If the widget is hidden, animate to 1.0 (fully visible).
+            opacity: _visible ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 200),
+            child: Center(
+              child: IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () => showSearch(
+                  context: context,
+                  delegate: SongSearchDelegate(songsData: _songsData),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+        ],
+      ),
+      body: ListView(
+        controller: _controller,
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        addAutomaticKeepAlives: true,
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
-                color: appTheme.primaryColor),
-            child: Column(
+          Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: Text(
+              "Quale canto stai\ncercando?",
+              style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          RaisedButton(
+            onPressed: () => showSearch(
+              context: context,
+              delegate: SongSearchDelegate(songsData: _songsData),
+            ),
+            elevation: .5,
+            hoverElevation: .5,
+            focusElevation: .5,
+            highlightElevation: .5,
+            color: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Row(
               children: <Widget>[
-                RichText(
-                  text: TextSpan(children: [
-                    TextSpan(
-                        text: "Cantapp\n",
-                        style: Theme.of(context).textTheme.display4),
-                    TextSpan(
-                        text: "Ciao, \nquale canto liturgico stai cercando?",
-                        style: Theme.of(context).textTheme.subhead)
-                  ]),
+                Icon(
+                  Icons.search,
+                  size: 17.00,
                 ),
-                RaisedButton(
-                  onPressed: () => showSearch(
-                    context: context,
-                    delegate: SongSearchDelegate(songsData: _songsData),
-                  ),
-                  elevation: 0,
-                  hoverElevation: 0,
-                  focusElevation: 0,
-                  highlightElevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.search,
-                        size: 17.00,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text("Cerca")
-                    ],
-                  ),
+                SizedBox(
+                  width: 5,
                 ),
+                Text("Cerca")
               ],
             ),
           ),
@@ -91,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>
             itemCount: _songsData.items.length,
           ),
         ],
-      )),
+      ),
     );
   }
 
@@ -100,49 +129,4 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-// class CurvePainter extends CustomPainter {
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     var paint = Paint();
-//     paint.color = appTheme.primaryColor;
-//     paint.style = PaintingStyle.fill; // Change this to fill
-
-//     var path = Path();
-
-//     path.moveTo(0, size.height * 0.25);
-//     path.quadraticBezierTo(
-//         size.width / 2, size.height / 2, size.width, size.height * 0.25);
-//     path.lineTo(size.width, 0);
-//     path.lineTo(0, 0);
-
-//     canvas.drawPath(path, paint);
-//   }
-
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) {
-//     return true;
-//   }
-// }
-
-class BackgroundClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-
-    path.moveTo(0, size.height * .75);
-    path.quadraticBezierTo(
-        size.width / 2, size.height / 2, size.width, size.height * 0.75);
-    path.lineTo(size.width, 0);
-    path.lineTo(0, 0);
-
-    // canvas.drawPath(path, paint);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return true;
-  }
 }

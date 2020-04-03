@@ -50,6 +50,13 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: AnimatedOpacity(
+          // If the widget is visible, animate to 0.0 (invisible).
+          // If the widget is hidden, animate to 1.0 (fully visible).
+          opacity: _visible ? 1.0 : 0.0,
+          duration: Duration(milliseconds: 200),
+          child: Text("Cantapp"),
+        ),
         actions: <Widget>[
           AnimatedOpacity(
             // If the widget is visible, animate to 0.0 (invisible).

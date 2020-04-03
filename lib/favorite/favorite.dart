@@ -14,7 +14,6 @@ class Favorites with ChangeNotifier {
 
   Favorites();
 
-  @override
   List<Object> get props => [_items];
 
   @override
@@ -41,8 +40,11 @@ class Favorites with ChangeNotifier {
 
   /// use those references to fill [_favorites].
   Future fetchFavorites() async {
+    // ottieni i dati nelle preferenze
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _items = prefs.getStringList(FAVORITES_KEY);
+    // carica preferiti se non è null
+    // imposta un array vuoto []
+    _items = prefs.getStringList(FAVORITES_KEY) ?? [];
     notifyListeners();
   }
 

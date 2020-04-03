@@ -1,4 +1,5 @@
-import 'package:cantapp/home/widgets/song_search.dart';
+import 'package:cantapp/activity/list_activity_cards.dart';
+import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
@@ -78,11 +79,11 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: ListView(
         controller: _controller,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        // padding: EdgeInsets.symmetric(horizontal: 20),
         addAutomaticKeepAlives: true,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               "Quale canto stai\ncercando?",
               style: TextStyle(
@@ -92,39 +93,47 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           SizedBox(height: 10),
-          RaisedButton(
-            onPressed: () => showSearch(
-              context: context,
-              delegate: SongSearchDelegate(songsData: _songsData),
-            ),
-            elevation: .5,
-            hoverElevation: .5,
-            focusElevation: .5,
-            highlightElevation: .5,
-            color: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.search,
-                  size: 17.00,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Cerca")
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: RaisedButton(
+              onPressed: () => showSearch(
+                context: context,
+                delegate: SongSearchDelegate(songsData: _songsData),
+              ),
+              elevation: .5,
+              hoverElevation: .5,
+              focusElevation: .5,
+              highlightElevation: .5,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.search,
+                    size: 17.00,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text("Cerca")
+                ],
+              ),
             ),
           ),
           SizedBox(height: 10),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return SongWidget(song: _songsData.items[index], number: index);
-            },
-            itemCount: _songsData.items.length,
+          ListActivityCardsWidget(),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return SongWidget(song: _songsData.items[index], number: index);
+              },
+              itemCount: _songsData.items.length,
+            ),
           ),
         ],
       ),

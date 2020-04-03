@@ -1,6 +1,5 @@
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SongSearchDelegate extends SearchDelegate {
   Songs _songsData;

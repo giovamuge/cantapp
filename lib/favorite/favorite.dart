@@ -55,8 +55,7 @@ class Favorites with ChangeNotifier {
 
   /// Persists the data to disk.
   _save() {
-    SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      prefs.setStringList(FAVORITES_KEY, _items);
-    });
+    SharedPreferences.getInstance().then((SharedPreferences prefs) =>
+        prefs.setStringList(FAVORITES_KEY, _items));
   }
 }

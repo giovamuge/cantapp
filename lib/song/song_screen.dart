@@ -1,4 +1,5 @@
 import 'package:cantapp/favorite/favorite.dart';
+import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class SongScreen extends StatefulWidget {
 }
 
 class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
-  double _fontSize;
+  // double _fontSize;
   GlobalKey _keyFoldChild;
   bool collapsed = false;
   double _childWidth;
@@ -25,6 +26,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   bool _isFirst = true;
   bool _isPreferite = false;
   Favorites _favorites;
+  SongLyric _lyricData;
 
   EdgeInsets safeAreaChildScroll = const EdgeInsets.symmetric(horizontal: 15);
 
@@ -32,7 +34,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _fontSize = 15.00;
+    // _fontSize = 15.00;
 
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 120));
@@ -44,6 +46,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
   void didChangeDependencies() async {
     super.didChangeDependencies();
 
+    _lyricData = Provider.of<SongLyric>(context);
     _favorites = Provider.of<Favorites>(context);
     await _favorites.fetchFavorites();
   }
@@ -64,11 +67,11 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
     // return SafeArea(
     //   child:
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
+      body: SafeArea(
+        // height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -114,8 +117,9 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                     child: Slider(
                       min: 10,
                       max: 35,
-                      value: _fontSize,
-                      onChanged: (value) => setState(() => _fontSize = value),
+                      value: _lyricData.fontSize,
+                      onChanged: (value) => _lyricData.fontSize = value,
+                      // onChangeEnd: (value) => _lyricData.save(),
                     ),
                   ),
                 ),
@@ -133,7 +137,8 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                 SizedBox(height: 20),
                 Padding(
                   padding: safeAreaChildScroll,
-                  child: Lyric(text: widget.song.lyric, fontSize: _fontSize),
+                  child: Lyric(
+                      text: widget.song.lyric, fontSize: _lyricData.fontSize),
                 ),
                 SizedBox(height: 20),
                 Padding(
@@ -141,7 +146,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                   child: Material(
                     elevation: 10,
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.blue,
+                    color: Colors.yellow,
                     type: MaterialType.card,
                     // padding: const EdgeInsets.all(10),
                     // decoration: BoxDecoration(

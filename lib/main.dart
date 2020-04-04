@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: appProviders,
       child: MaterialApp(
+        // showPerformanceOverlay: true,
         // navigatorKey: navigatorKey,
         title: 'Cantapp',
         theme: appTheme,

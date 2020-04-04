@@ -1,4 +1,5 @@
 import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/song/song_screen.dart';
 import 'package:flutter/material.dart';
 
 class SongSearchDelegate extends SearchDelegate {
@@ -36,13 +37,14 @@ class SongSearchDelegate extends SearchDelegate {
   Widget searchSongs() {
     List<Song> _songs = _songsData.items;
 
-    if (query.length < 3) {
+    if (query.length < 2) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Center(
             child: Text(
-              "Search term must be longer than two letters.",
+              "Inserisci più di due ✌️ lettere \nper la ricerca. ",
+              textAlign: TextAlign.center,
             ),
           )
         ],
@@ -63,20 +65,17 @@ class SongSearchDelegate extends SearchDelegate {
     });
 
     if (songListData.length == 0) {
-      return Column(
-        children: <Widget>[
-          Text(
-            "Nessun risultato trovato.",
-          ),
-        ],
-      );
+      return Center(child: Text("Nessun risultato trovato. 🤔"));
     } else {
       return ListView.builder(
         itemCount: songListData.length,
         itemBuilder: (context, index) {
-          var result = songListData[index];
           return ListTile(
-            title: Text(result.title),
+            title: Text(songListData[index].title),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => SongScreen(song: songListData[index])),
+            ),
           );
         },
       );

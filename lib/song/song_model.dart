@@ -74,6 +74,7 @@ class Songs with ChangeNotifier {
     final docs = await databaseReference
         .collection("songs")
         .orderBy("title")
+        .limit(15)
         .getDocuments();
     final songs = docs.documents
         .map((doc) => Song.fromSnapshot(doc, '${count++}'))

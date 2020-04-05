@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 class ListSongsScreen extends StatefulWidget {
   final String title;
   final List<Song> items;
+  final MaterialColor avatarColor;
+  final MaterialColor textColor;
 
-  ListSongsScreen({
-    @required this.items,
-    @required this.title,
-  });
+  ListSongsScreen(
+      {@required this.items,
+      @required this.title,
+      this.avatarColor,
+      this.textColor});
 
   @override
   _ListSongsScreenState createState() => _ListSongsScreenState();
@@ -82,7 +85,12 @@ class _ListSongsScreenState extends State<ListSongsScreen> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
-        return SongWidget(song: items[index], number: index);
+        return SongWidget(
+          song: items[index],
+          number: index,
+          avatarColor: widget.avatarColor,
+          textColor: widget.textColor,
+        );
       },
       itemCount: items.length,
     );

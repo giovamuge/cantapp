@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_path.dart';
 import 'package:cantapp/services/firestore_service.dart';
 import 'package:cantapp/song/song_model.dart';
@@ -48,20 +49,27 @@ class FirestoreDatabase {
   // Future<void> deleteEntry(Entry entry) async =>
   //     await _service.deleteData(path: FirestorePath.entry(uid, entry.id));
 
-  // Stream<List<Entry>> entriesStream({Job job}) =>
-  //     _service.collectionStream<Entry>(
-  //       path: FirestorePath.entries(uid),
-  //       queryBuilder: job != null
-  //           ? (query) => query.where('jobId', isEqualTo: job.id)
-  //           : null,
-  //       builder: (data, documentID) => Entry.fromMap(data, documentID),
-  //       sort: (lhs, rhs) => rhs.start.compareTo(lhs.start),
-  //     );
+  Stream<List<Song>> songsFromCategorySearchStream({Category category}) =>
+      _service.collectionStream<Song>(
+          path: FirestorePath.songs(),
+          queryBuilder: (query) => query
+              .where('categories', arrayContains: category.toString())
+              .orderBy('title'),
+          builder: (data, documentID) => Song.formMap(data, documentID));
+
+  Stream<List<Song>> songsSearchStream({String textSearch}) =>
+      _service.collectionStream<Song>(
+          path: FirestorePath.songs(),
+          queryBuilder: (query) => query
+              .where('keywords', arrayContains: textSearch)
+              .orderBy('title'),
+          builder: (data, documentID) => Song.formMap(data, documentID));
 
   Stream<List<Song>> songsStream() => _service.collectionStream(
       path: FirestorePath.songs(),
-      builder: (data, documentId) => Song.formMap(data, documentId),
-      sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
+      queryBuilder: (query) => query.orderBy('title'),
+      builder: (data, documentId) => Song.formMap(data, documentId));
+  // sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
 
   // Stream<List<Song>> entriesStream() => _service.collectionStream<Song>(
   //     path: FirestorePath.songs(),

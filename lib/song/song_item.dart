@@ -6,11 +6,35 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SongWidget extends StatelessWidget {
-  final Song song;
-  final int number;
+  Song song;
+  int number;
+  MaterialColor _avatarColor;
+  MaterialColor _textColor;
 
-  const SongWidget({Key key, @required this.song, @required this.number})
-      : super(key: key);
+  SongWidget(
+      {Key key,
+      @required this.song,
+      @required this.number,
+      avatarColor,
+      textColor})
+      : _avatarColor = avatarColor ?? Colors.purple,
+        _textColor = textColor ??
+            MaterialColor(
+              0xFF000000,
+              <int, Color>{
+                50: Color(0xFF000000),
+                100: Color(0xFF000000),
+                200: Color(0xFF000000),
+                300: Color(0xFF000000),
+                400: Color(0xFF000000),
+                500: Color(0xFF000000),
+                600: Color(0xFF000000),
+                700: Color(0xFF000000),
+                800: Color(0xFF000000),
+                900: Color(0xFF000000),
+              },
+            ),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +42,28 @@ class SongWidget extends StatelessWidget {
     return Consumer<Favorites>(
       builder: (ctx, favoritesData, child) => ListTile(
         leading: CircleAvatar(
-          maxRadius: 17,
-          backgroundColor: Colors.purple[100],
+          maxRadius: 20,
+          backgroundColor: _avatarColor[100],
           child: Text(
             '$number',
             style: TextStyle(
-                color: Colors.purple,
+                color: _avatarColor[900],
                 fontWeight: FontWeight.w800,
-                fontSize: 10),
+                fontSize: 11),
           ),
         ),
         title: Text(
           '${song.title}',
-          style: TextStyle(fontWeight: FontWeight.normal),
+          style: TextStyle(fontWeight: FontWeight.bold, color: _textColor[900], fontSize: 15),
         ),
+        subtitle:
+            Text('Artista sconosciuto', style: TextStyle(color: _textColor[900], fontSize: 11)),
         // isThreeLine: true,
         // subtitle: Text("Prova"),
         dense: true,
         onTap: () => _navigateToSong(context, song),
         trailing: PopupMenuButton<OptionSong>(
+          color: _textColor[900],
           onSelected: (OptionSong result) {
             if (result == OptionSong.add) {
               favoritesData.addFavorite(song.id);

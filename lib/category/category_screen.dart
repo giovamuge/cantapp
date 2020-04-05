@@ -1,4 +1,5 @@
-import 'package:cantapp/category/category_model.dart' as cat;
+import 'package:cantapp/category/category_model.dart';
+import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
@@ -51,7 +52,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var categories = cat.Categories().items;
+    var categories = Categories().items;
 
     return Scaffold(
       appBar: AppBar(
@@ -67,7 +68,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               icon: Icon(Icons.search),
               onPressed: () => showSearch(
                 context: context,
-                delegate: SongSearchDelegate(songsData: _songsData),
+                delegate: SongSearchDelegate(),
               ),
             ),
           ),
@@ -101,69 +102,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
               title: Text(categories[i].title),
               // enabled: categories[i].songs != null,
-              onTap: () {
-                // print(categories[i].songs);
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ListSongsScreen(
-                        items: _songsData.findByCategory(categories[i]),
-                        title: categories[i].title,
-                      );
-                    },
-                  ),
-                );
-              },
+              onTap: () => _onNavigateCategory(context, categories[i]),
             ),
           )
         ],
       ),
     );
-
-    // return Scaffold(
-    //   body: SingleChildScrollView(
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.max,
-    //       children: <Widget>[
-    //         TitleWidget(
-    //           "Categoria",
-    //           padding: const EdgeInsets.only(
-    //               top: 30, left: 15, right: 15, bottom: 15),
-    //         ),
-    //         ListView.builder(
-    //           shrinkWrap: true,
-    //           physics: const NeverScrollableScrollPhysics(),
-    //           itemCount: categories.length,
-    //           itemBuilder: (context, i) => ListTile(
-    //             dense: true,
-    //             trailing: Icon(
-    //               Icons.chevron_right,
-    //               size: 20.00,
-    //             ),
-    //             title: Text(categories[i].title),
-    //             // enabled: categories[i].songs != null,
-    //             onTap: () {
-    //               // print(categories[i].songs);
-
-    //               Navigator.push(
-    //                 context,
-    //                 MaterialPageRoute(
-    //                   builder: (context) {
-    //                     return ListSongsScreen(
-    //                       items: _songsData.findByCategory(categories[i]),
-    //                       title: categories[i].title,
-    //                     );
-    //                   },
-    //                 ),
-    //               );
-    //             },
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
+
+  _onNavigateCategory(context, category) =>
+      Provider.of<FirestoreDatabase>(context, listen: false)
+          .songsFromCategorySearchStream(category: category)
+          .listen((songs) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ListSongsScreen(items: songs, title: category.title))));
 }

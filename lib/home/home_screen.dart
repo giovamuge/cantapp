@@ -1,10 +1,12 @@
 import 'package:cantapp/activity/list_activity_cards.dart';
+import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -28,21 +30,21 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    _songsData = Provider.of<Songs>(context);
-    await _songsData.fetchSongs();
+    // _songsData = Provider.of<Songs>(context);
+    // await _songsData.fetchSongs();
   }
 
   void _onScrolling() {
     // Mostra il bottone search quando raggiungo
     // 120 di altezza, dove si trovara il bottone
     // grande search.
-    if (_controller.offset <= 120 && _visible) {
+    if (_controller.offset <= 115 && _visible) {
       setState(() => _visible = false);
     }
 
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
-    if (_controller.offset > 120 && !_visible) {
+    if (_controller.offset > 115 && !_visible) {
       setState(() => _visible = true);
     }
   }
@@ -92,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: RaisedButton(
@@ -105,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen>
               focusElevation: .5,
               highlightElevation: .5,
               color: Colors.white,
+              padding: const EdgeInsets.all(12),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Row(
@@ -121,23 +124,68 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SizedBox(height: 10),
-          // ListActivityCardsWidget(),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
+          ListActivityCardsWidget(),
+          SizedBox(height: 15),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return SongWidget(song: _songsData.items[index], number: index);
-              },
-              itemCount: _songsData.items.length,
-            ),
-          ),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _buildContents(context)),
         ],
       ),
     );
+  }
+
+  Widget _buildContents(BuildContext context) {
+    final database = Provider.of<FirestoreDatabase>(context,
+        listen: false); // potrebbe essere true, da verificare
+    return StreamBuilder<List<Song>>(
+      stream: database.songsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final List<Song> items = snapshot.data;
+          if (items.isNotEmpty) {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return SongWidget(song: items[index], number: index);
+              },
+              itemCount: items.length,
+            );
+          } else {
+            return Center(child: Text("Non ci sono canzoni 🤷‍♂️"));
+          }
+        } else if (snapshot.hasError) {
+          return Center(
+              child: Text("C'è un errore 😖 riprova tra qualche istante."));
+        }
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[100],
+          highlightColor: Colors.grey[300],
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                leading: CircleAvatar(),
+                title: Container(
+                  width: double.infinity,
+                  height: 15.00,
+                  color: Colors.white,
+                ),
+              );
+            },
+            itemCount: List.generate(10, (i) => i++).length,
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

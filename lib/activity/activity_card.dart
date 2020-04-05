@@ -30,7 +30,7 @@ class ActivityCardWidget extends StatelessWidget {
       width: screenWidth,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: InkWell(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(15),
         onTap: () => Navigator.push(
             context,
             PageRouteBuilder(
@@ -52,7 +52,7 @@ class ActivityCardWidget extends StatelessWidget {
                   // height: screenHeight,
                   // width: screenWidth,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(15),
                     gradient: LinearGradient(
                       colors: [_color[200], _color[400]],
                       begin: Alignment.topRight,
@@ -63,12 +63,12 @@ class ActivityCardWidget extends StatelessWidget {
               ),
             ),
             Container(
-              alignment: Alignment.topRight,
+              alignment: Alignment.topLeft,
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
               child: Image(
-                image: AssetImage(_assetsImage),
-                width: 40,
-                height: 40,
+                image: AssetImage("icons/music.png"),
+                width: 50,
+                height: 50,
               ),
               // child: SvgPicture.asset(_assetsImage,
               //   semanticsLabel: 'Popularity',
@@ -89,8 +89,10 @@ class ActivityCardWidget extends StatelessWidget {
                       child: Container(
                         child: Text(_title,
                             style: TextStyle(
-                              color: _color[800],
+                              // color: _color[800],
+                              color: Colors.white,
                               fontWeight: FontWeight.w800,
+                              fontSize: 20,
                             )),
                       ),
                     ),

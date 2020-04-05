@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
-import 'package:cantapp/widgets/navbar/navbar.dart';
+import 'package:cantapp/widgets/navbar_bottom.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatefulWidget {
@@ -12,7 +12,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  List<NavBarItemData> _navBarItems;
   int _selectedNavIndex = 0;
   List<Widget> _viewsByIndex;
   String _currentTab = "/home";
@@ -43,12 +42,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     //Declare some buttons for our tab bar
-    _navBarItems = [
-      NavBarItemData("Home", Icons.home, 110, Color(0xFFF3DFBF)),
-      NavBarItemData("Categoria", Icons.dashboard, 110, Color(0xFFF3DFBF)),
-      NavBarItemData("Preferiti", Icons.favorite, 115, Color(0xFFF3DFBF)),
-      NavBarItemData("Settings", Icons.settings, 100, Color(0xFFF3DFBF)),
-    ];
 
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
@@ -90,8 +83,7 @@ class _AppState extends State<App> {
           _buildOffstageNavigator("/favorites"),
           _buildOffstageNavigator("/settings"),
         ]),
-        bottomNavigationBar: NavBar(
-          items: _navBarItems,
+        bottomNavigationBar: NavbarBottomWidget(
           itemTapped: _handleNavBtnTapped,
           currentIndex: _selectedNavIndex,
         ),
@@ -123,7 +115,8 @@ class _AppState extends State<App> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => routeBuilders[TabNavigatorRoutes.categories](context),
+        builder: (context) =>
+            routeBuilders[TabNavigatorRoutes.categories](context),
       ),
     );
   }

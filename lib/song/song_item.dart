@@ -3,7 +3,6 @@ import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SongWidget extends StatelessWidget {
@@ -22,14 +21,17 @@ class SongWidget extends StatelessWidget {
           maxRadius: 17,
           backgroundColor: Colors.purple[100],
           child: Text(
-            '${song.number}',
+            '$number',
             style: TextStyle(
                 color: Colors.purple,
                 fontWeight: FontWeight.w800,
                 fontSize: 10),
           ),
         ),
-        title: Text('${song.title}'),
+        title: Text(
+          '${song.title}',
+          style: TextStyle(fontWeight: FontWeight.normal),
+        ),
         // isThreeLine: true,
         // subtitle: Text("Prova"),
         dense: true,

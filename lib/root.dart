@@ -4,10 +4,8 @@ import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/setting/setting_screen.dart';
-import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/widgets/navbar_bottom.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -38,16 +36,10 @@ class _RootScreenState extends State<RootScreen> {
     //Wrap our custom navbar + contentView with the app Scaffold
     return Scaffold(
       // backgroundColor: Color(0xffE6E6E6),
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 350),
-            //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-            child: contentView,
-          ),
-        ),
+      body: Container(
+        width: double.infinity,
+        //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+        child: contentView,
       ),
       // bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
       bottomNavigationBar: NavbarBottomWidget(
@@ -65,4 +57,3 @@ class _RootScreenState extends State<RootScreen> {
     });
   }
 }
-

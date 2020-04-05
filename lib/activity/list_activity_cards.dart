@@ -5,7 +5,7 @@ class ListActivityCardsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150.0,
+      height: 175.00,
       child: ListView(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -34,18 +34,18 @@ class ListActivityCardsWidget extends StatelessWidget {
             title: "Proposte",
             assetsImage: "icons/plant_tree.png",
           ),
-          ActivityCardWidget(
-            index: 3,
-            color: Colors.orange,
-            title: "Classici",
-            assetsImage: "icons/popularity.png",
-          ),
-          ActivityCardWidget(
-            index: 4,
-            color: Colors.deepOrange,
-            title: "sss",
-            assetsImage: "icons/popularity.png",
-          ),
+          // ActivityCardWidget(
+          //   index: 3,
+          //   color: Colors.orange,
+          //   title: "Classici",
+          //   assetsImage: "icons/popularity.png",
+          // ),
+          // ActivityCardWidget(
+          //   index: 4,
+          //   color: Colors.deepOrange,
+          //   title: "sss",
+          //   assetsImage: "icons/popularity.png",
+          // ),
         ],
       ),
     );

@@ -41,7 +41,9 @@ class NavbarBottomWidget extends StatelessWidget {
         topRight: Radius.circular(35),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 5.0, bottom: 15.0),
+        // padding: const EdgeInsets.only(top: 5.0, bottom: 15.0),
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).padding.bottom, top: 5.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[

@@ -17,8 +17,8 @@ class _SettingScreenState extends State<SettingScreen> {
       appBar: AppBar(
         title: Text("Setting"),
       ),
-      body: SettingsList(
-        sections: [
+      body: ListView(
+        children: [
           SettingsSection(
             title: 'Section',
             tiles: [

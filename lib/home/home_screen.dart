@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     implements AutomaticKeepAliveClientMixin<HomeScreen> {
-  Songs _songsData;
+  // Songs _songsData;
   bool _visible;
   ScrollController _controller;
 
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen>
                 icon: Icon(Icons.search),
                 onPressed: () => showSearch(
                   context: context,
-                  delegate: SongSearchDelegate(songsData: _songsData),
+                  delegate: SongSearchDelegate(),
                 ),
               ),
             ),
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen>
             child: RaisedButton(
               onPressed: () => showSearch(
                 context: context,
-                delegate: SongSearchDelegate(songsData: _songsData),
+                delegate: SongSearchDelegate(),
               ),
               elevation: .5,
               hoverElevation: .5,

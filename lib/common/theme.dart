@@ -27,7 +27,7 @@ final appTheme = ThemeData(
       title: TextStyle(
         color: Colors.black,
         fontSize: 18.0,
-        fontWeight: FontWeight.w800,
+        // fontWeight: FontWeight.w800,
       ),
     ),
   ),

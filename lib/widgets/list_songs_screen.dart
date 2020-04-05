@@ -87,4 +87,10 @@ class _ListSongsScreenState extends State<ListSongsScreen> {
       itemCount: items.length,
     );
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }

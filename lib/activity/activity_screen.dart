@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
   @override
   void initState() {
     _visible = false;
+
+    Timer(const Duration(milliseconds: 500),
+        () => setState(() => _visible = true));
+
     super.initState();
   }
 
@@ -37,10 +42,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
     // Per correggere l'animazione rimuovere scaffold
     // Trovare soluzione per iconData
     // var _songsData = Provider.of<Songs>(context, listen: false);
-    if (!_visible) {
-      Timer(const Duration(milliseconds: 500),
-          () => setState(() => _visible = true));
-    }
+    final database = Provider.of<FirestoreDatabase>(context, listen: false);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -59,71 +61,99 @@ class _ActivityScreenState extends State<ActivityScreen> {
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 10),
-                  child: IconButton(
-                      icon: Icon(Icons.close),
-                      color: widget.color[800],
-                      onPressed: () {
-                        setState(() => _visible = false);
-                        Timer(const Duration(milliseconds: 500),
-                            () => Navigator.pop(context));
-                      }),
-                ),
-                // Align(
-                //   alignment: Alignment.topRight,
-                //   child: Hero(
-                //       tag: "image-$index",
-                //       child: Image.asset(widget.character.imagePath,
-                //           height: screenHeight * 0.45)),
-                // ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
-                  child: Hero(
-                    tag: "name-${widget.index}",
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        child: Text(
-                          widget.title ?? "",
-                          style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                              color: widget.color[800]),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                AnimatedOpacity(
+          StreamBuilder<List<Song>>(
+            stream: database.songsStream(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                // setState(() => _visible = true);
+                final List<Song> items = snapshot.data;
+                return AnimatedOpacity(
+                  curve: Curves.bounceIn,
                   opacity: _visible ? 1.00 : 0.00,
                   duration: Duration(milliseconds: 350),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 8, 32),
-                    child: Consumer<Songs>(
-                      builder: (ctx, _songsData, child) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (BuildContext context, int index) {
-                            return SongWidget(
-                                song: _songsData.items[index], number: index);
-                          },
-                          itemCount: _songsData.items.length,
-                        );
-                      },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, left: 10),
+                          child: IconButton(
+                              icon: Icon(Icons.close),
+                              color: widget.color[800],
+                              onPressed: () {
+                                setState(() => _visible = false);
+                                Navigator.pop(context);
+                              }),
+                        ),
+                        // Align(
+                        //   alignment: Alignment.topRight,
+                        //   child: Hero(
+                        //       tag: "image-$index",
+                        //       child: Image.asset(widget.character.imagePath,
+                        //           height: screenHeight * 0.45)),
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 8),
+                          child: Text(
+                            widget.title ?? "",
+                            style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: widget.color[800]),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 8),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              return SongWidget(
+                                  song: items[index], number: index);
+                            },
+                            itemCount: items.length,
+                          ),
+                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(20, 0, 8, 32),
+                        //   child: Consumer<Songs>(
+                        //     builder: (ctx, _songsData, child) {
+                        //       return ListView.builder(
+                        //         shrinkWrap: true,
+                        //         physics: const NeverScrollableScrollPhysics(),
+                        //         itemBuilder: (BuildContext context, int index) {
+                        //           return SongWidget(
+                        //               song: _songsData.items[index],
+                        //               number: index);
+                        //         },
+                        //         itemCount: _songsData.items.length,
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text("C'è un errore 😖 riprova tra qualche istante."),
+                );
+              }
+
+              return Column(
+                children: <Widget>[
+                  Text("Non ci sono dati 🤷‍♂️"),
+                  FlatButton(
+                      child: Text("Chiudi"),
+                      onPressed: () => Navigator.pop(context))
+                ],
+              );
+            },
+          )
         ],
       ),
     );

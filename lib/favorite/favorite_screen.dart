@@ -51,6 +51,13 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   }
 
   @override
+  void dispose() {
+    // _songsData.dispose();
+    // _favoritesData.dispose();
+    super.dispose();
+  }
+
+  @override
   void updateKeepAlive() {}
 
   @override

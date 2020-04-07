@@ -69,10 +69,5 @@ class FirestoreDatabase {
       path: FirestorePath.songs(),
       queryBuilder: (query) => query.orderBy('title'),
       builder: (data, documentId) => Song.formMap(data, documentId));
-  // sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
-
-  // Stream<List<Song>> entriesStream() => _service.collectionStream<Song>(
-  //     path: FirestorePath.songs(),
-  //     builder: (data, id) => Song.formMap(data, id),
-  //     sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
+      //sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
 }

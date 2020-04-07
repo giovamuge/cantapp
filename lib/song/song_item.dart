@@ -54,10 +54,13 @@ class SongWidget extends StatelessWidget {
         ),
         title: Text(
           '${song.title}',
-          style: TextStyle(fontWeight: FontWeight.bold, color: _textColor[900], fontSize: 15),
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: _textColor[900],
+              fontSize: 15),
         ),
-        subtitle:
-            Text('Artista sconosciuto', style: TextStyle(color: _textColor[900], fontSize: 11)),
+        subtitle: Text('Artista sconosciuto',
+            style: TextStyle(color: _textColor[900], fontSize: 11)),
         // isThreeLine: true,
         // subtitle: Text("Prova"),
         dense: true,
@@ -87,21 +90,21 @@ class SongWidget extends StatelessWidget {
 
   List<PopupMenuEntry<OptionSong>> _buildOptions(
       BuildContext context, Favorites data) {
-    List<PopupMenuItem<OptionSong>> result = [];
+    PopupMenuItem<OptionSong> result;
     if (data.exist(song.id)) {
-      result.add(const PopupMenuItem<OptionSong>(
+      result = const PopupMenuItem<OptionSong>(
         value: OptionSong.remove,
         child: Text('💔 elimina preferito'),
-      ));
+      );
     } else {
-      result.add(const PopupMenuItem<OptionSong>(
+      result = const PopupMenuItem<OptionSong>(
         value: OptionSong.add,
         child: Text('❤️ salva preferito'),
-      ));
+      );
     }
 
     return [
-      ...result,
+      result,
       const PopupMenuItem<OptionSong>(
         value: OptionSong.view,
         child: Text('🎶 canta'),
@@ -112,7 +115,7 @@ class SongWidget extends StatelessWidget {
   _messageSnackbar(BuildContext context, OptionSong option) {
     String msg;
     if (option == OptionSong.add) {
-      msg = '${song.title} ❤️ aggiunto hai preferiti';
+      msg = '${song.title} ❤️ aggiunto ai preferiti';
     } else {
       msg = '${song.title} 💔 rimosso dai preferiti';
     }

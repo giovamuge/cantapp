@@ -23,6 +23,7 @@ final appTheme = ThemeData(
   scaffoldBackgroundColor: lightBG,
   appBarTheme: AppBarTheme(
     elevation: 0,
+    color: lightBG,
     textTheme: TextTheme(
       title: TextStyle(
         color: Colors.black,
@@ -31,15 +32,25 @@ final appTheme = ThemeData(
       ),
     ),
   ),
+);
 
-  // textTheme: TextTheme(
-  //   display4: TextStyle(
-  //     fontFamily: 'Corben',
-  //     fontWeight: FontWeight.w700,
-  //     fontSize: 24,
-  //     color: Colors.black,
-  //   ),
-  // ),
+final appThemeDark = ThemeData(
+  primarySwatch: Colors.yellow,
+  accentColor: Colors.yellow,
+  accentColorBrightness: Brightness.dark,
+  backgroundColor: darkBG,
+  primaryColor: lightPrimary,
+  cursorColor: lightAccent,
+  scaffoldBackgroundColor: darkBG,
+  appBarTheme: AppBarTheme(
+    elevation: 0,
+    textTheme: TextTheme(
+      title: TextStyle(
+        color: Colors.white,
+        fontSize: 18.0,
+      ),
+    ),
+  ),
 );
 
 // final appTheme = ThemeData(
@@ -66,3 +77,18 @@ final appTheme = ThemeData(
 //     platform: Theme.of(context).platform
 //     // primaryColor: Colors.blue
 //     );
+
+
+class ThemeChanger with ChangeNotifier {
+  ThemeData _themeData;
+
+  ThemeChanger(this._themeData);
+
+  getTheme() => _themeData;
+
+  setTheme(ThemeData value) {
+    _themeData = value;
+    notifyListeners();
+  }
+
+}

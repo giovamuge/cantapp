@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // initialaze google admob
+    // initialaze firebase ads
     FirebaseAdsService()..initialaze();
 
     return MultiProvider(
@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
         // navigatorKey: navigatorKey,
         title: 'Cantapp',
         theme: appTheme,
-        // home: RootScreen(),
         localeResolutionCallback: onLocaleResolutionCallback,
         routes: appRoutes,
       ),

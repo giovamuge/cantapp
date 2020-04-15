@@ -1,5 +1,6 @@
 import 'package:cantapp/common/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -15,24 +16,30 @@ class _SettingScreenState extends State<SettingScreen> {
     return Scaffold(
       backgroundColor: lightBG,
       appBar: AppBar(
-        title: Text("Setting"),
+        title: Text("Impostazioni"),
       ),
       body: ListView(
         children: [
           SettingsSection(
-            title: 'Section',
+            title: 'Principale',
             tiles: [
               SettingsTile(
-                title: 'Language',
-                subtitle: 'English',
-                leading: Icon(Icons.language),
+                title: 'Testo',
+                subtitle: 'Dimensione del testo',
+                leading: Icon(Icons.format_size),
                 onTap: () {},
               ),
               SettingsTile.switchTile(
-                title: 'Use fingerprint',
-                leading: Icon(Icons.fingerprint),
+                title: 'Modalità tema',
+                subtitle: 'Scegli tra la modalità notte e giorno',
+                leading: Icon(Icons.wb_sunny),
                 switchValue: value,
-                onToggle: (bool value) {},
+                onToggle: (bool v) {
+                  setState(() => value = v);
+                  print('modalità tema: $v');
+                  Provider.of<ThemeChanger>(context)
+                      .setTheme(value ? ThemeData.light() : ThemeData.dark());
+                },
               ),
             ],
           ),

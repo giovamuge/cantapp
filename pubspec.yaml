@@ -38,6 +38,7 @@ dependencies:
   sqflite:
   path:
   shared_preferences:
+  url_launcher:
 
   font_awesome_flutter: ^8.5.0
   flutter_slidable: ^0.5.3

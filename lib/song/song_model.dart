@@ -7,6 +7,7 @@ class Song extends Equatable {
   String id;
   String title;
   String lyric;
+  String chord;
   String number;
   bool isFavorite = false;
   List<String> categories;
@@ -17,6 +18,7 @@ class Song extends Equatable {
       : id = snapshot.documentID,
         title = snapshot.data["title"],
         lyric = snapshot.data["lyric"],
+        chord = snapshot.data["chord"],
         number = number,
         categories = snapshot.data["categories"] != null
             ? new List<String>.from(snapshot.data["categories"])
@@ -26,19 +28,28 @@ class Song extends Equatable {
       : id = id,
         title = maps["title"],
         lyric = maps["lyric"],
+        chord = maps["chord"],
         categories = maps["categories"] != null
             ? new List<String>.from(maps["categories"])
             : new List<String>();
 
   toJson() {
-    return {"id": id, "title": title, "lyric": lyric, "categories": categories};
+    return {
+      "id": id,
+      "title": title,
+      "lyric": lyric,
+      "chord": chord,
+      "categories": categories
+    };
   }
 
   @override
-  List<Object> get props => [id, title, lyric, isFavorite, categories, number];
+  List<Object> get props =>
+      [id, title, lyric, chord, isFavorite, categories, number];
 
   @override
-  String toString() => 'Song { id: $id }';
+  String toString() =>
+      'Song { id: $id, title: $title, lyric: $lyric, chord: $chord, categories: ${categories.join(",")} }';
 }
 
 class Songs with ChangeNotifier {

@@ -11,9 +11,14 @@ class SongLyric with ChangeNotifier {
     return _fontSize;
   }
 
+  bool _isCollasped = false;
+  bool get isCollasped => _isCollasped;
+  set isCollasped(bool value) => _isCollasped = value;
+
   set fontSize(double value) {
     _fontSize = value;
     _save().then((_) => print('font size saved: $_fontSize'));
+    notifyListeners();
   }
 
   SongLyric({double fontSize}) {
@@ -31,5 +36,10 @@ class SongLyric with ChangeNotifier {
       _fontSize = prefs.getDouble(FONTSIZE_KEY) ?? _defaultSize;
       notifyListeners();
     });
+  }
+
+  void collaspe() {
+    _isCollasped = !_isCollasped;
+    notifyListeners();
   }
 }

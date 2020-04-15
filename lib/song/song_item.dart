@@ -11,6 +11,22 @@ class SongWidget extends StatelessWidget {
   MaterialColor _avatarColor;
   MaterialColor _textColor;
 
+  static MaterialColor _defaultTextColor = MaterialColor(
+    0xFF000000,
+    <int, Color>{
+      50: Color(0xFF000000),
+      100: Color(0xFF000000),
+      200: Color(0xFF000000),
+      300: Color(0xFF000000),
+      400: Color(0xFF000000),
+      500: Color(0xFF000000),
+      600: Color(0xFF000000),
+      700: Color(0xFF000000),
+      800: Color(0xFF000000),
+      900: Color(0xFF000000),
+    },
+  );
+
   SongWidget(
       {Key key,
       @required this.song,
@@ -18,22 +34,7 @@ class SongWidget extends StatelessWidget {
       avatarColor,
       textColor})
       : _avatarColor = avatarColor ?? Colors.purple,
-        _textColor = textColor ??
-            MaterialColor(
-              0xFF000000,
-              <int, Color>{
-                50: Color(0xFF000000),
-                100: Color(0xFF000000),
-                200: Color(0xFF000000),
-                300: Color(0xFF000000),
-                400: Color(0xFF000000),
-                500: Color(0xFF000000),
-                600: Color(0xFF000000),
-                700: Color(0xFF000000),
-                800: Color(0xFF000000),
-                900: Color(0xFF000000),
-              },
-            ),
+        _textColor = textColor ?? _defaultTextColor,
         super(key: key);
 
   @override
@@ -66,7 +67,7 @@ class SongWidget extends StatelessWidget {
         dense: true,
         onTap: () => _navigateToSong(context, song),
         trailing: PopupMenuButton<OptionSong>(
-          color: _textColor[900],
+          // color: _textColor[900],
           onSelected: (OptionSong result) {
             if (result == OptionSong.add) {
               favoritesData.addFavorite(song.id);

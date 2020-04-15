@@ -12,7 +12,11 @@ class Favorites with ChangeNotifier {
 
   List<String> _items = [];
 
-  Favorites();
+  Favorites() {
+    // esegue un fetch dei preferiti
+    // quando viene istanziata la classe
+    fetchFavorites();
+  }
 
   List<Object> get props => [_items];
 

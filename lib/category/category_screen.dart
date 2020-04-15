@@ -1,7 +1,6 @@
 import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_search.dart';
-import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,20 +11,9 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  // Categories _categoriesData;
-  Songs _songsData;
   bool _visible;
   ScrollController _controller;
   String _title;
-
-  @override
-  didChangeDependencies() async {
-    super.didChangeDependencies();
-
-    _songsData = Provider.of<Songs>(context);
-    // _categoriesData = Provider.of<Categories>(context);
-    // await _categoriesData.fetchSongsToCategories(_songsData.items);
-  }
 
   @override
   void initState() {
@@ -39,13 +27,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void _onScrolling() {
     // Mostra il bottone search quando raggiungo
     // 100 di altezza del title (impostazione custom)
-    if (_controller.offset <= 80 && _visible) {
+    if (_controller.offset <= 40 && _visible) {
       setState(() => _visible = false);
     }
 
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
-    if (_controller.offset > 80 && !_visible) {
+    if (_controller.offset > 40 && !_visible) {
       setState(() => _visible = true);
     }
   }

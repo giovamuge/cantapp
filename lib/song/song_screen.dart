@@ -2,6 +2,7 @@ import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/song/widgets/banner_ads.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,8 +79,12 @@ class SongScreen extends StatelessWidget {
                 child: LyricWidget(
                     text: _song.lyric, fontSize: lyricData.fontSize),
               ),
+              SizedBox(height: 80),
             ]),
-          )
+          ),
+          SliverFixedExtentList(
+              delegate: SliverChildListDelegate.fixed([BannerAdsWidget()]),
+              itemExtent: 1)
         ],
       ),
     );

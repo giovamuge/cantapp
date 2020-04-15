@@ -1,6 +1,7 @@
 import 'package:cantapp/common/providers.dart';
 import 'package:cantapp/common/route.dart';
 import 'package:cantapp/common/theme.dart';
+import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // initialaze google admob
+    FirebaseAdsService()..initialaze();
+
     return MultiProvider(
       providers: appProviders,
       child: MaterialApp(

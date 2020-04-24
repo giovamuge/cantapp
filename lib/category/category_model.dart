@@ -20,11 +20,11 @@ enum CategoryEnum {
 }
 
 class Category {
-  Category({@required this.title, @required this.value, this.songs});
+  const Category({@required this.title, @required this.value, this.songs});
 
-  String title;
-  CategoryEnum value;
-  List<Song> songs;
+  final String title;
+  final CategoryEnum value;
+  final List<Song> songs;
 
   toString() {
     var valueData = value.toString();

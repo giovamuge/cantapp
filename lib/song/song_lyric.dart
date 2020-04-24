@@ -7,13 +7,9 @@ class SongLyric with ChangeNotifier {
   static const double _defaultSize = 15.00;
 
   double _fontSize;
-  double get fontSize {
-    return _fontSize;
-  }
+  double get fontSize => _fontSize;
 
-  bool _isCollasped = false;
-  bool get isCollasped => _isCollasped;
-  set isCollasped(bool value) => _isCollasped = value;
+  bool isCollapsed;
 
   set fontSize(double value) {
     _fontSize = value;
@@ -39,7 +35,7 @@ class SongLyric with ChangeNotifier {
   }
 
   void collaspe() {
-    _isCollasped = !_isCollasped;
+    isCollapsed = !isCollapsed;
     notifyListeners();
   }
 }

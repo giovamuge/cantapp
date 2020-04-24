@@ -8,7 +8,5 @@ final Map<String, WidgetBuilder> appRoutes = {
   // '/' to tab screen
   // '/song' detail song with lyric
   '/': (context) => RootScreen(),
-  '/song': (context) => SongScreen(
-        song: new Song('', ''),
-      )
+  '/song': (context) => SongScreen(song: new Song())
 };

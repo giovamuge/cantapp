@@ -7,8 +7,7 @@ import 'package:provider/provider.dart';
 
 class ChordScreen extends StatefulWidget {
   final Song _song;
-
-  ChordScreen({@required Song song}) : _song = song;
+  const ChordScreen({@required Song song}) : _song = song;
 
   @override
   _ChordScreenState createState() => _ChordScreenState();
@@ -37,7 +36,7 @@ class _ChordScreenState extends State<ChordScreen> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              FontSizeSliderWidget(collasped: lyricData.isCollasped),
+              FontSizeSliderWidget(collasped: lyricData.isCollapsed),
               SizedBox(height: 20),
               Padding(
                 padding: safeAreaChildScroll,

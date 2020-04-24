@@ -7,8 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ServiziScreen extends StatefulWidget {
   final Song song;
-
-  ServiziScreen({this.song});
+  const ServiziScreen({this.song});
 
   @override
   _ServiziScreenState createState() => _ServiziScreenState();

@@ -12,9 +12,11 @@ class RootScreen extends StatefulWidget {
   _RootScreenState createState() => _RootScreenState();
 }
 
-class _RootScreenState extends State<RootScreen> {
+class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
   int _selectedNavIndex = 0;
   List<Widget> _viewsByIndex;
+
+  // TabController _controller;
 
   @override
   void initState() {
@@ -25,7 +27,16 @@ class _RootScreenState extends State<RootScreen> {
       FavoriteScreen(),
       SettingScreen(),
     ];
+    // _controller = TabController(
+    //     length: _viewsByIndex.length, initialIndex: 0, vsync: this);
+    // _controller.addListener(_onTabChanges);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // _controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -35,13 +46,19 @@ class _RootScreenState extends State<RootScreen> {
         _viewsByIndex[min(_selectedNavIndex, _viewsByIndex.length - 1)];
     //Wrap our custom navbar + contentView with the app Scaffold
     return Scaffold(
-      // backgroundColor: Color(0xffE6E6E6),
+      // without tab controller
+      // maybe is small large ram but every time
+      // rebuild the widget (page_screen)
+
       body: Container(
         width: double.infinity,
         //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
         child: contentView,
       ),
-      // bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
+      // body: TabBarView(
+      //   children: _viewsByIndex,
+      //   controller: _controller,
+      // ),
       bottomNavigationBar: NavbarBottomWidget(
         itemTapped: _handleNavBtnTapped,
         currentIndex: _selectedNavIndex,
@@ -55,5 +72,11 @@ class _RootScreenState extends State<RootScreen> {
       //This will be passed into the NavBar and change it's selected state, also controls the active content page
       _selectedNavIndex = index;
     });
+
+    // _controller.animateTo(index);
   }
+
+  // void _onTabChanges() {
+  //   setState(() => _selectedNavIndex = _controller.index);
+  // }
 }

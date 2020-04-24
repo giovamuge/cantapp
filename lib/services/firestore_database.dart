@@ -4,6 +4,7 @@ import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_path.dart';
 import 'package:cantapp/services/firestore_service.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -13,11 +14,6 @@ class FirestoreDatabase {
   final String uid;
 
   final _service = FirestoreService.instance;
-
-  // Future<void> setJob(Job job) async => await _service.setData(
-  //       path: FirestorePath.job(uid, job.id),
-  //       data: job.toMap(),
-  //     );
 
   // Future<void> deleteJob(Job job) async {
   //   // delete where entry.jobId == job.jobId
@@ -31,23 +27,10 @@ class FirestoreDatabase {
   //   await _service.deleteData(path: FirestorePath.job(uid, job.id));
   // }
 
-  // Stream<Job> jobStream({@required String jobId}) => _service.documentStream(
-  //       path: FirestorePath.job(uid, jobId),
-  //       builder: (data, documentId) => Job.fromMap(data, documentId),
-  //     );
-
-  // Stream<List<Job>> jobsStream() => _service.collectionStream(
-  //       path: FirestorePath.jobs(uid),
-  //       builder: (data, documentId) => Job.fromMap(data, documentId),
-  //     );
-
-  // Future<void> setEntry(Entry entry) async => await _service.setData(
-  //       path: FirestorePath.entry(uid, entry.id),
-  //       data: entry.toMap(),
-  //     );
-
-  // Future<void> deleteEntry(Entry entry) async =>
-  //     await _service.deleteData(path: FirestorePath.entry(uid, entry.id));
+  Future<void> incrementView(String songId) async => await _service.updateData(
+        path: FirestorePath.song(songId),
+        data: {"numberViews": FieldValue.increment(1)},
+      );
 
   Stream<List<Song>> songsFromCategorySearchStream({Category category}) =>
       _service.collectionStream<Song>(
@@ -69,5 +52,5 @@ class FirestoreDatabase {
       path: FirestorePath.songs(),
       queryBuilder: (query) => query.orderBy('title'),
       builder: (data, documentId) => Song.formMap(data, documentId));
-      //sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
+  //sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
 }

@@ -4,18 +4,33 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class Song extends Equatable {
-  String id;
-  String title;
-  String lyric;
-  String chord;
-  String number;
-  bool isFavorite = false;
-  List<String> categories;
-  int counterViews;
-  DateTime createdAt;
-  DateTime updatedAt;
+  final String id;
+  final String title;
+  final String lyric;
+  final String chord;
+  final String number;
+  final bool isFavorite;
+  final List<String> categories;
+  final int counterViews;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<Link> links;
+  final String artist;
 
-  Song(this.title, this.lyric);
+  Song({
+    this.title,
+    this.lyric,
+    this.id,
+    this.chord,
+    this.number,
+    this.isFavorite,
+    this.categories,
+    this.counterViews,
+    this.createdAt,
+    this.updatedAt,
+    this.links,
+    this.artist,
+  });
 
   Song.fromSnapshot(DocumentSnapshot snapshot, String number)
       : id = snapshot.documentID,
@@ -28,7 +43,12 @@ class Song extends Equatable {
         updatedAt = snapshot.data["updatedAt"],
         categories = snapshot.data["categories"] != null
             ? new List<String>.from(snapshot.data["categories"])
-            : new List<String>();
+            : new List<String>(),
+        links = snapshot.data["links"] != null
+            ? new List<Link>.from(snapshot.data["links"])
+            : new List<Link>(),
+        artist = snapshot.data["artist"],
+        isFavorite = false;
 
   Song.formMap(Map maps, String id)
       : id = id,
@@ -40,7 +60,13 @@ class Song extends Equatable {
         updatedAt = maps["updatedAt"],
         categories = maps["categories"] != null
             ? new List<String>.from(maps["categories"])
-            : new List<String>();
+            : new List<String>(),
+        links = maps["links"] != null
+            ? new List<Link>.from(maps["links"])
+            : new List<Link>(),
+        artist = maps["artist"],
+        number = maps["number"],
+        isFavorite = false;
 
   toJson() {
     return {
@@ -49,7 +75,11 @@ class Song extends Equatable {
       "lyric": lyric,
       "chord": chord,
       "counterViews": counterViews,
-      "categories": categories
+      "categories": categories,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
+      "links": links,
+      "artist": artist
     };
   }
 
@@ -69,10 +99,7 @@ class Songs with ChangeNotifier {
 
   List<Song> _items = [];
 
-  List<Song> get items {
-    return [..._items];
-  }
-
+  List<Song> get items => [..._items];
   set items(List<Song> value) {
     _items = value;
   }
@@ -103,4 +130,10 @@ class Songs with ChangeNotifier {
     _items = songs;
     notifyListeners();
   }
+}
+
+class Link {
+  String type;
+  String title;
+  String url;
 }

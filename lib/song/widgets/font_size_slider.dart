@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FontSizeSliderWidget extends StatefulWidget {
-  bool collasped = false;
-
-  FontSizeSliderWidget({this.collasped});
+  final bool collasped;
+  const FontSizeSliderWidget({this.collasped = false});
 
   @override
   _FontSizeSliderWidgetState createState() => _FontSizeSliderWidgetState();
@@ -13,11 +12,6 @@ class FontSizeSliderWidget extends StatefulWidget {
 
 class _FontSizeSliderWidgetState extends State<FontSizeSliderWidget>
     with TickerProviderStateMixin {
-  // AnimationController _controller;
-  // Animation<double> _sizeAnimation;
-  // bool _isFirst = true;
-  // double _childWidth;
-  // double _childHeight;
   GlobalKey _keyFoldChild;
 
   @override
@@ -59,11 +53,4 @@ class _FontSizeSliderWidgetState extends State<FontSizeSliderWidget>
       },
     );
   }
-
-  // ottieni width e heigth del widget
-  // void _afterLayout(_) {
-  //   final RenderBox renderBox = _keyFoldChild.currentContext.findRenderObject();
-  //   _childHeight = renderBox.size.height;
-  //   _childWidth = renderBox.size.width;
-  // }
 }

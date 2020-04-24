@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Favorite {
   final String id;
 
-  Favorite({this.id});
+  const Favorite({this.id});
 }
 
 class Favorites with ChangeNotifier {

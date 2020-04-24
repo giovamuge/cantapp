@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class SongSearchDelegate extends SearchDelegate {
   // Songs _songsData;
-  SongSearchDelegate();
+  // SongSearchDelegate();
 
   @override
   List<Widget> buildActions(BuildContext context) {

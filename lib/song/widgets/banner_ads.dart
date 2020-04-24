@@ -3,7 +3,6 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 
 class BannerAdsWidget extends StatefulWidget {
-  Function _onLoad;
   @override
   _BannerAdsWidgetState createState() => _BannerAdsWidgetState();
 }

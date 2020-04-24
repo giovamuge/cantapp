@@ -1,3 +1,4 @@
+import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/song/song_model.dart';
@@ -7,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SongWidget extends StatelessWidget {
-  Song song;
-  int number;
-  MaterialColor _avatarColor;
-  MaterialColor _textColor;
+  final Song song;
+  final int number;
+  final MaterialColor _avatarColor;
+  final MaterialColor _textColor;
 
-  static MaterialColor _defaultTextColor = MaterialColor(
+  static const MaterialColor _defaultTextColor = MaterialColor(
     0xFF000000,
     <int, Color>{
       50: Color(0xFF000000),
@@ -28,7 +29,7 @@ class SongWidget extends StatelessWidget {
     },
   );
 
-  SongWidget(
+  const SongWidget(
       {Key key,
       @required this.song,
       @required this.number,
@@ -98,12 +99,23 @@ class SongWidget extends StatelessWidget {
   List<Widget> _buildSubtitle() {
     final result = new List<Widget>();
 
-    if (song.chord != null && song.chord != '') {
-      result.add(BadgetWidget(
-        title: 'accordi',
-        color: Colors.pink,
-      ));
+    if (!song.chord.isNullOrEmpty()) {
+      result.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: BadgetWidget(
+            title: 'accordi',
+            color: Colors.pink,
+          ),
+        ),
+      );
     }
+
+    // if(song.links.any((l) => l.))
+
+    result.add(Text(
+        !song.artist.isNullOrEmpty() ? song.artist : 'Artista conosciuto',
+        style: TextStyle(fontSize: 11)));
 
     // controlli per links e audio
     // aggiungere alla lista se esistono

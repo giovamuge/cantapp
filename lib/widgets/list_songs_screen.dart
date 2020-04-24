@@ -8,7 +8,7 @@ class ListSongsScreen extends StatefulWidget {
   final MaterialColor avatarColor;
   final MaterialColor textColor;
 
-  ListSongsScreen(
+  const ListSongsScreen(
       {@required this.items,
       @required this.title,
       this.avatarColor,

@@ -1,17 +1,17 @@
 class YouTubeModel {
-  String version;
-  String authorName;
-  String authorUrl;
-  String providerName;
-  String providerUrl;
-  int width;
-  int height;
-  String html;
-  String type;
-  int thumbnailHeight;
-  int thumbnailWidth;
-  String thumbnailUrl;
-  String title;
+  final String version;
+  final String authorName;
+  final String authorUrl;
+  final String providerName;
+  final String providerUrl;
+  final int width;
+  final int height;
+  final String html;
+  final String type;
+  final int thumbnailHeight;
+  final int thumbnailWidth;
+  final String thumbnailUrl;
+  final String title;
 
   YouTubeModel.formMap(Map maps)
       : version = maps["version"],

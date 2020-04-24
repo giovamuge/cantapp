@@ -71,7 +71,7 @@ class SongScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           // adsData.hide();
-                          lyricData.isCollasped = false;
+                          lyricData.isCollapsed = false;
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
                                   ServiziScreen(song: _song)));
@@ -90,7 +90,7 @@ class SongScreen extends StatelessWidget {
               ),
               SliverList(
                 delegate: SliverChildListDelegate([
-                  FontSizeSliderWidget(collasped: lyricData.isCollasped),
+                  FontSizeSliderWidget(collasped: lyricData.isCollapsed),
                   SizedBox(height: 20),
                   Padding(
                     padding: safeAreaChildScroll,

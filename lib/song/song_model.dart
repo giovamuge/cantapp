@@ -11,6 +11,9 @@ class Song extends Equatable {
   String number;
   bool isFavorite = false;
   List<String> categories;
+  int counterViews;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   Song(this.title, this.lyric);
 
@@ -20,6 +23,9 @@ class Song extends Equatable {
         lyric = snapshot.data["lyric"],
         chord = snapshot.data["chord"],
         number = number,
+        counterViews = snapshot.data["counterViews"] ?? 0,
+        createdAt = snapshot.data["createdAd"],
+        updatedAt = snapshot.data["updatedAt"],
         categories = snapshot.data["categories"] != null
             ? new List<String>.from(snapshot.data["categories"])
             : new List<String>();
@@ -29,6 +35,9 @@ class Song extends Equatable {
         title = maps["title"],
         lyric = maps["lyric"],
         chord = maps["chord"],
+        counterViews = maps["counterViews"],
+        createdAt = maps["createdAd"],
+        updatedAt = maps["updatedAt"],
         categories = maps["categories"] != null
             ? new List<String>.from(maps["categories"])
             : new List<String>();
@@ -39,6 +48,7 @@ class Song extends Equatable {
       "title": title,
       "lyric": lyric,
       "chord": chord,
+      "counterViews": counterViews,
       "categories": categories
     };
   }

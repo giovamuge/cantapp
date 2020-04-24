@@ -2,6 +2,7 @@ import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
+import 'package:cantapp/song/widgets/badget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -60,8 +61,13 @@ class SongWidget extends StatelessWidget {
               color: _textColor[900],
               fontSize: 15),
         ),
-        subtitle: Text('Artista sconosciuto',
-            style: TextStyle(color: _textColor[900], fontSize: 11)),
+        // subtitle: Text('Artista sconosciuto',
+        //     style: TextStyle(color: _textColor[900], fontSize: 11)),
+        subtitle: Container(
+          child: Row(
+            children: _buildSubtitle(),
+          ),
+        ),
         // isThreeLine: true,
         // subtitle: Text("Prova"),
         dense: true,
@@ -87,6 +93,22 @@ class SongWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildSubtitle() {
+    final result = new List<Widget>();
+
+    if (song.chord != null && song.chord != '') {
+      result.add(BadgetWidget(
+        title: 'accordi',
+        color: Colors.pink,
+      ));
+    }
+
+    // controlli per links e audio
+    // aggiungere alla lista se esistono
+
+    return result;
   }
 
   List<PopupMenuEntry<OptionSong>> _buildOptions(

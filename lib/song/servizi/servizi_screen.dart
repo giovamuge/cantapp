@@ -1,9 +1,9 @@
-import 'package:cantapp/app.dart';
+import 'package:cantapp/common/utils.dart';
 import 'package:cantapp/song/servizi/chord_screen.dart';
+import 'package:cantapp/song/servizi/youtube_card.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ServiziScreen extends StatefulWidget {
   final Song song;
@@ -100,54 +100,15 @@ class _ServiziScreenState extends State<ServiziScreen> {
             SizedBox(height: 10),
 
             Container(
-              height: 300,
+              height: 300.00,
               child: PageView.builder(
                 controller: _controller,
                 physics: BouncingScrollPhysics(),
                 // onPageChanged: (index) => setState(() => _currentIndex = index),
                 itemCount: 10,
-                itemBuilder: (ctx, index) {
-                  final cardHeigth = 300;
-                  final cardWidth = MediaQuery.of(ctx).size.width;
-
-                  final titleHeigth = cardHeigth * 66 / 100;
-                  final subHeight = cardHeigth * 34 / 100;
-
-                  // final nextIndex = _currentIndex + 1;
-
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () => _launchURL(),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Column(children: [
-                          Container(
-                            width: cardWidth,
-                            height: titleHeigth,
-                            color: Colors.red,
-                            child: Center(
-                              child: Icon(
-                                FontAwesomeIcons.youtube,
-                                color: Colors.white,
-                                size: 50.00,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: cardWidth,
-                            height: subHeight,
-                            color: Colors.white,
-                            padding: const EdgeInsets.all(10),
-                            child: Text(
-                                "MOSCA in 40ena e l'INCIDENTE DIPLOMATICO RUSSIA-ITALIA"),
-                          )
-                        ]),
-                      ),
-                    ),
-                  );
-                },
+                itemBuilder: (ctx, index) => YouTubeCard(
+                    heigth: 300.00,
+                    url: 'https://www.youtube.com/watch?v=CReCKHj8GTk'),
               ),
             ),
 
@@ -195,7 +156,7 @@ class _ServiziScreenState extends State<ServiziScreen> {
                     padding: EdgeInsets.only(left: paddingLeft, right: 5),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10),
-                      onTap: () => _launchURL(),
+                      onTap: () => Utils.launchURL(),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Column(children: [
@@ -225,8 +186,9 @@ class _ServiziScreenState extends State<ServiziScreen> {
                   );
                 },
               ),
-            )
+            ),
 
+            SizedBox(height: 80.00)
             // ),
           ],
         ),
@@ -264,14 +226,5 @@ class _ServiziScreenState extends State<ServiziScreen> {
         );
       },
     );
-  }
-
-  _launchURL() async {
-    const url = 'https://www.youtube.com/watch?v=oCuucODgzhM';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }

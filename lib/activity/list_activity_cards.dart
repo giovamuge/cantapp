@@ -17,20 +17,20 @@ class ListActivityCardsWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15),
             child: ActivityCardWidget(
               index: 0,
-              color: Colors.yellow,
+              color: Colors.orange,
               title: "Popolari",
               assetsImage: "icons/popularity.png",
             ),
           ),
           ActivityCardWidget(
             index: 1,
-            color: Colors.lightGreen,
+            color: Colors.lightBlue,
             title: "Novità",
             assetsImage: "icons/new.png",
           ),
           ActivityCardWidget(
             index: 2,
-            color: Colors.lightBlue,
+            color: Colors.lightGreen,
             title: "Proposte",
             assetsImage: "icons/plant_tree.png",
           ),

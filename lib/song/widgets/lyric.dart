@@ -1,16 +1,13 @@
 import 'package:flutter/widgets.dart';
 
 class LyricWidget extends StatelessWidget {
-  const LyricWidget({
-    Key key,
-    @required String text,
-    @required double fontSize,
-  })  : _fontSize = fontSize,
-        _text = text,
-        super(key: key);
-
   final String _text;
   final double _fontSize;
+
+  const LyricWidget({Key key, @required String text, @required double fontSize})
+      : _fontSize = fontSize,
+        _text = text,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

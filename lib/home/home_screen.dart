@@ -153,11 +153,16 @@ class _HomeScreenState extends State<HomeScreen>
               itemCount: items.length,
             );
           } else {
-            return Center(child: Text("Non ci sono canzoni 🤷‍♂️"));
+            return Container(
+                height: 300,
+                child: Center(child: Text("Non ci sono canzoni 🤷‍♂️")));
           }
         } else if (snapshot.hasError) {
-          return Center(
-              child: Text("C'è un errore 😖 riprova tra qualche istante."));
+          return Container(
+              height: 300,
+              child: Center(
+                  child: Text("C'è un errore 😖\nriprova tra qualche istante.",
+                      textAlign: TextAlign.center)));
         }
         return Shimmer.fromColors(
           baseColor: Colors.grey[100],

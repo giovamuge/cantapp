@@ -111,6 +111,31 @@ class SongWidget extends StatelessWidget {
       );
     }
 
+    if (song.links.any((l) => l.type == 'youtube')) {
+      result.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: BadgetWidget(
+            title: 'video',
+            color: Colors.lightGreen,
+          ),
+        ),
+      );
+    }
+
+
+    if (song.links.any((l) => l.type == 'audio')) {
+      result.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: BadgetWidget(
+            title: 'audio',
+            color: Colors.lightBlue,
+          ),
+        ),
+      );
+    }
+
     // if(song.links.any((l) => l.))
 
     result.add(Text(

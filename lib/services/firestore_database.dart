@@ -38,7 +38,7 @@ class FirestoreDatabase {
           queryBuilder: (query) => query
               .where('categories', arrayContains: category.toString())
               .orderBy('title'),
-          builder: (data, documentID) => Song.formMap(data, documentID));
+          builder: (data, documentID) => Song.fromMap(data, documentID));
 
   Stream<List<Song>> songsSearchStream({String textSearch}) =>
       _service.collectionStream<Song>(
@@ -46,11 +46,11 @@ class FirestoreDatabase {
           queryBuilder: (query) => query
               .where('keywords', arrayContains: textSearch)
               .orderBy('title'),
-          builder: (data, documentID) => Song.formMap(data, documentID));
+          builder: (data, documentID) => Song.fromMap(data, documentID));
 
   Stream<List<Song>> songsStream() => _service.collectionStream(
       path: FirestorePath.songs(),
       queryBuilder: (query) => query.orderBy('title'),
-      builder: (data, documentId) => Song.formMap(data, documentId));
+      builder: (data, documentId) => Song.fromMap(data, documentId));
   //sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
 }

@@ -1,7 +1,9 @@
 import 'package:cantapp/common/utils.dart';
 import 'package:cantapp/song/servizi/youtube_api.dart';
 import 'package:cantapp/song/servizi/youtube_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class YouTubeCard extends StatefulWidget {
   final double _heigth;
@@ -40,8 +42,8 @@ class _YouTubeCardState extends State<YouTubeCard>
     final cardHeigth = widget._heigth;
     final cardWidth = MediaQuery.of(context).size.width;
 
-    final titleHeigth = cardHeigth * 66 / 100;
-    final subHeight = cardHeigth * 34 / 100;
+    final titleHeigth = cardHeigth * 60 / 100;
+    final subHeight = cardHeigth * 40 / 100;
     final service = YouTubeApi();
 
     return FutureBuilder<YouTubeModel>(
@@ -56,7 +58,7 @@ class _YouTubeCardState extends State<YouTubeCard>
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () => Utils.launchURL(),
+                onTap: () => Utils.launchURL(widget._url),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Column(children: [
@@ -73,9 +75,58 @@ class _YouTubeCardState extends State<YouTubeCard>
                       height: subHeight,
                       color: Colors.white,
                       padding: const EdgeInsets.all(15),
-                      child: Text(video.title,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w800)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(video.title,
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w800)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    FontAwesomeIcons.youtube,
+                                    color: Colors.red,
+                                    size: 15,
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Container(
+                                        height: 10,
+                                        width: 1,
+                                        alignment: Alignment.center,
+                                        color: Colors.grey,
+                                      )),
+                                  Text(video.authorName,
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 13))
+                                ],
+                              ),
+                              RawGestureDetector(
+                                  gestures: {
+                                    AllowMultipleGestureRecognizer:
+                                        GestureRecognizerFactoryWithHandlers<
+                                            AllowMultipleGestureRecognizer>(
+                                      () =>
+                                          AllowMultipleGestureRecognizer(), //constructor
+                                      (AllowMultipleGestureRecognizer
+                                          instance) {
+                                        //initializer
+                                        instance.onTap = () =>
+                                            print('options on video youtube');
+                                      },
+                                    )
+                                  },
+                                  //Creates the nested container within the first.
+                                  child: Icon(FontAwesomeIcons.ellipsisV,
+                                      size: 15))
+                            ],
+                          )
+                        ],
+                      ),
                     )
                   ]),
                 ),
@@ -105,18 +156,17 @@ class _YouTubeCardState extends State<YouTubeCard>
         //   ),
         // );
 
-        // return Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 5),
-        //   child: Container(
-        //     height: cardHeigth,
-        //     width: cardWidth,
-        //     decoration: BoxDecoration(
-        //         borderRadius: BorderRadius.circular(10),
-        //         color: Colors.grey[300]),
-        //   ),
-        // );
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Container(
+            height: cardHeigth,
+            width: cardWidth,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
+          ),
+        );
 
-        return Container();
+        // return Container();
       },
     );
   }
@@ -128,4 +178,15 @@ class _YouTubeCardState extends State<YouTubeCard>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+// Custom Gesture Recognizer.
+// rejectGesture() is overridden. When a gesture is rejected, this is the function that is called. By default, it disposes of the
+// Recognizer and runs clean up. However we modified it so that instead the Recognizer is disposed of, it is actually manually added.
+// The result is instead you have one Recognizer winning the Arena, you have two. It is a win-win.
+class AllowMultipleGestureRecognizer extends TapGestureRecognizer {
+  @override
+  void rejectGesture(int pointer) {
+    acceptGesture(pointer);
+  }
 }

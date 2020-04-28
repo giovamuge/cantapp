@@ -1,8 +1,7 @@
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
-  static launchURL() async {
-    const url = 'https://www.youtube.com/watch?v=oCuucODgzhM';
+  static launchURL(url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {

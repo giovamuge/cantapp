@@ -44,29 +44,58 @@ class Song extends Equatable {
         categories = snapshot.data["categories"] != null
             ? new List<String>.from(snapshot.data["categories"])
             : new List<String>(),
-        links = snapshot.data["links"] != null
-            ? new List<Link>.from(snapshot.data["links"])
-            : new List<Link>(),
+        // links = snapshot.data["links"] != null
+        //     ? new List<Link>.from(snapshot.data["links"])
+        //     : new List<Link>(),
+        links = new List<Link>(),
         artist = snapshot.data["artist"],
         isFavorite = false;
 
-  Song.formMap(Map maps, String id)
-      : id = id,
-        title = maps["title"],
-        lyric = maps["lyric"],
-        chord = maps["chord"],
-        counterViews = maps["counterViews"],
-        createdAt = maps["createdAd"],
-        updatedAt = maps["updatedAt"],
-        categories = maps["categories"] != null
+  // Song.fromMap(Map maps, String id)
+  //     : id = id,
+  //       title = maps["title"],
+  //       lyric = maps["lyric"],
+  //       chord = maps["chord"],
+  //       counterViews = maps["counterViews"],
+  //       createdAt = maps["createdAd"],
+  //       updatedAt = maps["updatedAt"],
+  //       categories = maps["categories"] != null
+  //           ? new List<String>.from(maps["categories"])
+  //           : new List<String>(),
+  //       links = maps["links"] != null
+  //           ? new List<Map<String, String>>.from(maps["links"])
+  //           : new List<Map<String, String>>(),
+  //       // links = new List<Link>(),
+  //       artist = maps["artist"],
+  //       number = maps["number"],
+  //       isFavorite = false;
+
+  static fromMap(Map maps, String id) {
+    final links = new List<Link>();
+    if (maps["links"] != null) {
+      final items = List.from(maps["links"]);
+      for (var i = 0; i < items.length; i++) {
+        final link = Link.fromMap(items[i]);
+        links.add(link);
+      }
+    }
+
+    return Song(
+        id: id,
+        title: maps["title"],
+        lyric: maps["lyric"],
+        chord: maps["chord"],
+        counterViews: maps["counterViews"],
+        createdAt: maps["createdAd"],
+        updatedAt: maps["updatedAt"],
+        categories: maps["categories"] != null
             ? new List<String>.from(maps["categories"])
             : new List<String>(),
-        links = maps["links"] != null
-            ? new List<Link>.from(maps["links"])
-            : new List<Link>(),
-        artist = maps["artist"],
-        number = maps["number"],
-        isFavorite = false;
+        links: links,
+        artist: maps["artist"],
+        number: maps["number"],
+        isFavorite: false);
+  }
 
   toJson() {
     return {
@@ -133,7 +162,29 @@ class Songs with ChangeNotifier {
 }
 
 class Link {
-  String type;
-  String title;
-  String url;
+  final String type;
+  final String title;
+  final String url;
+
+  const Link({this.type, this.title, this.url});
+
+  Link.fromMap(Map maps)
+      : type = maps["type"],
+        title = maps["title"],
+        url = maps["url"];
 }
+
+// abstract class Links implements List<Link> {
+//   Links.fromMap(Map maps) {
+//     final links = new List<Link>();
+//     if (maps["links"] != null) {
+//       final items = List.from(maps["links"]);
+//       for (var i = 0; i < items.length; i++) {
+//         final link = Link.fromMap(items[i]);
+//         links.add(link);
+//       }
+//     }
+
+//     return links;
+//   }
+// }

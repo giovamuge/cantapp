@@ -9,7 +9,7 @@ class SongLyric with ChangeNotifier {
   double _fontSize;
   double get fontSize => _fontSize;
 
-  bool isCollapsed;
+  bool isCollapsed = false;
 
   set fontSize(double value) {
     _fontSize = value;

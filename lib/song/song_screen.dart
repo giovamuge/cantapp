@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/services/firestore_database.dart';
@@ -22,7 +23,6 @@ class SongScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var lyricData = Provider.of<SongLyric>(context, listen: false);
     // var adsData = Provider.of<Ads>(context);
     // adsData.initState();
 
@@ -56,28 +56,7 @@ class SongScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    SizedBox(
-                      width: 80.00,
-                      height: 25.00,
-                      child: RaisedButton(
-                        child: Text(
-                          "servizi",
-                        ),
-                        color: lightBG,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(2),
-                          side: BorderSide(color: Colors.black),
-                        ),
-                        onPressed: () {
-                          // adsData.hide();
-                          lyricData.isCollapsed = false;
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ServiziScreen(song: _song)));
-                        },
-                      ),
-                    ),
+                    _buildServiziButton(context, lyricData),
                   ],
                 ),
                 actions: <Widget>[
@@ -118,6 +97,34 @@ class SongScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  _buildServiziButton(BuildContext context, SongLyric lyricData) {
+    if (_song.links.length > 0 || !_song.chord.isNullOrEmpty()) {
+      return SizedBox(
+        width: 80.00,
+        height: 25.00,
+        child: RaisedButton(
+          child: Text(
+            "servizi",
+          ),
+          color: lightBG,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2),
+            side: BorderSide(color: Colors.black),
+          ),
+          onPressed: () {
+            // adsData.hide();
+            lyricData.isCollapsed = false;
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ServiziScreen(song: _song)));
+          },
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   void _incrementViews(BuildContext context) {

@@ -32,6 +32,8 @@ class _ServiziScreenState extends State<ServiziScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final videos = widget.song.links.where((l) => l.type == 'youtube').toList();
+    final audios = widget.song.links.where((l) => l.type == 'audio').toList();
     return Scaffold(
       appBar: AppBar(title: Text("Servizi")),
       body: SafeArea(
@@ -74,118 +76,11 @@ class _ServiziScreenState extends State<ServiziScreen> {
 
             SizedBox(height: 10),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "YouTube",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  FlatButton(
-                    child: Text("visualizza tutto"),
-                    textColor: Colors.yellow,
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () {},
-                  )
-                ],
-              ),
-            ),
+            ..._buildVideos(videos),
 
             SizedBox(height: 10),
-
-            Container(
-              height: 300.00,
-              child: PageView.builder(
-                controller: _controller,
-                physics: BouncingScrollPhysics(),
-                // onPageChanged: (index) => setState(() => _currentIndex = index),
-                itemCount: 10,
-                itemBuilder: (ctx, index) => YouTubeCard(
-                    heigth: 300.00,
-                    url: 'https://www.youtube.com/watch?v=CReCKHj8GTk'),
-              ),
-            ),
-
-            SizedBox(height: 10),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Audio mp3",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  FlatButton(
-                    child: Text("visualizza tutto"),
-                    textColor: Colors.yellow,
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () {},
-                  )
-                ],
-              ),
-            ),
-
-            SizedBox(height: 10),
-
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  final double cardHeigth = 200;
-                  final double cardWidth = 150;
-
-                  final double titleHeigth = cardHeigth * 66 / 100;
-                  final double subHeight = cardHeigth * 34 / 100;
-
-                  final double paddingLeft = (index == 0) ? 20.00 : 5.00;
-
-                  return Padding(
-                    padding: EdgeInsets.only(left: paddingLeft, right: 5),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () => Utils.launchURL(),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Column(children: [
-                          Container(
-                            width: cardWidth,
-                            height: titleHeigth,
-                            color: Colors.yellow,
-                            child: Center(
-                              child: Icon(
-                                FontAwesomeIcons.headphones,
-                                color: Colors.white,
-                                size: 50.00,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: cardWidth,
-                            height: subHeight,
-                            color: Colors.white,
-                            padding: const EdgeInsets.all(10),
-                            child: Text(
-                                "MOSCA in 40ena e l'INCIDENTE DIPLOMATICO RUSSIA-ITALIA"),
-                          )
-                        ]),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+            
+            ..._buildAudios(audios),
 
             SizedBox(height: 80.00)
             // ),
@@ -193,6 +88,129 @@ class _ServiziScreenState extends State<ServiziScreen> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildVideos(List<Link> videos) {
+    if (videos.length > 0) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "YouTube",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              FlatButton(
+                child: Text("visualizza tutto"),
+                textColor: Colors.yellow,
+                padding: const EdgeInsets.all(0),
+                onPressed: () {},
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 10),
+        Container(
+          height: 300.00,
+          child: PageView.builder(
+            controller: _controller,
+            physics: BouncingScrollPhysics(),
+            // onPageChanged: (index) => setState(() => _currentIndex = index),
+            itemCount: videos.length,
+            itemBuilder: (ctx, index) =>
+                YouTubeCard(heigth: 300.00, url: videos[index].url),
+          ),
+        ),
+      ];
+    } else {
+      return [Container()];
+    }
+  }
+
+  List<Widget> _buildAudios(List<Link> audios) {
+    if (audios.length > 0) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Audio mp3",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              FlatButton(
+                child: Text("visualizza tutto"),
+                textColor: Colors.yellow,
+                padding: const EdgeInsets.all(0),
+                onPressed: () {},
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 10),
+        Container(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              final double cardHeigth = 200;
+              final double cardWidth = 150;
+
+              final double titleHeigth = cardHeigth * 66 / 100;
+              final double subHeight = cardHeigth * 34 / 100;
+
+              final double paddingLeft = (index == 0) ? 20.00 : 5.00;
+
+              return Padding(
+                padding: EdgeInsets.only(left: paddingLeft, right: 5),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () => Utils.launchURL(
+                      'https://www.youtube.com/watch?v=CReCKHj8GTk'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Column(children: [
+                      Container(
+                        width: cardWidth,
+                        height: titleHeigth,
+                        color: Colors.yellow,
+                        child: Center(
+                          child: Icon(
+                            FontAwesomeIcons.headphones,
+                            color: Colors.white,
+                            size: 50.00,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: cardWidth,
+                        height: subHeight,
+                        color: Colors.white,
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                            "MOSCA in 40ena e l'INCIDENTE DIPLOMATICO RUSSIA-ITALIA"),
+                      )
+                    ]),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ];
+    } else {
+      return [Container()];
+    }
   }
 
   Widget _buildListChords() {

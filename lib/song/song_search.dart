@@ -34,7 +34,8 @@ class SongSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) => searchSongs(context);
 
   @override
-  Widget buildSuggestions(BuildContext context) => searchSongs(context);
+  Widget buildSuggestions(BuildContext context) => searchSongs(
+      context); // da sostituire con Container se non vuoi lasciare in pending l'ultima ricerca
 
   Widget searchSongs(BuildContext context) {
     if (query.length < 2) {

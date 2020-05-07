@@ -107,6 +107,7 @@ class SongScreen extends StatelessWidget {
         child: RaisedButton(
           child: Text(
             "servizi",
+            overflow: TextOverflow.ellipsis,
           ),
           color: lightBG,
           elevation: 0,

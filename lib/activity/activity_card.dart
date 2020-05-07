@@ -34,7 +34,7 @@ class ActivityCardWidget extends StatelessWidget {
         onTap: () => Navigator.push(
             context,
             PageRouteBuilder(
-                transitionDuration: const Duration(milliseconds: 200),
+                transitionDuration: const Duration(milliseconds: 400),
                 pageBuilder: (context, _, __) => ActivityScreen(
                       index: _index,
                       color: _color,

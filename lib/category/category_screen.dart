@@ -66,6 +66,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       body: ListView(
         controller: _controller,
         padding: EdgeInsets.symmetric(horizontal: 20),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 20),

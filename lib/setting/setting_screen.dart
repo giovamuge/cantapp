@@ -1,3 +1,5 @@
+import 'package:cantapp/common/constants.dart';
+import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,12 +11,21 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  bool value = false;
+  bool _value = false;
+  Shared _shared;
+
+  @override
+  void initState() {
+    _shared = new Shared();
+    _shared.getThemeMode().then(
+        (theme) => setState(() => _value = theme == Constants.themeLight));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightBG,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text("Impostazioni"),
       ),
@@ -30,15 +41,19 @@ class _SettingScreenState extends State<SettingScreen> {
                 onTap: () {},
               ),
               SettingsTile.switchTile(
-                title: 'Modalità tema',
+                title: 'Modalità Giorno',
                 subtitle: 'Scegli tra la modalità notte e giorno',
                 leading: Icon(Icons.wb_sunny),
-                switchValue: value,
+                switchValue: _value,
                 onToggle: (bool v) {
-                  setState(() => value = v);
+                  setState(() => _value = v);
                   print('modalità tema: $v');
-                  Provider.of<ThemeChanger>(context)
-                      .setTheme(value ? ThemeData.light() : ThemeData.dark());
+                  final theme =
+                      Provider.of<ThemeChanger>(context, listen: false);
+                  theme.setTheme(_value ? appTheme : appThemeDark,
+                      _value ? Constants.themeLight : Constants.themeDark);
+                  _shared.setThemeMode(
+                      _value ? Constants.themeLight : Constants.themeDark);
                 },
               ),
             ],

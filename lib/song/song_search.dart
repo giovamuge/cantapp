@@ -9,6 +9,11 @@ class SongSearchDelegate extends SearchDelegate {
   // SongSearchDelegate();
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    return super.appBarTheme(context);
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(

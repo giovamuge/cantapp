@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Shared {
   static const String favorites = 'favorites';
   static const String font_size = 'font_size';
+  static const String theme_mode = 'theme_mode';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -29,5 +30,13 @@ class Shared {
 
   Future<bool> getFavorites() async {
     return await get(favorites);
+  }
+
+  Future<void> setThemeMode(String value) async {
+    return await set(theme_mode, value);
+  }
+
+  Future<String> getThemeMode() async {
+    return await get(theme_mode);
   }
 }

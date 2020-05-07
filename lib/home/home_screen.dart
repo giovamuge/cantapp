@@ -1,4 +1,6 @@
 import 'package:cantapp/activity/list_activity_cards.dart';
+import 'package:cantapp/common/constants.dart';
+import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
@@ -106,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen>
               hoverElevation: .5,
               focusElevation: .5,
               highlightElevation: .5,
-              color: Colors.white,
+              color: Theme.of(context).dialogBackgroundColor,
               padding: const EdgeInsets.all(12),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -164,9 +166,17 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text("C'è un errore 😖\nriprova tra qualche istante.",
                       textAlign: TextAlign.center)));
         }
+
+        var theme = Provider.of<ThemeChanger>(context, listen: false);
         return Shimmer.fromColors(
-          baseColor: Colors.grey[100],
-          highlightColor: Colors.grey[300],
+          // baseColor: Theme.of(context).primaryColorLight,
+          // highlightColor: Theme.of(context).primaryColor,
+          baseColor: theme.getThemeName() == Constants.themeLight
+              ? Colors.grey[100]
+              : Colors.grey[600],
+          highlightColor: theme.getThemeName() == Constants.themeLight
+              ? Colors.grey[300]
+              : Colors.grey[900],
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

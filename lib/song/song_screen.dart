@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cantapp/extensions/string.dart';
-import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
@@ -109,11 +108,11 @@ class SongScreen extends StatelessWidget {
             "servizi",
             overflow: TextOverflow.ellipsis,
           ),
-          color: lightBG,
+          color: Theme.of(context).backgroundColor,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2),
-            side: BorderSide(color: Colors.black),
+            side: BorderSide(color: Theme.of(context).primaryColor),
           ),
           onPressed: () {
             // adsData.hide();

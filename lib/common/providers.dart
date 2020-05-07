@@ -1,3 +1,4 @@
+import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/services/firestore_database.dart';
@@ -14,7 +15,8 @@ final List<SingleChildWidget> appProviders = [
   ChangeNotifierProvider.value(value: Favorites()),
   ChangeNotifierProvider.value(value: Ads()),
   ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
-  ChangeNotifierProvider.value(value: ThemeChanger(appTheme)),
+  ChangeNotifierProvider.value(
+      value: ThemeChanger(appTheme, Constants.themeLight)),
   ChangeNotifierProvider.value(
       value: Songs(databaseReference: Firestore.instance)),
   Provider<FirestoreDatabase>(

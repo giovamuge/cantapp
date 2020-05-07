@@ -13,6 +13,8 @@ class SongWidget extends StatelessWidget {
   final MaterialColor _avatarColor;
   final MaterialColor _textColor;
 
+  // static const Color _defaultPrimaryColor = Theme.of(context).primaryColor;
+
   static const MaterialColor _defaultTextColor = MaterialColor(
     0xFF000000,
     <int, Color>{
@@ -59,7 +61,8 @@ class SongWidget extends StatelessWidget {
           '${song.title}',
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: _textColor[900],
+              // color: _textColor[900],
+              color: Theme.of(context).primaryColor,
               fontSize: 15),
         ),
         // subtitle: Text('Artista sconosciuto',
@@ -122,7 +125,6 @@ class SongWidget extends StatelessWidget {
         ),
       );
     }
-
 
     if (song.links.any((l) => l.type == 'audio')) {
       result.add(

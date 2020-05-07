@@ -1,14 +1,25 @@
+import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/providers.dart';
 import 'package:cantapp/common/route.dart';
+import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
+import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
+import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/song_lyric.dart';
+import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/song/widgets/banner_ads.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  final shared = new Shared();
+  final themeString = await shared.getThemeMode() ?? Constants.themeLight;
+  final theme = themeString == Constants.themeLight ? appTheme : appThemeDark;
+  runApp(MyApp(theme: theme, themeName: themeString));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +30,14 @@ class MyApp extends StatelessWidget {
 
   // Custom navigator takes a global key if you want to access the
   // navigator from outside it's widget tree subtree
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  // GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  final ThemeData _theme;
+  final String _themeName;
+
+  const MyApp({ThemeData theme, String themeName})
+      : _theme = theme,
+        _themeName = themeName;
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +45,30 @@ class MyApp extends StatelessWidget {
     FirebaseAdsService()..initialaze();
 
     return MultiProvider(
-      providers: appProviders,
-      child: MaterialApp(
-        // showPerformanceOverlay: true,
-        // navigatorKey: navigatorKey,
-        title: 'Cantapp',
-        theme: appTheme,
-        localeResolutionCallback: onLocaleResolutionCallback,
-        routes: appRoutes,
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider.value(value: Favorites()),
+          ChangeNotifierProvider.value(value: Ads()),
+          ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
+          ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
+          ChangeNotifierProvider.value(
+              value: Songs(databaseReference: Firestore.instance)),
+          Provider<FirestoreDatabase>(
+            create: (context) => FirestoreDatabase(
+                uid: ""), // da modificare in caso di registrazione utente
+          ),
+        ],
+        child: Consumer<ThemeChanger>(
+          builder: (context, theme, child) {
+            return MaterialApp(
+              // showPerformanceOverlay: true,
+              // navigatorKey: navigatorKey,
+              title: 'Cantapp',
+              theme: theme.getTheme(),
+              localeResolutionCallback: onLocaleResolutionCallback,
+              routes: appRoutes,
+            );
+          },
+        ));
   }
 
   Locale onLocaleResolutionCallback(

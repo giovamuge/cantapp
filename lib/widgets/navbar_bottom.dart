@@ -34,7 +34,7 @@ class NavbarBottomWidget extends StatelessWidget {
       //     topRight: Radius.circular(35),
       //   ),
       // ),
-      color: lightBG,
+      color: Theme.of(context).backgroundColor,
       elevation: 15, // oppure 5 o 1
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(35),

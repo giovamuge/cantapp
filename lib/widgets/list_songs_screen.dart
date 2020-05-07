@@ -61,6 +61,7 @@ class _ListSongsScreenState extends State<ListSongsScreen> {
       ),
       body: ListView(
         controller: _controller,
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 20),
         children: <Widget>[
           Padding(

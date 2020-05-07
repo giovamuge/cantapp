@@ -7,88 +7,63 @@ import 'package:flutter/material.dart';
 //Colors for theme
 final Color lightPrimary = Color(0xfffcfcff);
 final Color darkPrimary = Colors.black;
-final Color lightAccent = Colors.orange;
+final Color lightAccent = Colors.yellow;
 final Color darkAccent = Colors.orangeAccent;
 final Color lightBG = Color(0xfffcfcff);
 final Color darkBG = Colors.black;
 
-final appTheme = ThemeData(
-  primarySwatch: Colors.yellow,
-  accentColor: Colors.yellow,
+final appTheme = ThemeData.light().copyWith(
+  // primarySwatch: Colors.yellow,
+  primaryColorLight: lightAccent,
+  primaryIconTheme: IconThemeData(color: darkPrimary),
+  accentColor: lightAccent,
   accentColorBrightness: Brightness.light,
   backgroundColor: lightBG,
-  primaryColor: lightPrimary,
-  // accentColor: lightAccent,
+  primaryColor: darkPrimary,
   cursorColor: lightAccent,
   scaffoldBackgroundColor: lightBG,
   appBarTheme: AppBarTheme(
     elevation: 0,
     color: lightBG,
-    textTheme: TextTheme(
-      title: TextStyle(
-        color: Colors.black,
-        fontSize: 18.0,
-        // fontWeight: FontWeight.w800,
-      ),
-    ),
+    brightness: Brightness.light,
+    textTheme: TextTheme(title: TextStyle(color: Colors.black, fontSize: 18.0)),
   ),
 );
 
-final appThemeDark = ThemeData(
-  primarySwatch: Colors.yellow,
-  accentColor: Colors.yellow,
+final appThemeDark = ThemeData.dark().copyWith(
+  primaryColorDark: lightAccent,
+  accentColor: lightAccent,
   accentColorBrightness: Brightness.dark,
+  primaryIconTheme: IconThemeData(color: Colors.white),
   backgroundColor: darkBG,
-  primaryColor: lightPrimary,
+  primaryColor: Colors.white,
   cursorColor: lightAccent,
   scaffoldBackgroundColor: darkBG,
   appBarTheme: AppBarTheme(
     elevation: 0,
-    textTheme: TextTheme(
-      title: TextStyle(
-        color: Colors.white,
-        fontSize: 18.0,
-      ),
-    ),
+    color: darkBG,
+    brightness: Brightness.dark,
+    textTheme: TextTheme(title: TextStyle(color: Colors.white, fontSize: 18.0)),
   ),
 );
 
-// final appTheme = ThemeData(
-//     // This is the theme of your application.
-//     //
-//     // Try running your application with "flutter run". You'll see the
-//     // application has a blue toolbar. Then, without quitting the app, try
-//     // changing the primarySwatch below to Colors.green and then invoke
-//     // "hot reload" (press "r" in the console where you ran "flutter run",
-//     // or simply save your changes to "hot reload" in a Flutter IDE).
-//     // Notice that the counter didn't reset back to zero; the application
-//     // is not restarted.
-//     primaryColor: Color(0xFF355070),
-//     backgroundColor: Color(0xFF355070),
-//     colorScheme: Theme.of(context).colorScheme.copyWith(
-//           primary: Color(0xF355070),
-//           primaryVariant: Color(0xFF2D82B7),
-//           secondary: Color(0xFFB56576),
-//           secondaryVariant: Color(0xFFEB8A90),
-//         ),
-//     textTheme: TextTheme(
-//       body1: TextStyle(color: Color(0xFFB56576)),
-//     ),
-//     platform: Theme.of(context).platform
-//     // primaryColor: Colors.blue
-//     );
-
-
 class ThemeChanger with ChangeNotifier {
   ThemeData _themeData;
+  String _themeName;
 
-  ThemeChanger(this._themeData);
+  ThemeChanger(ThemeData themeData, String themeName)
+      : _themeData = themeData,
+        _themeName = themeName;
 
   getTheme() => _themeData;
 
-  setTheme(ThemeData value) {
+  setTheme(ThemeData value, String name) {
     _themeData = value;
+    _themeName = name;
     notifyListeners();
   }
 
+  getThemeName() => _themeName;
+
+  setThemeName(String value) {}
 }

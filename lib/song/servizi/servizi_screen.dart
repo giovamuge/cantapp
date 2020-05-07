@@ -63,12 +63,12 @@ class _ServiziScreenState extends State<ServiziScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  FlatButton(
-                    child: Text("visualizza tutto"),
-                    textColor: Colors.yellow,
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () {},
-                  )
+                  // FlatButton(
+                  //   child: Text("visualizza tutto"),
+                  //   textColor: Colors.yellow,
+                  //   padding: const EdgeInsets.all(0),
+                  //   onPressed: () {},
+                  // )
                 ],
               ),
             ),
@@ -105,12 +105,12 @@ class _ServiziScreenState extends State<ServiziScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              FlatButton(
-                child: Text("visualizza tutto"),
-                textColor: Colors.yellow,
-                padding: const EdgeInsets.all(0),
-                onPressed: () {},
-              )
+              // FlatButton(
+              //   child: Text("visualizza tutto"),
+              //   textColor: Colors.yellow,
+              //   padding: const EdgeInsets.all(0),
+              //   onPressed: () {},
+              // )
             ],
           ),
         ),
@@ -147,12 +147,12 @@ class _ServiziScreenState extends State<ServiziScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              FlatButton(
-                child: Text("visualizza tutto"),
-                textColor: Colors.yellow,
-                padding: const EdgeInsets.all(0),
-                onPressed: () {},
-              )
+              // FlatButton(
+              //   child: Text("visualizza tutto"),
+              //   textColor: Colors.yellow,
+              //   padding: const EdgeInsets.all(0),
+              //   onPressed: () {},
+              // )
             ],
           ),
         ),

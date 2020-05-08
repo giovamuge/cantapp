@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
@@ -10,6 +11,7 @@ import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
 
@@ -29,12 +31,13 @@ class SongScreen extends StatelessWidget {
     // esegue funziona asincrona
     // _incrementViews(context);
 
-    final database = Provider.of<FirestoreDatabase>(context,
-        listen: false); // potrebbe essere true, da verificare
+    // final database = Provider.of<FirestoreDatabase>(context,
+    //     listen: false); // potrebbe essere true, da verificare
 
     var sessionTask = Future.delayed(Duration(seconds: 10))
         .asStream()
-        .listen((res) => database.incrementView(_song.id));
+        .listen((res) => _incrementViewAsync());
+    // .listen((res) => database.incrementView(_song.id));
 
     return Scaffold(
       body: Consumer<SongLyric>(
@@ -134,5 +137,21 @@ class SongScreen extends StatelessWidget {
     Future.delayed(Duration(seconds: 5))
         .asStream()
         .listen((res) => database.incrementView(_song.id));
+  }
+
+  Future<void> _incrementViewAsync() async {
+    final String url =
+        'https://us-central1-mgc-cantapp.cloudfunctions.net/incrementView?songId=${_song.id}';
+    final Response response = await put(url);
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      print('song incremented corretly');
+      return;
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to increment views');
+    }
   }
 }

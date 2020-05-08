@@ -34,6 +34,16 @@ class SongLyric with ChangeNotifier {
     });
   }
 
+  toStringFontSize() {
+    if (fontSize >= 30) {
+      return 'Grande';
+    } else if (fontSize <= 15) {
+      return 'Piccolo';
+    } else {
+      return 'Normale';
+    }
+  }
+
   void collaspe() {
     isCollapsed = !isCollapsed;
     notifyListeners();

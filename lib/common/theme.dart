@@ -67,3 +67,28 @@ class ThemeChanger with ChangeNotifier {
 
   setThemeName(String value) {}
 }
+
+// Alternativa da valutare
+// enum ThemeState { light, dark }
+
+// class ThemeSwitch with ChangeNotifier {
+//   ThemeSwitch(this._themeState);
+
+//   ThemeState _themeState;
+//   ThemeData _theme;
+
+//   ThemeState get themeState => _themeState;
+//   ThemeData get theme => _theme;
+
+//   set themeState(ThemeState themeState) {
+//     _themeState = themeState;
+
+//     if (_themeState == ThemeState.light) {
+//       _theme = ThemeData.light();
+//     } else {
+//       _theme = ThemeData.dark();
+//     }
+//     notifyListeners();
+//     print("theme state changed");
+//   }
+// }

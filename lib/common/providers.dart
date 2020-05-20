@@ -4,7 +4,6 @@ import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
-import 'package:cantapp/song/widgets/banner_ads.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -13,7 +12,6 @@ import 'package:provider/single_child_widget.dart';
 
 final List<SingleChildWidget> appProviders = [
   ChangeNotifierProvider.value(value: Favorites()),
-  ChangeNotifierProvider.value(value: Ads()),
   ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
   ChangeNotifierProvider.value(
       value: ThemeChanger(appTheme, Constants.themeLight)),

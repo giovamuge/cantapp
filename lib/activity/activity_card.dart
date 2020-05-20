@@ -34,7 +34,7 @@ class ActivityCardWidget extends StatelessWidget {
         onTap: () => Navigator.push(
             context,
             PageRouteBuilder(
-                transitionDuration: const Duration(milliseconds: 400),
+                // transitionDuration: const Duration(milliseconds: 400),
                 pageBuilder: (context, _, __) => ActivityScreen(
                       index: _index,
                       color: _color,
@@ -88,6 +88,8 @@ class ActivityCardWidget extends StatelessWidget {
                       color: Colors.transparent,
                       child: Container(
                         child: Text(_title,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             style: TextStyle(
                               // color: _color[800],
                               color: Colors.white,

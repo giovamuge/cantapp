@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
+import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
-import 'package:cantapp/song/widgets/banner_ads.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,6 +37,9 @@ class SongScreen extends StatelessWidget {
         .asStream()
         .listen((res) => _incrementViewAsync());
     // .listen((res) => database.incrementView(_song.id));
+
+    var service = new FirebaseAdsService();
+    service.createBannerAd();
 
     return Scaffold(
       body: Consumer<SongLyric>(
@@ -86,14 +88,21 @@ class SongScreen extends StatelessWidget {
                   Padding(
                     padding: safeAreaChildScroll,
                     child: LyricWidget(
-                        text: _song.lyric, fontSize: lyricData.fontSize),
+                      text: _song.lyric,
+                      fontSize: lyricData.fontSize,
+                      child: service.banner,
+                    ),
                   ),
+                  // Padding(
+                  //   padding: safeAreaChildScroll,
+                  //   child: service.banner,
+                  // ),
                   SizedBox(height: 80),
                 ]),
               ),
-              SliverFixedExtentList(
-                  delegate: SliverChildListDelegate.fixed([BannerAdsWidget()]),
-                  itemExtent: 1)
+              // SliverFixedExtentList(
+              //     delegate: SliverChildListDelegate.fixed([BannerAdsWidget()]),
+              //     itemExtent: 1)
             ],
           );
         },

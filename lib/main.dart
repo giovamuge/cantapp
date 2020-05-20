@@ -1,5 +1,4 @@
 import 'package:cantapp/common/constants.dart';
-import 'package:cantapp/common/providers.dart';
 import 'package:cantapp/common/route.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
@@ -8,7 +7,6 @@ import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
-import 'package:cantapp/song/widgets/banner_ads.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

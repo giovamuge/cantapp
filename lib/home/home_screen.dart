@@ -37,16 +37,18 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _onScrolling() {
+    // valore di offset costante
+    const offset = 125;
     // Mostra il bottone search quando raggiungo
     // 120 di altezza, dove si trovara il bottone
-    // grande search.
-    if (_controller.offset <= 115 && _visible) {
+    // grande search. 
+    if (_controller.offset <= offset && _visible) {
       setState(() => _visible = false);
     }
 
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
-    if (_controller.offset > 115 && !_visible) {
+    if (_controller.offset > offset && !_visible) {
       setState(() => _visible = true);
     }
   }

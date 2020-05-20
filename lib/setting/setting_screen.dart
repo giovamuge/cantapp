@@ -84,6 +84,17 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ],
           ),
+          SettingsSection(
+            title: 'Richieste',
+            tiles: [
+              SettingsTile(
+                title: 'Nuovo canto',
+                leading: Icon(Icons.add_circle),
+                onTap: () async => await Utils.launchURL(
+                    'https://forms.gle/H2HFQ8EpaWgQJs7d6'),
+              ),
+            ],
+          ),
         ],
       ),
     );

@@ -62,9 +62,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
             ),
           ),
           StreamBuilder<List<Song>>(
-            stream: database.songsStream(),
+            stream: database.activitySongsStream(widget.index),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data.length > 0) {
                 // setState(() => _visible = true);
                 final List<Song> items = snapshot.data;
                 return AnimatedOpacity(
@@ -144,15 +144,38 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 );
               } else if (snapshot.hasError) {
                 return Center(
-                  child: Text("C'è un errore 😖 riprova tra qualche istante."),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("C'è un errore 😖 riprova tra qualche istante."),
+                      FlatButton(
+                          child: Text(
+                            "Chiudi",
+                            style: TextStyle(
+                              color: widget.color[800],
+                            ),
+                          ),
+                          textColor: widget.color[800],
+                          onPressed: () => Navigator.pop(context))
+                    ],
+                  ),
                 );
               }
 
               return Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("Non ci sono dati 🤷‍♂️"),
+                  Text(
+                    "Non ci sono dati 🤷‍♂️",
+                    style: TextStyle(
+                      color: widget.color[800],
+                    ),
+                  ),
                   FlatButton(
                       child: Text("Chiudi"),
+                      textColor: widget.color[800],
                       onPressed: () => Navigator.pop(context))
                 ],
               );

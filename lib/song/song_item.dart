@@ -50,7 +50,7 @@ class SongWidget extends StatelessWidget {
           maxRadius: 20,
           backgroundColor: _avatarColor[100],
           child: Text(
-            '$number',
+            '${number + 1}',
             style: TextStyle(
                 color: _avatarColor[900],
                 fontWeight: FontWeight.w800,

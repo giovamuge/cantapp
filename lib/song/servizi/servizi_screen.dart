@@ -52,7 +52,7 @@ class _ServiziScreenState extends State<ServiziScreen> {
             // ),
             SizedBox(height: 30),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +74,7 @@ class _ServiziScreenState extends State<ServiziScreen> {
             ),
             _buildListChords(),
 
-            SizedBox(height: 10),
+            SizedBox(height: 30),
 
             ..._buildVideos(videos),
 
@@ -94,7 +94,7 @@ class _ServiziScreenState extends State<ServiziScreen> {
     if (videos.length > 0) {
       return [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -11,7 +11,7 @@ class Song extends Equatable {
   final String number;
   final bool isFavorite;
   final List<String> categories;
-  final int counterViews;
+  final int numberViews;
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<Link> links;
@@ -25,7 +25,7 @@ class Song extends Equatable {
     this.number,
     this.isFavorite,
     this.categories,
-    this.counterViews,
+    this.numberViews,
     this.createdAt,
     this.updatedAt,
     this.links,
@@ -38,7 +38,7 @@ class Song extends Equatable {
         lyric = snapshot.data["lyric"],
         chord = snapshot.data["chord"],
         number = number,
-        counterViews = snapshot.data["counterViews"] ?? 0,
+        numberViews = snapshot.data["numberViews"] ?? 0,
         createdAt = snapshot.data["createdAd"],
         updatedAt = snapshot.data["updatedAt"],
         categories = snapshot.data["categories"] != null
@@ -56,7 +56,7 @@ class Song extends Equatable {
   //       title = maps["title"],
   //       lyric = maps["lyric"],
   //       chord = maps["chord"],
-  //       counterViews = maps["counterViews"],
+  //       numberViews = maps["numberViews"],
   //       createdAt = maps["createdAd"],
   //       updatedAt = maps["updatedAt"],
   //       categories = maps["categories"] != null
@@ -85,7 +85,7 @@ class Song extends Equatable {
         title: maps["title"],
         lyric: maps["lyric"],
         chord: maps["chord"],
-        counterViews: maps["counterViews"],
+        numberViews: maps["numberViews"],
         createdAt: maps["createdAd"],
         updatedAt: maps["updatedAt"],
         categories: maps["categories"] != null
@@ -103,7 +103,7 @@ class Song extends Equatable {
       "title": title,
       "lyric": lyric,
       "chord": chord,
-      "counterViews": counterViews,
+      "numberViews": numberViews,
       "categories": categories,
       "createdAt": createdAt,
       "updatedAt": updatedAt,

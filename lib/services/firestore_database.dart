@@ -29,7 +29,7 @@ class FirestoreDatabase {
 
   Future<void> incrementView(String songId) async => await _service.updateData(
         path: FirestorePath.song(songId),
-        data: {"numberViews": FieldValue.increment(1)},
+        data: {'numberViews': FieldValue.increment(1)},
       );
 
   Stream<List<Song>> songsFromCategorySearchStream({Category category}) =>
@@ -51,6 +51,22 @@ class FirestoreDatabase {
   Stream<List<Song>> songsStream() => _service.collectionStream(
       path: FirestorePath.songs(),
       queryBuilder: (query) => query.orderBy('title'),
+      builder: (data, documentId) => Song.fromMap(data, documentId));
+
+  Stream<List<Song>> activitySongsStream(int type) => _service.collectionStream(
+      path: FirestorePath.songs(),
+      queryBuilder: (query) {
+        var res = query;
+        if (type == 0) {
+          res = res.orderBy('numberViews', descending: true);
+        } else if (type == 1) {
+          res = res.orderBy('createdAt', descending: true);
+        } else {
+          res = res.orderBy('title', descending: true);
+        }
+        res = res.limit(15);
+        return res;
+      },
       builder: (data, documentId) => Song.fromMap(data, documentId));
   //sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
 }

@@ -99,12 +99,47 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  _onNavigateCategory(context, category) =>
+  void _onNavigateCategory(context, category) async =>
       Provider.of<FirestoreDatabase>(context, listen: false)
           .songsFromCategorySearchStream(category: category)
-          .listen((songs) => Navigator.push(
+          .listen((songs) async {
+        if (songs.isNotEmpty && songs.length > 0) {
+          Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      ListSongsScreen(items: songs, title: category.title))));
+                      ListSongsScreen(items: songs, title: category.title)));
+        } else {
+          await _showMyDialog(category);
+        }
+      });
+
+  Future<void> _showMyDialog(
+    category,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(category.title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('${category.title} non ha canzoni.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Chiudi'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

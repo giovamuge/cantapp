@@ -18,22 +18,27 @@ class ActivityScreen extends StatefulWidget {
   _ActivityScreenState createState() => _ActivityScreenState();
 }
 
-class _ActivityScreenState extends State<ActivityScreen> {
-  bool _visible;
+class _ActivityScreenState extends State<ActivityScreen>
+    with TickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation _animation;
 
   @override
   void initState() {
-    _visible = false;
-
     Timer(const Duration(milliseconds: 500),
-        () => setState(() => _visible = true));
+        () => _animationController.forward());
+
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _visible = false;
+    _animation = null;
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -65,12 +70,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
             stream: database.activitySongsStream(widget.index),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData && snapshot.data.length > 0) {
-                // setState(() => _visible = true);
                 final List<Song> items = snapshot.data;
-                return AnimatedOpacity(
-                  curve: Curves.bounceIn,
-                  opacity: _visible ? 1.00 : 0.00,
-                  duration: Duration(milliseconds: 350),
+                return AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Opacity(opacity: _animation.value, child: child);
+                  },
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,17 +87,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               icon: Icon(Icons.close),
                               color: widget.color[800],
                               onPressed: () {
-                                setState(() => _visible = false);
-                                Navigator.pop(context);
+                                _animationController
+                                    .reverse()
+                                    .then((value) => Navigator.pop(context));
                               }),
                         ),
-                        // Align(
-                        //   alignment: Alignment.topRight,
-                        //   child: Hero(
-                        //       tag: "image-$index",
-                        //       child: Image.asset(widget.character.imagePath,
-                        //           height: screenHeight * 0.45)),
-                        // ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 8),
@@ -121,63 +120,66 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             itemCount: items.length,
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(20, 0, 8, 32),
-                        //   child: Consumer<Songs>(
-                        //     builder: (ctx, _songsData, child) {
-                        //       return ListView.builder(
-                        //         shrinkWrap: true,
-                        //         physics: const NeverScrollableScrollPhysics(),
-                        //         itemBuilder: (BuildContext context, int index) {
-                        //           return SongWidget(
-                        //               song: _songsData.items[index],
-                        //               number: index);
-                        //         },
-                        //         itemCount: _songsData.items.length,
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
                 );
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("C'è un errore 😖 riprova tra qualche istante."),
-                      FlatButton(
-                          child: Text(
-                            "Chiudi",
-                            style: TextStyle(
-                              color: widget.color[800],
+                return AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Opacity(opacity: _animation.value, child: child);
+                  },
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("C'è un errore 😖 riprova tra qualche istante."),
+                        FlatButton(
+                            child: Text(
+                              "Chiudi",
+                              style: TextStyle(
+                                color: widget.color[800],
+                              ),
                             ),
-                          ),
-                          textColor: widget.color[800],
-                          onPressed: () => Navigator.pop(context))
-                    ],
+                            textColor: widget.color[800],
+                            onPressed: () {
+                              _animationController
+                                  .reverse()
+                                  .then((value) => Navigator.pop(context));
+                            }),
+                      ],
+                    ),
                   ),
                 );
               }
 
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Non ci sono dati 🤷‍♂️",
-                    style: TextStyle(
-                      color: widget.color[800],
+              return AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return Opacity(opacity: _animation.value, child: child);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Non ci sono dati 🤷‍♂️",
+                      style: TextStyle(
+                        color: widget.color[800],
+                      ),
                     ),
-                  ),
-                  FlatButton(
-                      child: Text("Chiudi"),
-                      textColor: widget.color[800],
-                      onPressed: () => Navigator.pop(context))
-                ],
+                    FlatButton(
+                        child: Text("Chiudi"),
+                        textColor: widget.color[800],
+                        onPressed: () {
+                          _animationController
+                              .reverse()
+                              .then((value) => Navigator.pop(context));
+                        })
+                  ],
+                ),
               );
             },
           )

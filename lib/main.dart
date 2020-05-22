@@ -44,11 +44,11 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (ctx) => Favorites()),
-          ChangeNotifierProvider(create: (ctx) => SongLyric(fontSize: 15.00)),
-          ChangeNotifierProvider(create: (ctx) => ThemeChanger(_theme, _themeName)),
-          ChangeNotifierProvider(
-              create: (ctx) => Songs(databaseReference: Firestore.instance)),
+          ChangeNotifierProvider.value(value: Favorites()),
+          ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
+          ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
+          ChangeNotifierProvider.value(
+              value: Songs(databaseReference: Firestore.instance)),
           Provider<FirestoreDatabase>(
             create: (context) => FirestoreDatabase(
                 uid: ""), // da modificare in caso di registrazione utente
@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               // showPerformanceOverlay: true,
               // navigatorKey: navigatorKey,
+              // debugShowCheckedModeBanner: false,
               title: 'Cantapp',
               theme: theme.getTheme(),
               localeResolutionCallback: onLocaleResolutionCallback,

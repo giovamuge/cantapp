@@ -68,9 +68,7 @@ class SongWidget extends StatelessWidget {
         // subtitle: Text('Artista sconosciuto',
         //     style: TextStyle(color: _textColor[900], fontSize: 11)),
         subtitle: Container(
-          child: Row(
-            children: _buildSubtitle(),
-          ),
+          child: Row(children: _buildSubtitle()),
         ),
         // isThreeLine: true,
         // subtitle: Text("Prova"),
@@ -138,11 +136,14 @@ class SongWidget extends StatelessWidget {
       );
     }
 
-    // if(song.links.any((l) => l.))
-
-    result.add(Text(
-        !song.artist.isNullOrEmpty() ? song.artist : 'Artista conosciuto',
-        style: TextStyle(fontSize: 11)));
+    result.add(
+      Flexible(
+        child: Text(
+            !song.artist.isNullOrEmpty() ? song.artist : 'Artista conosciuto',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 11)),
+      ),
+    );
 
     // controlli per links e audio
     // aggiungere alla lista se esistono

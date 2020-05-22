@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen>
     const offset = 125;
     // Mostra il bottone search quando raggiungo
     // 120 di altezza, dove si trovara il bottone
-    // grande search. 
+    // grande search.
     if (_controller.offset <= offset && _visible) {
       setState(() => _visible = false);
     }
@@ -57,19 +57,23 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AnimatedOpacity(
+        // title: AnimatedOpacity(
+        title: Opacity(
           // If the widget is visible, animate to 0.0 (invisible).
           // If the widget is hidden, animate to 1.0 (fully visible).
           opacity: _visible ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 200),
+          // curve: Curves.easeInExpo,
+          // duration: Duration(milliseconds: 200),
           child: Text("Cantapp"),
         ),
         actions: <Widget>[
-          AnimatedOpacity(
+          // AnimatedOpacity(
+          Opacity(
             // If the widget is visible, animate to 0.0 (invisible).
             // If the widget is hidden, animate to 1.0 (fully visible).
             opacity: _visible ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 200),
+            // duration: Duration(milliseconds: 200),
+            // curve: Curves.easeInExpo,
             child: Center(
               child: IconButton(
                 icon: Icon(Icons.search),

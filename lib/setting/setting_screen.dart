@@ -85,6 +85,17 @@ class _SettingScreenState extends State<SettingScreen> {
             ],
           ),
           SettingsSection(
+            title: 'Note legali',
+            tiles: [
+              SettingsTile(
+                title: 'Policy & Privacy',
+                leading: Icon(Icons.security),
+                onTap: () async => await Utils.launchURL(
+                    'https://us-central1-mgc-cantapp.cloudfunctions.net/privacyAndPolicy'),
+              ),
+            ],
+          ),
+          SettingsSection(
             title: 'Richieste',
             tiles: [
               SettingsTile(

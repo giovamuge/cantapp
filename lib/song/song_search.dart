@@ -10,7 +10,14 @@ class SongSearchDelegate extends SearchDelegate {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    return super.appBarTheme(context);
+    // return super.appBarTheme(context);
+    final ThemeData theme = Theme.of(context);
+    return theme.copyWith(
+      primaryColor: theme.backgroundColor,
+      // primaryIconTheme: theme.primaryIconTheme,
+      // primaryColorBrightness: theme.primaryColorBrightness,
+      primaryTextTheme: theme.primaryTextTheme,
+    );
   }
 
   @override

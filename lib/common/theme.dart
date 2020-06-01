@@ -26,7 +26,7 @@ final appTheme = ThemeData.light().copyWith(
     elevation: 0,
     color: lightBG,
     brightness: Brightness.light,
-    textTheme: TextTheme(title: TextStyle(color: Colors.black, fontSize: 18.0)),
+    textTheme: TextTheme(headline6: TextStyle(color: Colors.black, fontSize: 18.0)),
   ),
 );
 
@@ -43,7 +43,7 @@ final appThemeDark = ThemeData.dark().copyWith(
     elevation: 0,
     color: darkBG,
     brightness: Brightness.dark,
-    textTheme: TextTheme(title: TextStyle(color: Colors.white, fontSize: 18.0)),
+    textTheme: TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18.0)),
   ),
 );
 

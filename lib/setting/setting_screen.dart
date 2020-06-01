@@ -24,8 +24,8 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   void initState() {
     _shared = new Shared();
-    _shared.getThemeMode().then(
-        (theme) => setState(() => _value = theme == Constants.themeLight));
+    _shared.getThemeMode().then((theme) => setState(
+        () => _value = theme == Constants.themeLight || theme == null));
     PackageInfo.fromPlatform()
         .then((info) => setState(() => _versionName = info.version));
     super.initState();

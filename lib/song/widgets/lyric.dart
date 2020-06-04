@@ -14,16 +14,23 @@ class LyricWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return RichText(
-    //   text: TextSpan(
-    //     style: DefaultTextStyle.of(context).style,
-    //     // children: _splitFontWight(_text),
-    //   ),
-    // );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: _test(context),
+      children: [
+        _child,
+        SizedBox(height: 20),
+        RichText(
+          text: TextSpan(
+            style: DefaultTextStyle.of(context).style,
+            children: _splitFontWight(_text),
+          ),
+        ),
+      ],
     );
+    // return Column(
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   children: _test(context),
+    // );
   }
 
   List<Widget> _test(context) {

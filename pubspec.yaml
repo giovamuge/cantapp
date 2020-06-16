@@ -1,5 +1,5 @@
 name: cantapp
-description: A new Flutter project.
+description: un'applicazione dedicata ai canti liturgici.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -20,15 +20,15 @@ dependencies:
   flutter:
     sdk: flutter
   # Add the dependency for the Firebase Core Flutter SDK
-  firebase_core: ^0.4.0+9
+  firebase_core: ^0.4.5
 
   # Add the dependency for the FlutterFire plugin for Google Analytics
-  firebase_analytics: ^5.0.2
+  firebase_analytics: ^5.0.15
 
   # Add the dependencies for any other Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore
-  firebase_auth: ^0.14.0+5
-  cloud_firestore: ^0.12.9+5
+  firebase_auth: ^0.16.1
+  cloud_firestore: ^0.13.6
 
   # Add the dependency for adb mob, set key for iOS and Android
   # firebase_admob: ^0.9.3+1

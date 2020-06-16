@@ -17,14 +17,14 @@ class LyricWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _child,
-        SizedBox(height: 20),
         RichText(
           text: TextSpan(
             style: DefaultTextStyle.of(context).style,
             children: _splitFontWight(_text),
           ),
         ),
+        SizedBox(height: 30),
+        _child,
       ],
     );
     // return Column(

@@ -3,7 +3,10 @@ import 'package:cantapp/common/route.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';
+import 'package:cantapp/landing/landing_screen.dart';
+import 'package:cantapp/root.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
+import 'package:cantapp/services/firebase_auth_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
@@ -43,30 +46,34 @@ class MyApp extends StatelessWidget {
     FirebaseAdsService()..initialaze();
 
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: Favorites()),
-          ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
-          ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
-          ChangeNotifierProvider.value(
-              value: Songs(databaseReference: Firestore.instance)),
-          Provider<FirestoreDatabase>(
-            create: (context) => FirestoreDatabase(
-                uid: ""), // da modificare in caso di registrazione utente
-          ),
-        ],
-        child: Consumer<ThemeChanger>(
-          builder: (context, theme, child) {
-            return MaterialApp(
-              // showPerformanceOverlay: true,
-              // navigatorKey: navigatorKey,
-              // debugShowCheckedModeBanner: false,
-              title: 'Cantapp',
-              theme: theme.getTheme(),
-              localeResolutionCallback: onLocaleResolutionCallback,
-              routes: appRoutes,
-            );
-          },
-        ));
+      providers: [
+        ChangeNotifierProvider.value(value: Favorites()),
+        ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
+        ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
+        ChangeNotifierProvider.value(
+            value: Songs(databaseReference: Firestore.instance)),
+        Provider<FirebaseAuthService>(
+            create: (context) => FirebaseAuthService()),
+        Provider<FirestoreDatabase>(
+          create: (context) => FirestoreDatabase(
+              uid: ""), // da modificare in caso di registrazione utente
+        ),
+      ],
+      child: Consumer<ThemeChanger>(
+        builder: (context, theme, child) {
+          return MaterialApp(
+            // showPerformanceOverlay: true,
+            // navigatorKey: navigatorKey,
+            // debugShowCheckedModeBanner: false,
+            title: 'Cantapp',
+            theme: theme.getTheme(),
+            localeResolutionCallback: onLocaleResolutionCallback,
+            // routes: appRoutes,
+            home: LandingScreen(child: RootScreen()),
+          );
+        },
+      ),
+    );
   }
 
   Locale onLocaleResolutionCallback(

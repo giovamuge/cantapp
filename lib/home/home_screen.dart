@@ -58,20 +58,22 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         // title: AnimatedOpacity(
-        title: Opacity(
+        title: Visibility(
           // If the widget is visible, animate to 0.0 (invisible).
           // If the widget is hidden, animate to 1.0 (fully visible).
-          opacity: _visible ? 1.0 : 0.0,
+          // opacity: _visible ? 1.0 : 0.0,
+          visible: _visible,
           // curve: Curves.easeInExpo,
           // duration: Duration(milliseconds: 200),
           child: Text("Cantapp"),
         ),
         actions: <Widget>[
           // AnimatedOpacity(
-          Opacity(
+          Visibility(
             // If the widget is visible, animate to 0.0 (invisible).
             // If the widget is hidden, animate to 1.0 (fully visible).
-            opacity: _visible ? 1.0 : 0.0,
+            // opacity: _visible ? 1.0 : 0.0,
+            visible: _visible,
             // duration: Duration(milliseconds: 200),
             // curve: Curves.easeInExpo,
             child: Center(

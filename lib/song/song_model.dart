@@ -3,6 +3,36 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
+// potrei usarlo come abstract class
+// da inserrire come classe base di song
+// così da ridurre le dimensioni nella lista delle canzoni
+class SongLight extends Equatable {
+  final String id;
+  final String title;
+  final String artist;
+
+  SongLight({this.title, this.id, this.artist});
+
+  SongLight.fromSnapshot(
+      DocumentSnapshot snapshot, String number, String artist)
+      : id = snapshot.id, //snapshot.documentID,
+        title = snapshot.data()["title"],
+        artist = snapshot.data()["artist"];
+
+  static fromMap(Map maps, String id) =>
+      SongLight(id: id, title: maps["title"], artist: maps["artist"]);
+
+  toJson() {
+    return {"id": id, "title": title, "artist": artist};
+  }
+
+  @override
+  List<Object> get props => [id, title];
+
+  @override
+  String toString() => 'Song { id: $id, title: $title }';
+}
+
 class Song extends Equatable {
   final String id;
   final String title;
@@ -33,22 +63,22 @@ class Song extends Equatable {
   });
 
   Song.fromSnapshot(DocumentSnapshot snapshot, String number)
-      : id = snapshot.documentID,
-        title = snapshot.data["title"],
-        lyric = snapshot.data["lyric"],
-        chord = snapshot.data["chord"],
+      : id = snapshot.id,
+        title = snapshot.data()["title"],
+        lyric = snapshot.data()["lyric"],
+        chord = snapshot.data()["chord"],
         number = number,
-        numberViews = snapshot.data["numberViews"] ?? 0,
-        createdAt = snapshot.data["createdAd"],
-        updatedAt = snapshot.data["updatedAt"],
-        categories = snapshot.data["categories"] != null
-            ? new List<String>.from(snapshot.data["categories"])
+        numberViews = snapshot.data()["numberViews"] ?? 0,
+        createdAt = snapshot.data()["createdAd"],
+        updatedAt = snapshot.data()["updatedAt"],
+        categories = snapshot.data()["categories"] != null
+            ? new List<String>.from(snapshot.data()["categories"])
             : new List<String>(),
         // links = snapshot.data["links"] != null
         //     ? new List<Link>.from(snapshot.data["links"])
         //     : new List<Link>(),
         links = new List<Link>(),
-        artist = snapshot.data["artist"],
+        artist = snapshot.data()["artist"],
         isFavorite = false;
 
   // Song.fromMap(Map maps, String id)

@@ -1,6 +1,6 @@
 import 'package:cantapp/activity/activity_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+//import 'package:flutter_svg/flutter_svg.dart';
 
 class ActivityCardWidget extends StatelessWidget {
   final int _index;

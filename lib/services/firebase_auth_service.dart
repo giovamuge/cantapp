@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -17,9 +17,9 @@ class User {
 }
 
 class FirebaseAuthService {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
 
-  User _userFromFirebase(FirebaseUser user) {
+  User _userFromFirebase(auth.User user) {
     if (user == null) {
       return null;
     }
@@ -27,22 +27,23 @@ class FirebaseAuthService {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
-      photoUrl: user.photoUrl,
+      photoUrl: user.photoURL,
     );
   }
 
   Stream<User> get onAuthStateChanged {
-    return _firebaseAuth.onAuthStateChanged.map(_userFromFirebase);
+    return _firebaseAuth.authStateChanges().map(_userFromFirebase);
   }
 
   Future<User> signInAnonymously() async {
-    final AuthResult authResult = await _firebaseAuth.signInAnonymously();
+    final auth.UserCredential authResult =
+        await _firebaseAuth.signInAnonymously();
     return _userFromFirebase(authResult.user);
   }
 
   Future<User> signInWithEmailAndPassword(String email, String password) async {
-    final AuthResult authResult = await _firebaseAuth
-        .signInWithCredential(EmailAuthProvider.getCredential(
+    final auth.UserCredential authResult = await _firebaseAuth
+        .signInWithCredential(auth.EmailAuthProvider.credential(
       email: email,
       password: password,
     ));
@@ -51,7 +52,7 @@ class FirebaseAuthService {
 
   Future<User> createUserWithEmailAndPassword(
       String email, String password) async {
-    final AuthResult authResult = await _firebaseAuth
+    final auth.UserCredential authResult = await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     return _userFromFirebase(authResult.user);
   }
@@ -60,9 +61,8 @@ class FirebaseAuthService {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future<User> currentUser() async {
-    final FirebaseUser user = await _firebaseAuth.currentUser();
-    return _userFromFirebase(user);
+  User currentUser() {
+    return _userFromFirebase(_firebaseAuth.currentUser);
   }
 
   Future<void> signOut() async {

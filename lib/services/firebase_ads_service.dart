@@ -6,7 +6,7 @@ class FirebaseAdsService {
   // final FirebaseAdMob _firebaseAd = FirebaseAdMob.instance;
   initialaze() {
     // _firebaseAd.initialize(appId: getAppId(), analyticsEnabled: true);
-    Admob.initialize(getAppId());
+    Admob.initialize();
   }
 
   static String getAppId() => Platform.isIOS

@@ -46,15 +46,21 @@ class SongWidget extends StatelessWidget {
     // var favoritesData = Provider.of<Favorites>(context);
     return Consumer<Favorites>(
       builder: (ctx, favoritesData, child) => ListTile(
-        leading: CircleAvatar(
-          maxRadius: 20,
-          backgroundColor: _avatarColor[100],
-          child: Text(
-            '${number + 1}',
-            style: TextStyle(
-                color: _avatarColor[900],
-                fontWeight: FontWeight.w800,
-                fontSize: 11),
+        leading: Container(
+          width: 35,
+          height: 35,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(7),
+            color: Color(0xFF48639C), //_avatarColor[100]
+          ),
+          child: Center(
+            child: Text(
+              '${number + 1}',
+              style: TextStyle(
+                  color: Color(0xFFFFFFFF), //_avatarColor[900],
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11),
+            ),
           ),
         ),
         title: Text(

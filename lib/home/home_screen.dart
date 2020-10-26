@@ -6,6 +6,7 @@ import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -15,17 +16,22 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    implements AutomaticKeepAliveClientMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  // implements  AutomaticKeepAliveClientMixin<HomeScreen> {
   // Songs _songsData;
   bool _visible;
   ScrollController _controller;
+  Animation _animation;
+  AnimationController _animationController;
 
   @override
   void initState() {
     _visible = false;
     _controller = ScrollController();
     _controller.addListener(_onScrolling);
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 150));
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     super.initState();
   }
 
@@ -43,13 +49,17 @@ class _HomeScreenState extends State<HomeScreen>
     // 120 di altezza, dove si trovara il bottone
     // grande search.
     if (_controller.offset <= offset && _visible) {
-      setState(() => _visible = false);
+      // setState(() => _visible = false);
+      _visible = false;
+      _animationController.reverse();
     }
 
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
     if (_controller.offset > offset && !_visible) {
-      setState(() => _visible = true);
+      // setState(() => _visible = true);
+      _visible = true;
+      _animationController.forward();
     }
   }
 
@@ -58,24 +68,28 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         // title: AnimatedOpacity(
-        title: Visibility(
-          // If the widget is visible, animate to 0.0 (invisible).
-          // If the widget is hidden, animate to 1.0 (fully visible).
-          // opacity: _visible ? 1.0 : 0.0,
-          visible: _visible,
-          // curve: Curves.easeInExpo,
-          // duration: Duration(milliseconds: 200),
+        // title: Visibility(
+        //   // If the widget is visible, animate to 0.0 (invisible).
+        //   // If the widget is hidden, animate to 1.0 (fully visible).
+        //   // opacity: _visible ? 1.0 : 0.0,
+        //   visible: _visible,
+        //   // curve: Curves.easeInExpo,
+        //   // duration: Duration(milliseconds: 200),
+        //   child: Text("Cantapp"),
+        // ),
+        title: AnimatedBuilder(
+          animation: _animationController,
+          builder: (ctx, child) {
+            return Opacity(opacity: _animation.value, child: child);
+          },
           child: Text("Cantapp"),
         ),
         actions: <Widget>[
-          // AnimatedOpacity(
-          Visibility(
-            // If the widget is visible, animate to 0.0 (invisible).
-            // If the widget is hidden, animate to 1.0 (fully visible).
-            // opacity: _visible ? 1.0 : 0.0,
-            visible: _visible,
-            // duration: Duration(milliseconds: 200),
-            // curve: Curves.easeInExpo,
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (ctx, child) {
+              return Opacity(opacity: _animation.value, child: child);
+            },
             child: Center(
               child: IconButton(
                 icon: Icon(Icons.search),
@@ -86,6 +100,24 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
+          // // AnimatedOpacity(
+          // Visibility(
+          //   // If the widget is visible, animate to 0.0 (invisible).
+          //   // If the widget is hidden, animate to 1.0 (fully visible).
+          //   // opacity: _visible ? 1.0 : 0.0,
+          //   visible: _visible,
+          //   // duration: Duration(milliseconds: 200),
+          //   // curve: Curves.easeInExpo,
+          //   child: Center(
+          //     child: IconButton(
+          //       icon: Icon(Icons.search),
+          //       onPressed: () => showSearch(
+          //         context: context,
+          //         delegate: SongSearchDelegate(),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           SizedBox(width: 20),
         ],
       ),
@@ -207,13 +239,18 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
+    _animation = null;
+    _animationController.dispose();
     _controller.dispose();
     super.dispose();
   }
 
-  @override
-  void updateKeepAlive() {}
+  // @override
+  // Ticker createTicker(void Function(Duration elapsed) onTick) {}
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // void updateKeepAlive() {}
+
+  // @override
+  // bool get wantKeepAlive => true;
 }

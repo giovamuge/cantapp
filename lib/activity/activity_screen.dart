@@ -66,11 +66,11 @@ class _ActivityScreenState extends State<ActivityScreen>
               ),
             ),
           ),
-          StreamBuilder<List<Song>>(
+          StreamBuilder<List<SongLight>>(
             stream: database.activitySongsStream(widget.index),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData && snapshot.data.length > 0) {
-                final List<Song> items = snapshot.data;
+                final List<SongLight> items = snapshot.data;
                 return AnimatedBuilder(
                   animation: _animation,
                   builder: (context, child) {

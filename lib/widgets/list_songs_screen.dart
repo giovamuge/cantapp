@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ListSongsScreen extends StatefulWidget {
   final String title;
-  final List<Song> items;
+  final List<SongLight> items;
   final MaterialColor avatarColor;
   final MaterialColor textColor;
 
@@ -81,7 +81,7 @@ class _ListSongsScreenState extends State<ListSongsScreen> {
     );
   }
 
-  Widget _buildListView(List<Song> items) {
+  Widget _buildListView(List<SongLight> items) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

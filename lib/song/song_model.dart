@@ -10,20 +10,33 @@ class SongLight extends Equatable {
   final String id;
   final String title;
   final String artist;
+  final List<Link> links;
 
-  SongLight({this.title, this.id, this.artist});
+  SongLight({this.title, this.id, this.artist, this.links});
 
   SongLight.fromSnapshot(
       DocumentSnapshot snapshot, String number, String artist)
       : id = snapshot.documentID, //snapshot.documentID,
         title = snapshot.data["title"],
-        artist = snapshot.data["artist"];
+        artist = snapshot.data["artist"],
+        links = new List<Link>();
 
-  static fromMap(Map maps, String id) =>
-      SongLight(id: id, title: maps["title"], artist: maps["artist"]);
+  static fromMap(Map maps, String id) {
+    final links = new List<Link>();
+    if (maps["links"] != null) {
+      final items = List.from(maps["links"]);
+      for (var i = 0; i < items.length; i++) {
+        final link = Link.fromMap(items[i]);
+        links.add(link);
+      }
+    }
+
+    return SongLight(
+        id: id, title: maps["title"], artist: maps["artist"], links: links);
+  }
 
   toJson() {
-    return {"id": id, "title": title, "artist": artist};
+    return {"id": id, "title": title, "artist": artist, "links": links};
   }
 
   @override

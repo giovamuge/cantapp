@@ -15,11 +15,11 @@ import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
 
 class SongScreen extends StatelessWidget {
-  final Song _song;
+  final String _id;
   final EdgeInsets safeAreaChildScroll =
       const EdgeInsets.symmetric(horizontal: 25);
 
-  const SongScreen({@required Song song}) : _song = song;
+  const SongScreen({@required String id}) : _id = id;
 
   @override
   Widget build(BuildContext context) {
@@ -41,77 +41,90 @@ class SongScreen extends StatelessWidget {
     var service = new FirebaseAdsService();
     service.createBannerAd();
 
+    final database = Provider.of<FirestoreDatabase>(context,
+        listen: false); // potrebbe essere true, da verificare
+
     return Scaffold(
-      body: Consumer<SongLyric>(
-        builder: (context, lyricData, child) {
-          return CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                floating: true,
-                pinned: false,
-                snap: true,
-                leading: BackButton(
-                  onPressed: () {
-                    Future.microtask(() => sessionTask.cancel());
-                    Navigator.pop(context);
-                  },
-                ),
-                title: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    _buildServiziButton(context, lyricData),
+      body: StreamBuilder<Song>(
+        stream: database.songStream(_id),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final Song _song = snapshot.data;
+            return Consumer<SongLyric>(
+              builder: (context, lyricData, child) {
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      floating: true,
+                      pinned: false,
+                      snap: true,
+                      leading: BackButton(
+                        onPressed: () {
+                          Future.microtask(() => sessionTask.cancel());
+                          Navigator.pop(context);
+                        },
+                      ),
+                      title: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          _buildServiziButton(context, lyricData, _song),
+                        ],
+                      ),
+                      actions: <Widget>[
+                        FavoriteIconButtonWidget(songId: _song.id),
+                        IconButton(
+                          icon: Icon(Icons.format_size),
+                          onPressed: lyricData.collaspe,
+                        ),
+                      ],
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        FontSizeSliderWidget(collasped: lyricData.isCollapsed),
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: safeAreaChildScroll,
+                          child: Text(
+                            _song.title,
+                            style: TextStyle(
+                                fontSize: lyricData.fontSize * 1.25,
+                                fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: safeAreaChildScroll,
+                          child: LyricWidget(
+                            text: _song.lyric,
+                            fontSize: lyricData.fontSize,
+                            child: service.banner,
+                          ),
+                        ),
+                        // Padding(
+                        //   padding: safeAreaChildScroll,
+                        //   child: service.banner,
+                        // ),
+                        SizedBox(height: 80),
+                      ]),
+                    ),
+                    // SliverFixedExtentList(
+                    //     delegate: SliverChildListDelegate.fixed([BannerAdsWidget()]),
+                    //     itemExtent: 1)
                   ],
-                ),
-                actions: <Widget>[
-                  FavoriteIconButtonWidget(songId: _song.id),
-                  IconButton(
-                    icon: Icon(Icons.format_size),
-                    onPressed: lyricData.collaspe,
-                  ),
-                ],
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  FontSizeSliderWidget(collasped: lyricData.isCollapsed),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: safeAreaChildScroll,
-                    child: Text(
-                      _song.title,
-                      style: TextStyle(
-                          fontSize: lyricData.fontSize * 1.25,
-                          fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: safeAreaChildScroll,
-                    child: LyricWidget(
-                      text: _song.lyric,
-                      fontSize: lyricData.fontSize,
-                      child: service.banner,
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: safeAreaChildScroll,
-                  //   child: service.banner,
-                  // ),
-                  SizedBox(height: 80),
-                ]),
-              ),
-              // SliverFixedExtentList(
-              //     delegate: SliverChildListDelegate.fixed([BannerAdsWidget()]),
-              //     itemExtent: 1)
-            ],
-          );
+                );
+              },
+            );
+          } else {
+            return Container();
+          }
         },
       ),
     );
   }
 
-  _buildServiziButton(BuildContext context, SongLyric lyricData) {
-    if (_song.links.length > 0 || !_song.chord.isNullOrEmpty()) {
+  _buildServiziButton(BuildContext context, SongLyric lyricData, Song song) {
+    if (song.links.length > 0 || !song.chord.isNullOrEmpty()) {
       return SizedBox(
         width: 80.00,
         height: 25.00,
@@ -130,7 +143,7 @@ class SongScreen extends StatelessWidget {
             // adsData.hide();
             lyricData.isCollapsed = false;
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ServiziScreen(song: _song)));
+                builder: (context) => ServiziScreen(song: song)));
           },
         ),
       );
@@ -145,12 +158,12 @@ class SongScreen extends StatelessWidget {
 
     Future.delayed(Duration(seconds: 5))
         .asStream()
-        .listen((res) => database.incrementView(_song.id));
+        .listen((res) => database.incrementView(_id));
   }
 
   Future<void> _incrementViewAsync() async {
     final String url =
-        'https://us-central1-mgc-cantapp.cloudfunctions.net/incrementView?songId=${_song.id}';
+        'https://us-central1-mgc-cantapp.cloudfunctions.net/incrementView?songId=${_id}';
     final Response response = await put(url);
     if (response.statusCode == 200) {
       // If the server did return a 201 CREATED response,

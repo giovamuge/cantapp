@@ -45,7 +45,8 @@ class _FavoriteScreenState extends State<FavoriteScreen>
         songs.where((s) => favorites.any((f) => f == s.id)).toList();
 
     return ListSongsScreen(
-      items: songFavorite,
+      // items: songFavorite, // todo: da implementare
+      items: [],
       title: "Preferiti",
     );
   }

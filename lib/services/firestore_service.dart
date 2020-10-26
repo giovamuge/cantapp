@@ -9,22 +9,22 @@ class FirestoreService {
 
   Future<void> setData(
       {@required String path, @required Map<String, dynamic> data}) async {
-    final reference = FirebaseFirestore.instance.doc(path);
+    final reference = Firestore.instance.document(path);
     print('$path: $data');
-    await reference.set(data);
+    await reference.setData(data);
   }
 
   Future<void> updateData({
     @required String path,
     @required Map<String, dynamic> data,
   }) async {
-    final reference = FirebaseFirestore.instance.doc(path);
+    final reference = Firestore.instance.document(path);
     print('$path: $data');
-    await reference.update(data);
+    await reference.updateData(data);
   }
 
   Future<void> deleteData({@required String path}) async {
-    final reference = FirebaseFirestore.instance.doc(path);
+    final reference = Firestore.instance.document(path);
     print('delete: $path');
     await reference.delete();
   }
@@ -35,14 +35,14 @@ class FirestoreService {
     Query queryBuilder(Query query),
     int sort(T lhs, T rhs),
   }) {
-    Query query = FirebaseFirestore.instance.collection(path);
+    Query query = Firestore.instance.collection(path);
     if (queryBuilder != null) {
       query = queryBuilder(query);
     }
     final Stream<QuerySnapshot> snapshots = query.snapshots();
     return snapshots.map((snapshot) {
-      final result = snapshot.docs
-          .map((snapshot) => builder(snapshot.data(), snapshot.id))
+      final result = snapshot.documents
+          .map((snapshot) => builder(snapshot.data, snapshot.documentID))
           .where((value) => value != null)
           .toList();
       if (sort != null) {
@@ -56,8 +56,9 @@ class FirestoreService {
     @required String path,
     @required T builder(Map<String, dynamic> data, String documentID),
   }) {
-    final DocumentReference reference = FirebaseFirestore.instance.doc(path);
+    final DocumentReference reference = Firestore.instance.document(path);
     final Stream<DocumentSnapshot> snapshots = reference.snapshots();
-    return snapshots.map((snapshot) => builder(snapshot.data(), snapshot.id));
+    return snapshots
+        .map((snapshot) => builder(snapshot.data, snapshot.documentID));
   }
 }

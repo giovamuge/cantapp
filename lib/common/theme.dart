@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 //Colors for theme
 final Color lightPrimary = Color(0xfffcfcff);
 final Color darkPrimary = Colors.black;
-final Color lightAccent = Colors.yellow;
-final Color darkAccent = Colors.orangeAccent;
+final Color lightAccent = Color(0xffffbd59);
+final Color darkAccent = Color(0xffffbd59); //Colors.orangeAccent;
 final Color lightBG = Color(0xfffcfcff);
 final Color darkBG = Colors.black;
 
@@ -26,7 +26,8 @@ final appTheme = ThemeData.light().copyWith(
     elevation: 0,
     color: lightBG,
     brightness: Brightness.light,
-    textTheme: TextTheme(headline6: TextStyle(color: Colors.black, fontSize: 18.0)),
+    textTheme:
+        TextTheme(headline6: TextStyle(color: Colors.black, fontSize: 18.0)),
   ),
 );
 
@@ -43,7 +44,8 @@ final appThemeDark = ThemeData.dark().copyWith(
     elevation: 0,
     color: darkBG,
     brightness: Brightness.dark,
-    textTheme: TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18.0)),
+    textTheme:
+        TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18.0)),
   ),
 );
 

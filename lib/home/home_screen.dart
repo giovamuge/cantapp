@@ -134,8 +134,8 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SizedBox(height: 15),
-          ListActivityCardsWidget(),
+          // SizedBox(height: 15),
+          // ListActivityCardsWidget(),
           SizedBox(height: 15),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

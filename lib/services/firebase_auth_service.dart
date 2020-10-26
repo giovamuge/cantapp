@@ -19,7 +19,7 @@ class User {
 class FirebaseAuthService {
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
 
-  User _userFromFirebase(auth.User user) {
+  User _userFromFirebase(auth.UserInfo user) {
     if (user == null) {
       return null;
     }
@@ -27,23 +27,22 @@ class FirebaseAuthService {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
-      photoUrl: user.photoURL,
+      photoUrl: user.photoUrl,
     );
   }
 
   Stream<User> get onAuthStateChanged {
-    return _firebaseAuth.authStateChanges().map(_userFromFirebase);
+    return _firebaseAuth.onAuthStateChanged.map(_userFromFirebase);
   }
 
   Future<User> signInAnonymously() async {
-    final auth.UserCredential authResult =
-        await _firebaseAuth.signInAnonymously();
+    final auth.AuthResult authResult = await _firebaseAuth.signInAnonymously();
     return _userFromFirebase(authResult.user);
   }
 
   Future<User> signInWithEmailAndPassword(String email, String password) async {
-    final auth.UserCredential authResult = await _firebaseAuth
-        .signInWithCredential(auth.EmailAuthProvider.credential(
+    final auth.AuthResult authResult = await _firebaseAuth
+        .signInWithCredential(auth.EmailAuthProvider.getCredential(
       email: email,
       password: password,
     ));
@@ -52,7 +51,7 @@ class FirebaseAuthService {
 
   Future<User> createUserWithEmailAndPassword(
       String email, String password) async {
-    final auth.UserCredential authResult = await _firebaseAuth
+    final auth.AuthResult authResult = await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     return _userFromFirebase(authResult.user);
   }
@@ -61,8 +60,9 @@ class FirebaseAuthService {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  User currentUser() {
-    return _userFromFirebase(_firebaseAuth.currentUser);
+  Future<User> currentUser() async {
+    final auth.FirebaseUser user = await _firebaseAuth.currentUser();
+    return _userFromFirebase(user);
   }
 
   Future<void> signOut() async {

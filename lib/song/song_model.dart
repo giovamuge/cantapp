@@ -15,9 +15,9 @@ class SongLight extends Equatable {
 
   SongLight.fromSnapshot(
       DocumentSnapshot snapshot, String number, String artist)
-      : id = snapshot.id, //snapshot.documentID,
-        title = snapshot.data()["title"],
-        artist = snapshot.data()["artist"];
+      : id = snapshot.documentID, //snapshot.documentID,
+        title = snapshot.data["title"],
+        artist = snapshot.data["artist"];
 
   static fromMap(Map maps, String id) =>
       SongLight(id: id, title: maps["title"], artist: maps["artist"]);
@@ -63,22 +63,22 @@ class Song extends Equatable {
   });
 
   Song.fromSnapshot(DocumentSnapshot snapshot, String number)
-      : id = snapshot.id,
-        title = snapshot.data()["title"],
-        lyric = snapshot.data()["lyric"],
-        chord = snapshot.data()["chord"],
+      : id = snapshot.documentID,
+        title = snapshot.data["title"],
+        lyric = snapshot.data["lyric"],
+        chord = snapshot.data["chord"],
         number = number,
-        numberViews = snapshot.data()["numberViews"] ?? 0,
-        createdAt = snapshot.data()["createdAd"],
-        updatedAt = snapshot.data()["updatedAt"],
-        categories = snapshot.data()["categories"] != null
-            ? new List<String>.from(snapshot.data()["categories"])
+        numberViews = snapshot.data["numberViews"] ?? 0,
+        createdAt = snapshot.data["createdAd"],
+        updatedAt = snapshot.data["updatedAt"],
+        categories = snapshot.data["categories"] != null
+            ? new List<String>.from(snapshot.data["categories"])
             : new List<String>(),
         // links = snapshot.data["links"] != null
         //     ? new List<Link>.from(snapshot.data["links"])
         //     : new List<Link>(),
         links = new List<Link>(),
-        artist = snapshot.data()["artist"],
+        artist = snapshot.data["artist"],
         isFavorite = false;
 
   // Song.fromMap(Map maps, String id)

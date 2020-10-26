@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SongWidget extends StatelessWidget {
-  final Song song;
+  final SongLight song;
   final int number;
   final MaterialColor _avatarColor;
   final MaterialColor _textColor;
@@ -100,17 +100,17 @@ class SongWidget extends StatelessWidget {
   List<Widget> _buildSubtitle() {
     final result = new List<Widget>();
 
-    if (!song.chord.isNullOrEmpty()) {
-      result.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 5),
-          child: BadgetWidget(
-            title: 'accordi',
-            color: Colors.pink,
-          ),
-        ),
-      );
-    }
+    // if (!song.chord.isNullOrEmpty()) {
+    //   result.add(
+    //     Padding(
+    //       padding: const EdgeInsets.only(right: 5),
+    //       child: BadgetWidget(
+    //         title: 'accordi',
+    //         color: Colors.pink,
+    //       ),
+    //     ),
+    //   );
+    // }
 
     if (song.links.any((l) => l.type == 'youtube')) {
       result.add(
@@ -204,7 +204,7 @@ class SongWidget extends StatelessWidget {
   _navigateToSong(context, song) => Navigator.of(context).push(
         MaterialPageRoute(
             // fullscreenDialog: true, // sono sicuro?
-            builder: (context) => SongScreen(song: song)),
+            builder: (context) => SongScreen(id: song.id)),
       );
 }
 

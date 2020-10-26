@@ -81,7 +81,8 @@ class SongSearchDelegate extends SearchDelegate {
                 return ListTile(
                     title: Text(items[index].title),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => SongScreen(song: items[index]))));
+                        builder: (context) =>
+                            SongScreen(id: items[index].id))));
               },
             );
           } else {

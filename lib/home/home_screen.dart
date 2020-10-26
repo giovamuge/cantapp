@@ -67,16 +67,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: AnimatedOpacity(
-        // title: Visibility(
-        //   // If the widget is visible, animate to 0.0 (invisible).
-        //   // If the widget is hidden, animate to 1.0 (fully visible).
-        //   // opacity: _visible ? 1.0 : 0.0,
-        //   visible: _visible,
-        //   // curve: Curves.easeInExpo,
-        //   // duration: Duration(milliseconds: 200),
-        //   child: Text("Cantapp"),
-        // ),
         title: AnimatedBuilder(
           animation: _animationController,
           builder: (ctx, child) {
@@ -100,24 +90,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
-          // // AnimatedOpacity(
-          // Visibility(
-          //   // If the widget is visible, animate to 0.0 (invisible).
-          //   // If the widget is hidden, animate to 1.0 (fully visible).
-          //   // opacity: _visible ? 1.0 : 0.0,
-          //   visible: _visible,
-          //   // duration: Duration(milliseconds: 200),
-          //   // curve: Curves.easeInExpo,
-          //   child: Center(
-          //     child: IconButton(
-          //       icon: Icon(Icons.search),
-          //       onPressed: () => showSearch(
-          //         context: context,
-          //         delegate: SongSearchDelegate(),
-          //       ),
-          //     ),
-          //   ),
-          // ),
           SizedBox(width: 20),
         ],
       ),
@@ -180,17 +152,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildContents(BuildContext context) {
     final database = Provider.of<FirestoreDatabase>(context,
         listen: false); // potrebbe essere true, da verificare
-    return StreamBuilder<List<Song>>(
-      stream: database.songsStream(),
+    return StreamBuilder<List<SongLight>>(
+      stream: database.songsLightStream(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final List<Song> items = snapshot.data;
+          final List<SongLight> items = snapshot.data;
           if (items.isNotEmpty) {
             return ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return SongWidget(song: items[index], number: index);
+                final SongLight item = items[index];
+                return SongWidget(song: item, number: index);
               },
               itemCount: items.length,
             );

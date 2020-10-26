@@ -32,13 +32,13 @@ class FirestoreDatabase {
         data: {'numberViews': FieldValue.increment(1)},
       );
 
-  Stream<List<Song>> songsFromCategorySearchStream({Category category}) =>
-      _service.collectionStream<Song>(
+  Stream<List<SongLight>> songsFromCategorySearchStream({Category category}) =>
+      _service.collectionStream<SongLight>(
           path: FirestorePath.songs(),
           queryBuilder: (query) => query
               .where('categories', arrayContains: category.toString())
               .orderBy('title'),
-          builder: (data, documentID) => Song.fromMap(data, documentID));
+          builder: (data, documentID) => SongLight.fromMap(data, documentID));
 
   Stream<List<Song>> songsSearchStream({String textSearch}) =>
       _service.collectionStream<Song>(
@@ -53,20 +53,30 @@ class FirestoreDatabase {
       queryBuilder: (query) => query.orderBy('title'),
       builder: (data, documentId) => Song.fromMap(data, documentId));
 
-  Stream<List<Song>> activitySongsStream(int type) => _service.collectionStream(
+  Stream<List<SongLight>> songsLightStream() => _service.collectionStream(
       path: FirestorePath.songs(),
-      queryBuilder: (query) {
-        var res = query;
-        if (type == 0) {
-          res = res.orderBy('numberViews', descending: true);
-        } else if (type == 1) {
-          res = res.orderBy('createdAt', descending: true);
-        } else {
-          res = res.orderBy('title', descending: true);
-        }
-        res = res.limit(15);
-        return res;
-      },
+      queryBuilder: (query) => query.orderBy('title'),
+      builder: (data, documentId) => SongLight.fromMap(data, documentId));
+
+  Stream<Song> songStream(String id) => _service.documentStream(
+      path: FirestorePath.song(id),
       builder: (data, documentId) => Song.fromMap(data, documentId));
+
+  Stream<List<SongLight>> activitySongsStream(int type) =>
+      _service.collectionStream(
+          path: FirestorePath.songs(),
+          queryBuilder: (query) {
+            var res = query;
+            if (type == 0) {
+              res = res.orderBy('numberViews', descending: true);
+            } else if (type == 1) {
+              res = res.orderBy('createdAt', descending: true);
+            } else {
+              res = res.orderBy('title', descending: true);
+            }
+            res = res.limit(15);
+            return res;
+          },
+          builder: (data, documentId) => SongLight.fromMap(data, documentId));
   //sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
 }

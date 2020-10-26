@@ -11,15 +11,20 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // initialize firebase
+  // await Firebase.initializeApp();
+
   final shared = new Shared();
   final themeString = await shared.getThemeMode() ?? Constants.themeLight;
   final theme = themeString == Constants.themeLight ? appTheme : appThemeDark;
+
   runApp(MyApp(theme: theme, themeName: themeString));
 }
 
@@ -42,7 +47,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // initialaze firebase ads
+    // initialize firebase ads
     FirebaseAdsService()..initialaze();
 
     return MultiProvider(

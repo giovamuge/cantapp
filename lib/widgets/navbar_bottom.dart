@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class NavbarBottomWidget extends StatelessWidget {
   final ValueChanged<int> _itemTapped;
   final int _currentIndex;
-  final Color _splashColor = Colors.yellow[100];
-  final Color _highlightColor = Colors.yellow[50];
+  final Color _splashColor = Color(0xffffb988); //Colors.yellow[100];
+  final Color _highlightColor = Color(0xffffb230); //Colors.yellow[50];
 
   NavbarBottomWidget(
       {@required ValueChanged<int> itemTapped, @required int currentIndex})
@@ -50,28 +50,34 @@ class NavbarBottomWidget extends StatelessWidget {
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
-                icon: Icon(
-                  Icons.home,
-                  color: _currentIndex == 0 ? Colors.yellow : Colors.grey,
-                ),
-                onPressed: () => _itemTapped(0)),
-            IconButton(
-                splashColor: _splashColor,
-                highlightColor: _highlightColor,
                 icon: Icon(Icons.dashboard,
-                    color: _currentIndex == 1 ? Colors.yellow : Colors.grey),
+                    color: _currentIndex == 1 ? lightAccent : Colors.grey),
                 onPressed: () => _itemTapped(1)),
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
                 icon: Icon(Icons.favorite,
-                    color: _currentIndex == 2 ? Colors.yellow : Colors.grey),
+                    color: _currentIndex == 2 ? lightAccent : Colors.grey),
                 onPressed: () => _itemTapped(2)),
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
+                icon: Icon(
+                  Icons.home,
+                  color: _currentIndex == 0 ? lightAccent : Colors.grey,
+                ),
+                onPressed: () => _itemTapped(0)),
+            IconButton(
+                splashColor: _splashColor,
+                highlightColor: _highlightColor,
+                icon: Icon(Icons.featured_play_list,
+                    color: _currentIndex == 4 ? lightAccent : Colors.grey),
+                onPressed: () => {}),
+            IconButton(
+                splashColor: _splashColor,
+                highlightColor: _highlightColor,
                 icon: Icon(Icons.settings,
-                    color: _currentIndex == 3 ? Colors.yellow : Colors.grey),
+                    color: _currentIndex == 3 ? lightAccent : Colors.grey),
                 onPressed: () => _itemTapped(3))
           ],
         ),

@@ -195,7 +195,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
-                leading: CircleAvatar(),
+                leading: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ),
                 title: Container(
                   width: double.infinity,
                   height: 15.00,

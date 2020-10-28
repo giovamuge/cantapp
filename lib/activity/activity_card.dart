@@ -27,7 +27,9 @@ class ActivityCardWidget extends StatelessWidget {
     final screenWidth = 150.00;
 
     return Container(
-      width: screenWidth,
+      margin: EdgeInsets.only(bottom: 15),
+      // width: screenWidth,
+      height: MediaQuery.of(context).size.width * 0.5,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: InkWell(
         borderRadius: BorderRadius.circular(15),

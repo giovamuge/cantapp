@@ -72,7 +72,7 @@ class NavbarBottomWidget extends StatelessWidget {
                 highlightColor: _highlightColor,
                 icon: Icon(Icons.featured_play_list,
                     color: _currentIndex == 4 ? lightAccent : Colors.grey),
-                onPressed: () => {}),
+                onPressed: () => _itemTapped(4)),
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,

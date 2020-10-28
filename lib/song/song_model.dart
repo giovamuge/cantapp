@@ -21,6 +21,12 @@ class SongLight extends Equatable {
         artist = snapshot.data["artist"],
         links = new List<Link>();
 
+  SongLight.fromJson(Map<String, dynamic> maps)
+      : artist = maps["artist"],
+        title = maps["title"],
+        id = maps["id"],
+        links = new List<Link>();
+
   static fromMap(Map maps, String id) {
     final links = new List<Link>();
     if (maps["links"] != null) {
@@ -46,9 +52,40 @@ class SongLight extends Equatable {
   String toString() => 'Song { id: $id, title: $title }';
 }
 
-class Song extends Equatable {
+abstract class SongBase extends Equatable {
   final String id;
   final String title;
+  final String artist;
+  final List<Link> links;
+
+  SongBase({this.title, this.id, this.artist, this.links});
+
+  SongBase.fromSnapshot(DocumentSnapshot snapshot, String number, String artist)
+      : id = snapshot.documentID, //snapshot.documentID,
+        title = snapshot.data["title"],
+        artist = snapshot.data["artist"],
+        links = new List<Link>();
+
+  SongBase.fromJson(Map<String, dynamic> maps)
+      : artist = maps["artist"],
+        title = maps["title"],
+        id = maps["objectID"],
+        links = new List<Link>();
+
+  // static fromMap(Map maps, String id);
+
+  toJson() {
+    return {"id": id, "title": title, "artist": artist, "links": links};
+  }
+
+  @override
+  List<Object> get props => [id, title];
+
+  @override
+  String toString() => 'Song { id: $id, title: $title }';
+}
+
+class Song extends SongBase {
   final String lyric;
   final String chord;
   final String number;
@@ -57,13 +94,13 @@ class Song extends Equatable {
   final int numberViews;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<Link> links;
-  final String artist;
 
   Song({
-    this.title,
+    String id,
+    String title,
+    List<Link> links,
+    String artist,
     this.lyric,
-    this.id,
     this.chord,
     this.number,
     this.isFavorite,
@@ -71,14 +108,16 @@ class Song extends Equatable {
     this.numberViews,
     this.createdAt,
     this.updatedAt,
-    this.links,
-    this.artist,
-  });
+  }) : super(
+          id: id,
+          title: title,
+          links: links,
+          artist: artist,
+        );
 
+  @override
   Song.fromSnapshot(DocumentSnapshot snapshot, String number)
-      : id = snapshot.documentID,
-        title = snapshot.data["title"],
-        lyric = snapshot.data["lyric"],
+      : lyric = snapshot.data["lyric"],
         chord = snapshot.data["chord"],
         number = number,
         numberViews = snapshot.data["numberViews"] ?? 0,
@@ -87,33 +126,10 @@ class Song extends Equatable {
         categories = snapshot.data["categories"] != null
             ? new List<String>.from(snapshot.data["categories"])
             : new List<String>(),
-        // links = snapshot.data["links"] != null
-        //     ? new List<Link>.from(snapshot.data["links"])
-        //     : new List<Link>(),
-        links = new List<Link>(),
-        artist = snapshot.data["artist"],
         isFavorite = false;
 
-  // Song.fromMap(Map maps, String id)
-  //     : id = id,
-  //       title = maps["title"],
-  //       lyric = maps["lyric"],
-  //       chord = maps["chord"],
-  //       numberViews = maps["numberViews"],
-  //       createdAt = maps["createdAd"],
-  //       updatedAt = maps["updatedAt"],
-  //       categories = maps["categories"] != null
-  //           ? new List<String>.from(maps["categories"])
-  //           : new List<String>(),
-  //       links = maps["links"] != null
-  //           ? new List<Map<String, String>>.from(maps["links"])
-  //           : new List<Map<String, String>>(),
-  //       // links = new List<Link>(),
-  //       artist = maps["artist"],
-  //       number = maps["number"],
-  //       isFavorite = false;
-
-  static fromMap(Map maps, String id) {
+  static Song fromMap(Map maps, String id) {
+    // fromMap(maps, id);
     final links = new List<Link>();
     if (maps["links"] != null) {
       final items = List.from(maps["links"]);
@@ -216,6 +232,125 @@ class Link {
         title = maps["title"],
         url = maps["url"];
 }
+
+// old class
+// class Song extends Equatable {
+//   final String id;
+//   final String title;
+//   final String lyric;
+//   final String chord;
+//   final String number;
+//   final bool isFavorite;
+//   final List<String> categories;
+//   final int numberViews;
+//   final DateTime createdAt;
+//   final DateTime updatedAt;
+//   final List<Link> links;
+//   final String artist;
+
+//   Song({
+//     this.title,
+//     this.lyric,
+//     this.id,
+//     this.chord,
+//     this.number,
+//     this.isFavorite,
+//     this.categories,
+//     this.numberViews,
+//     this.createdAt,
+//     this.updatedAt,
+//     this.links,
+//     this.artist,
+//   });
+
+//   Song.fromSnapshot(DocumentSnapshot snapshot, String number)
+//       : id = snapshot.documentID,
+//         title = snapshot.data["title"],
+//         lyric = snapshot.data["lyric"],
+//         chord = snapshot.data["chord"],
+//         number = number,
+//         numberViews = snapshot.data["numberViews"] ?? 0,
+//         createdAt = snapshot.data["createdAd"],
+//         updatedAt = snapshot.data["updatedAt"],
+//         categories = snapshot.data["categories"] != null
+//             ? new List<String>.from(snapshot.data["categories"])
+//             : new List<String>(),
+//         // links = snapshot.data["links"] != null
+//         //     ? new List<Link>.from(snapshot.data["links"])
+//         //     : new List<Link>(),
+//         links = new List<Link>(),
+//         artist = snapshot.data["artist"],
+//         isFavorite = false;
+
+//   // Song.fromMap(Map maps, String id)
+//   //     : id = id,
+//   //       title = maps["title"],
+//   //       lyric = maps["lyric"],
+//   //       chord = maps["chord"],
+//   //       numberViews = maps["numberViews"],
+//   //       createdAt = maps["createdAd"],
+//   //       updatedAt = maps["updatedAt"],
+//   //       categories = maps["categories"] != null
+//   //           ? new List<String>.from(maps["categories"])
+//   //           : new List<String>(),
+//   //       links = maps["links"] != null
+//   //           ? new List<Map<String, String>>.from(maps["links"])
+//   //           : new List<Map<String, String>>(),
+//   //       // links = new List<Link>(),
+//   //       artist = maps["artist"],
+//   //       number = maps["number"],
+//   //       isFavorite = false;
+
+//   static fromMap(Map maps, String id) {
+//     final links = new List<Link>();
+//     if (maps["links"] != null) {
+//       final items = List.from(maps["links"]);
+//       for (var i = 0; i < items.length; i++) {
+//         final link = Link.fromMap(items[i]);
+//         links.add(link);
+//       }
+//     }
+
+//     return Song(
+//         id: id,
+//         title: maps["title"],
+//         lyric: maps["lyric"],
+//         chord: maps["chord"],
+//         numberViews: maps["numberViews"],
+//         createdAt: maps["createdAd"],
+//         updatedAt: maps["updatedAt"],
+//         categories: maps["categories"] != null
+//             ? new List<String>.from(maps["categories"])
+//             : new List<String>(),
+//         links: links,
+//         artist: maps["artist"],
+//         number: maps["number"],
+//         isFavorite: false);
+//   }
+
+//   toJson() {
+//     return {
+//       "id": id,
+//       "title": title,
+//       "lyric": lyric,
+//       "chord": chord,
+//       "numberViews": numberViews,
+//       "categories": categories,
+//       "createdAt": createdAt,
+//       "updatedAt": updatedAt,
+//       "links": links,
+//       "artist": artist
+//     };
+//   }
+
+//   @override
+//   List<Object> get props =>
+//       [id, title, lyric, chord, isFavorite, categories, number];
+
+//   @override
+//   String toString() =>
+//       'Song { id: $id, title: $title, lyric: $lyric, chord: $chord, categories: ${categories.join(",")} }';
+// }
 
 // abstract class Links implements List<Link> {
 //   Links.fromMap(Map maps) {

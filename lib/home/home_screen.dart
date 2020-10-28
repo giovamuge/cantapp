@@ -192,16 +192,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 leading: Container(
-                  width: 35,
-                  height: 35,
+                  width: 35.00,
+                  height: 35.00,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
+                    color: Colors.white,
                   ),
                 ),
                 title: Container(
                   width: double.infinity,
-                  height: 15.00,
-                  color: Colors.white,
+                  height: 30.00,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    color: Colors.white,
+                  ),
                 ),
               );
             },

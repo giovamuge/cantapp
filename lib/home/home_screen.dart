@@ -1,4 +1,3 @@
-import 'package:cantapp/activity/list_activity_cards.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/firestore_database.dart';
@@ -6,7 +5,6 @@ import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -49,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // 120 di altezza, dove si trovara il bottone
     // grande search.
     if (_controller.offset <= offset && _visible) {
-      // setState(() => _visible = false);
       _visible = false;
       _animationController.reverse();
     }
@@ -57,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
     if (_controller.offset > offset && !_visible) {
-      // setState(() => _visible = true);
       _visible = true;
       _animationController.forward();
     }

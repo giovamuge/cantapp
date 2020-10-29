@@ -13,12 +13,12 @@ class AlgoliaService {
 
   AlgoliaIndexReference get _songsIndex => _algolia.instance.index('dev_SONGS');
 
-  Future<List<SongLight>> performMovieQuery({text: String}) async {
+  Future<List<SongResult>> performMovieQuery({text: String}) async {
     // if (_songsIndex == null) return new List<SongLight>();
     final query = _songsIndex.search(text);
     // if (query == null) return new List<SongLight>();
     final snap = await query.getObjects();
-    final movies = snap.hits.map((f) => SongLight.fromJson(f.data)).toList();
-    return movies;
+    final songs = snap.hits.map((f) => SongResult.fromJson(f.data)).toList();
+    return songs;
   }
 }

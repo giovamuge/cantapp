@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
 import 'package:algolia/algolia.dart';
+import 'package:cantapp/common/constants.dart';
+import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/algolia_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_model.dart';
@@ -6,6 +10,7 @@ import 'package:cantapp/song/song_screen.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DataSearch extends SearchDelegate {
   // Songs _songsData;
@@ -132,7 +137,7 @@ class SongSearchDelegate extends SearchDelegate<String> {
       future: ConnectivityWrapper.instance.isConnected,
       builder: (context, isConnected) {
         if (isConnected.hasData && isConnected.data) {
-          return FutureBuilder<List<SongLight>>(
+          return FutureBuilder<List<SongResult>>(
             future: _algoliaService.performMovieQuery(text: query),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -141,8 +146,9 @@ class SongSearchDelegate extends SearchDelegate<String> {
                 return ListView.builder(
                   itemCount: songs.length,
                   itemBuilder: (ctx, i) => ListTile(
-                    leading: Text("numero"),
+                    // leading: Text("numero"),
                     title: Text(songs[i].title),
+                    subtitle: Text(songs[i].lyric, maxLines: 1),
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
@@ -155,12 +161,56 @@ class SongSearchDelegate extends SearchDelegate<String> {
                 );
               } else if (snapshot.hasError) {
                 return Center(
-                  child: Text("${snapshot.error.toString()}"),
+                  child: Text("Errore di connessione."),
                 );
               }
 
-              return Center(
-                child: CircularProgressIndicator(),
+              final theme = Provider.of<ThemeChanger>(context, listen: false);
+              final double sizeWidth = MediaQuery.of(context).size.width;
+              final double titleWidth = sizeWidth * 0.55;
+              final double subtitleWidth = sizeWidth * 0.75;
+
+              return Shimmer.fromColors(
+                // baseColor: Theme.of(context).primaryColorLight,
+                // highlightColor: Theme.of(context).primaryColor,
+                baseColor: theme.getThemeName() == Constants.themeLight
+                    ? Colors.grey[100]
+                    : Colors.grey[600],
+                highlightColor: theme.getThemeName() == Constants.themeLight
+                    ? Colors.grey[300]
+                    : Colors.grey[900],
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: titleWidth,
+                            height: 15.00,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3.5),
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Container(
+                            width: subtitleWidth,
+                            height: 15.00,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3.5),
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  itemCount: List.generate(15, (i) => i++).length,
+                ),
               );
             },
           );
@@ -182,6 +232,7 @@ class SongSearchDelegate extends SearchDelegate<String> {
                   itemBuilder: (context, index) {
                     return ListTile(
                         title: Text(items[index].title),
+                        subtitle: Text(items[index].lyric, maxLines: 1),
                         onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (context) =>

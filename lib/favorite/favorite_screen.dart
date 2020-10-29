@@ -41,12 +41,15 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       );
     }
 
-    var songFavorite =
+    final List<Song> songFavorite =
         songs.where((s) => favorites.any((f) => f == s.id)).toList();
+    // converto in songlight
+    final List<SongLight> songLightFavorite = songFavorite.map((s) =>
+        SongLight(title: s.title, artist: s.artist, id: s.id, links: s.links));
 
     return ListSongsScreen(
-      // items: songFavorite, // todo: da implementare
-      items: [],
+      items: songLightFavorite, // todo: da implementare
+      // items: [],
       title: "Preferiti",
     );
   }

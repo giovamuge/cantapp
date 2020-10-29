@@ -2,14 +2,14 @@ import 'package:cantapp/activity/activity_screen.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
-class ActivityCardWidget extends StatelessWidget {
+class PlaylistCardWidget extends StatelessWidget {
   final int _index;
   final MaterialColor _color;
   final String _title;
   final String _assetsImage;
   final String _description;
 
-  ActivityCardWidget(
+  PlaylistCardWidget(
       {@required int index,
       @required MaterialColor color,
       @required String title,
@@ -34,25 +34,20 @@ class ActivityCardWidget extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
         onTap: () => Navigator.push(
-            context,
-            PageRouteBuilder(
-                // transitionDuration: const Duration(milliseconds: 400),
-                pageBuilder: (context, _, __) => ActivityScreen(
-                      index: _index,
-                      color: _color,
-                      title: _title,
-                    ))),
+          context,
+          PageRouteBuilder(
+            // transitionDuration: const Duration(milliseconds: 400),
+            pageBuilder: (context, _, __) =>
+                ActivityScreen(index: _index, color: _color, title: _title),
+          ),
+        ),
         child: Stack(
           children: [
             Align(
               alignment: Alignment.bottomCenter,
-              // child: ClipPath(
-              //   clipper: ActivityCardBackgroundClipper(),
               child: Hero(
                 tag: "background-$_index",
                 child: Container(
-                  // height: screenHeight,
-                  // width: screenWidth,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     gradient: LinearGradient(
@@ -65,12 +60,12 @@ class ActivityCardWidget extends StatelessWidget {
               ),
             ),
             Container(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.topRight,
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
               child: Image(
                 image: AssetImage("icons/music.png"),
-                width: 50,
-                height: 50,
+                width: 75,
+                height: 75,
               ),
               // child: SvgPicture.asset(_assetsImage,
               //   semanticsLabel: 'Popularity',
@@ -96,7 +91,7 @@ class ActivityCardWidget extends StatelessWidget {
                               // color: _color[800],
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
-                              fontSize: 20,
+                              fontSize: 35,
                             )),
                       ),
                     ),
@@ -114,33 +109,5 @@ class ActivityCardWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ActivityCardBackgroundClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path clippedPath = Path();
-    double curveDistance = 40;
-
-    clippedPath.moveTo(0, size.height * 0.4);
-    clippedPath.lineTo(0, size.height - curveDistance);
-    clippedPath.quadraticBezierTo(
-        1, size.height - 1, 0 + curveDistance, size.height);
-    clippedPath.lineTo(size.width - curveDistance, size.height);
-    clippedPath.quadraticBezierTo(size.width + 1, size.height - 1, size.width,
-        size.height - curveDistance);
-    clippedPath.lineTo(size.width, 0 + curveDistance);
-    clippedPath.quadraticBezierTo(size.width - 1, 0,
-        size.width - curveDistance - 5, 0 + curveDistance / 3);
-    clippedPath.lineTo(curveDistance, size.height * 0.29);
-    clippedPath.quadraticBezierTo(
-        1, (size.height * 0.30) + 10, 0, size.height * 0.4);
-    return clippedPath;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return true;
   }
 }

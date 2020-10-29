@@ -1,4 +1,4 @@
-import 'package:cantapp/activity/activity_card.dart';
+import 'package:cantapp/playlist/plalist_card.dart';
 import 'package:flutter/material.dart';
 
 class ListActivityCardsWidget extends StatelessWidget {
@@ -13,27 +13,27 @@ class ListActivityCardsWidget extends StatelessWidget {
           // imposta padding al primo elemento
           // per rispettare il margine a sinistra
           // da margine 20 sottraggo 5 quindi 15
-          Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: ActivityCardWidget(
-              index: 0,
-              color: Colors.orange,
-              title: "Popolari",
-              assetsImage: "icons/popularity.png",
-            ),
-          ),
-          ActivityCardWidget(
-            index: 1,
-            color: Colors.lightBlue,
-            title: "Novità",
-            assetsImage: "icons/new.png",
-          ),
-          ActivityCardWidget(
-            index: 2,
-            color: Colors.lightGreen,
-            title: "Proposte",
-            assetsImage: "icons/plant_tree.png",
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 15),
+          //   child: ActivityCardWidget(
+          //     index: 0,
+          //     color: Colors.orange,
+          //     title: "Popolari",
+          //     assetsImage: "icons/popularity.png",
+          //   ),
+          // ),
+          // ActivityCardWidget(
+          //   index: 1,
+          //   color: Colors.lightBlue,
+          //   title: "Novità",
+          //   assetsImage: "icons/new.png",
+          // ),
+          // ActivityCardWidget(
+          //   index: 2,
+          //   color: Colors.lightGreen,
+          //   title: "Proposte",
+          //   assetsImage: "icons/plant_tree.png",
+          // ),
           // ActivityCardWidget(
           //   index: 3,
           //   color: Colors.orange,

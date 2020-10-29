@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:cantapp/category/category_model.dart';
+import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/services/firestore_path.dart';
 import 'package:cantapp/services/firestore_service.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
+
+import 'firebase_auth_service.dart';
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
@@ -78,5 +81,17 @@ class FirestoreDatabase {
             return res;
           },
           builder: (data, documentId) => SongLight.fromMap(data, documentId));
-  //sort: (lhs, rhs) => rhs.title.compareTo(lhs.title));
+
+  Stream<User> userStream(String userId) => _service.documentStream(
+      path: FirestorePath.user(userId),
+      builder: (data, documentId) => User.fromMap(data));
+
+  void setUser(User user, String userId) =>
+      _service.setData(path: FirestorePath.user(userId), data: user.toJson());
+
+  void addFavorite(FavoriteFire favorite) =>
+      _service.addData(path: FirestorePath.user(uid), data: favorite.toJson());
+
+  // void setFavorite(String userId, String songId) => _service
+  //     .setData(path: FirestorePath.user(userId), data: );
 }

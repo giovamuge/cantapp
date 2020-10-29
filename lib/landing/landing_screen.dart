@@ -1,6 +1,6 @@
 import 'package:cantapp/services/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 
 class LandingScreen extends StatelessWidget {
   final Widget _child;
@@ -8,19 +8,20 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var auth = Provider.of<FirebaseAuthService>(context);
+    // var auth = Provider.of<FirebaseAuthService>(context);
+    final auth = GetIt.instance<FirebaseAuthService>();
     return StreamBuilder(
       stream: auth.onAuthStateChanged,
       builder: (context, snapshot) {
         // if (snapshot.connectionState == ConnectionState.active) {
-          User user = snapshot.data;
-          if (user == null) {
-            // authenticate anonymous
-            // start async sign in
-            auth.signInAnonymously();
-          }
+        User user = snapshot.data;
+        if (user == null) {
+          // authenticate anonymous
+          // start async sign in
+          auth.signInAnonymously();
+        }
 
-          return _child;
+        return _child;
         // }
 
         // return Scaffold(

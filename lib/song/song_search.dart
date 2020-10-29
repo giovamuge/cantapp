@@ -9,6 +9,7 @@ import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -73,8 +74,8 @@ class DataSearch extends SearchDelegate {
     }
 
     // List<Song> songListData = List<Song>();
-    final database = Provider.of<FirestoreDatabase>(context,
-        listen: false); // potrebbe essere true, da verificare
+    final database = GetIt.instance<
+        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
     print('i am searching:  -> $query');
 
@@ -216,8 +217,8 @@ class SongSearchDelegate extends SearchDelegate<String> {
           );
         } else {
           // List<Song> songListData = List<Song>();
-          final database = Provider.of<FirestoreDatabase>(context,
-              listen: false); // potrebbe essere true, da verificare
+          final database = GetIt.instance<
+              FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
           print('i am searching:  -> $query');
 

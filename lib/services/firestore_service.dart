@@ -7,6 +7,13 @@ class FirestoreService {
   FirestoreService._();
   static final instance = FirestoreService._();
 
+  Future<void> addData(
+      {@required String path, @required Map<String, dynamic> data}) async {
+    final reference = Firestore.instance.collection(path);
+    print('$path: $data');
+    await reference.add(data);
+  }
+
   Future<void> setData(
       {@required String path, @required Map<String, dynamic> data}) async {
     final reference = Firestore.instance.document(path);
@@ -60,5 +67,15 @@ class FirestoreService {
     final Stream<DocumentSnapshot> snapshots = reference.snapshots();
     return snapshots
         .map((snapshot) => builder(snapshot.data, snapshot.documentID));
+  }
+
+  // può essere una soluzione?
+  Future<QuerySnapshot> documentFuture<T>(
+      {@required String path,
+      @required T builder(Map<String, dynamic> data, String documentID)}) {
+    final DocumentReference reference = Firestore.instance.document(path);
+    final Future<QuerySnapshot> snapshot =
+        reference.collection(path).getDocuments();
+    return snapshot;
   }
 }

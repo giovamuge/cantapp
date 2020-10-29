@@ -4,6 +4,7 @@ import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/landing/landing_screen.dart';
+import 'package:cantapp/locator.dart';
 import 'package:cantapp/root.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firebase_auth_service.dart';
@@ -11,7 +12,6 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +25,7 @@ void main() async {
   final themeString = await shared.getThemeMode() ?? Constants.themeLight;
   final theme = themeString == Constants.themeLight ? appTheme : appThemeDark;
 
+  setupLocator();
   runApp(MyApp(theme: theme, themeName: themeString));
 }
 
@@ -57,12 +58,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
         ChangeNotifierProvider.value(
             value: Songs(databaseReference: Firestore.instance)),
-        Provider<FirebaseAuthService>(
-            create: (context) => FirebaseAuthService()),
-        Provider<FirestoreDatabase>(
-          create: (context) => FirestoreDatabase(
-              uid: ""), // da modificare in caso di registrazione utente
-        ),
+        // Provider<FirebaseAuthService>(
+        //     create: (context) => FirebaseAuthService()),
+        // Provider<FirestoreDatabase>(
+        //   create: (context) => FirestoreDatabase(
+        //       uid: ""), // da modificare in caso di registrazione utente
+        // ),
       ],
       child: Consumer<ThemeChanger>(
         builder: (context, theme, child) {

@@ -6,6 +6,7 @@ import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -146,8 +147,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContents(BuildContext context) {
-    final database = Provider.of<FirestoreDatabase>(context,
-        listen: false); // potrebbe essere true, da verificare
+    final database = GetIt.instance<FirestoreDatabase>();
+    // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
     return StreamBuilder<List<SongLight>>(
       stream: database.songsLightStream(),
       builder: (context, snapshot) {

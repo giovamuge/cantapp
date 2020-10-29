@@ -1,5 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:cantapp/services/firestore_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 
 @immutable
 class User {
@@ -14,15 +16,36 @@ class User {
   final String email;
   final String photoUrl;
   final String displayName;
+
+  User.fromMap(Map maps)
+      : uid = maps["uid"],
+        email = maps["email"],
+        photoUrl = maps["photoUrl"],
+        displayName = maps["displayName"];
+
+  User.fromFirebaseUser(FirebaseUser fu)
+      : uid = fu.uid,
+        email = fu.email,
+        photoUrl = fu.photoUrl,
+        displayName = fu.displayName;
+
+  toJson() {
+    return {
+      "uid": uid,
+      "email": email,
+      "photoUrl": photoUrl,
+      "displayName": displayName
+    };
+  }
 }
 
 class FirebaseAuthService {
-  final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  User _userFromFirebase(auth.UserInfo user) {
-    if (user == null) {
-      return null;
-    }
+  User _userFromFirebase(UserInfo user) {
+    // check if user not null
+    if (user == null) return null;
+
     return User(
       uid: user.uid,
       email: user.email,
@@ -31,18 +54,28 @@ class FirebaseAuthService {
     );
   }
 
+  // da rimuovere perché verranno usate le functions di firebase
+  Future<void> _addUserIfNotExist(FirebaseUser user) async {
+    final firestore = GetIt.instance<FirestoreDatabase>();
+    // final userFirestore = await firestore.userStream(user.uid)?.first;
+    // if (userFirestore != null) return;
+    firestore.setUser(User.fromFirebaseUser(user), user.uid);
+  }
+
   Stream<User> get onAuthStateChanged {
     return _firebaseAuth.onAuthStateChanged.map(_userFromFirebase);
   }
 
   Future<User> signInAnonymously() async {
-    final auth.AuthResult authResult = await _firebaseAuth.signInAnonymously();
-    return _userFromFirebase(authResult.user);
+    final AuthResult authResult = await _firebaseAuth.signInAnonymously();
+    final FirebaseUser user = authResult.user;
+    await _addUserIfNotExist(user);
+    return _userFromFirebase(user);
   }
 
   Future<User> signInWithEmailAndPassword(String email, String password) async {
-    final auth.AuthResult authResult = await _firebaseAuth
-        .signInWithCredential(auth.EmailAuthProvider.getCredential(
+    final AuthResult authResult = await _firebaseAuth
+        .signInWithCredential(EmailAuthProvider.getCredential(
       email: email,
       password: password,
     ));
@@ -51,7 +84,7 @@ class FirebaseAuthService {
 
   Future<User> createUserWithEmailAndPassword(
       String email, String password) async {
-    final auth.AuthResult authResult = await _firebaseAuth
+    final AuthResult authResult = await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     return _userFromFirebase(authResult.user);
   }
@@ -61,7 +94,7 @@ class FirebaseAuthService {
   }
 
   Future<User> currentUser() async {
-    final auth.FirebaseUser user = await _firebaseAuth.currentUser();
+    final FirebaseUser user = await _firebaseAuth.currentUser();
     return _userFromFirebase(user);
   }
 

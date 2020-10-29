@@ -10,6 +10,7 @@ import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
@@ -41,8 +42,8 @@ class SongScreen extends StatelessWidget {
     var service = new FirebaseAdsService();
     service.createBannerAd();
 
-    final database = Provider.of<FirestoreDatabase>(context,
-        listen: false); // potrebbe essere true, da verificare
+    final database = GetIt.instance<
+        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
     return Scaffold(
       body: StreamBuilder<Song>(
@@ -153,8 +154,8 @@ class SongScreen extends StatelessWidget {
   }
 
   void _incrementViews(BuildContext context) {
-    final database = Provider.of<FirestoreDatabase>(context,
-        listen: false); // potrebbe essere true, da verificare
+    final database = GetIt.instance<
+        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
     Future.delayed(Duration(seconds: 5))
         .asStream()

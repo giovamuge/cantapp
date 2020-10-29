@@ -40,6 +40,10 @@ dependencies:
   # Connection state
   connectivity_wrapper: ^1.0.4
 
+  # service locator
+  get_it: ^5.0.1
+
+
 
   # Non ho inserito il numero di versione, nella speranza che siano compatibili
   # Avere sempre un riguardo particolare a questi pacchetti

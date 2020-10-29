@@ -9,4 +9,7 @@ class FirestorePath {
   static String song(String songId) => 'songs/$songId';
 
   static String categories() => 'categories';
+
+  static String users() => 'users';
+  static String user(String userId) => 'users/$userId';
 }

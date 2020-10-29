@@ -1,4 +1,4 @@
-import 'package:cantapp/activity/activity_card.dart';
+import 'package:cantapp/playlist/plalist_card.dart';
 import 'package:flutter/material.dart';
 
 import 'playlist.dart';
@@ -97,13 +97,11 @@ class _PlaylistScreenState extends State<PlaylistScreen>
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _playlists.length,
-            itemBuilder: (context, i) => ActivityCardWidget(
+            itemBuilder: (context, i) => PlaylistCardWidget(
               index: _playlists[i].index,
               color: _playlists[i].color,
               title: _playlists[i].title,
               assetsImage: _playlists[i].assetsImage,
-              // itemBuilder: (context, i) => ListTile(
-              //   title: Text(_playlists[i].title),
             ),
           )
         ],

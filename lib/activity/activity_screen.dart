@@ -4,6 +4,7 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -47,7 +48,8 @@ class _ActivityScreenState extends State<ActivityScreen>
     // Per correggere l'animazione rimuovere scaffold
     // Trovare soluzione per iconData
     // var _songsData = Provider.of<Songs>(context, listen: false);
-    final database = Provider.of<FirestoreDatabase>(context, listen: false);
+    final database = GetIt.instance<FirestoreDatabase>();
+    //Provider.of<FirestoreDatabase>(context, listen: false);
 
     return Scaffold(
       backgroundColor: Colors.transparent,

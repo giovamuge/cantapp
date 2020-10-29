@@ -3,6 +3,7 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -100,7 +101,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 
   void _onNavigateCategory(context, category) async =>
-      Provider.of<FirestoreDatabase>(context, listen: false)
+      // Provider.of<FirestoreDatabase>(context, listen: false)
+      GetIt.instance<FirestoreDatabase>()
           .songsFromCategorySearchStream(category: category)
           .listen((songs) async {
         if (songs.isNotEmpty && songs.length > 0) {

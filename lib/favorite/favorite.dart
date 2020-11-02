@@ -1,4 +1,6 @@
 import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/services/firestore_path.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,13 +12,39 @@ class Favorite {
 }
 
 class FavoriteFire {
-  final String id;
+  final String songId;
+  final DocumentReference song;
   final DateTime updatedAt;
   final DateTime createdAt;
-  const FavoriteFire({this.id, this.createdAt, this.updatedAt});
 
-  toJson() =>
-      {"id": id, "createdAt": this.createdAt, "updatedAt": this.updatedAt};
+  const FavoriteFire({
+    this.songId,
+    this.song,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  FavoriteFire.fromMap(Map maps, String documentId)
+      : songId = maps["songId"],
+        song = maps["song"],
+        updatedAt = null,
+        createdAt = null;
+
+  // static fromMap(Map maps, String documentId) {
+  //   if (maps["createdAt"]) {
+  //     final data = Timestamp.fromDate(maps["createdAt"]);
+  //   }
+  //   // timeago.format(firestoreTime.toDate());
+
+  //   return FavoriteFire(id: maps["id"], songId: maps["songId"]);
+  // }
+
+  toJson() => {
+        "songId": this.songId,
+        "createdAt": this.createdAt,
+        "updatedAt": this.updatedAt,
+        "song": this.song
+      };
 }
 
 class Favorites with ChangeNotifier {
@@ -39,19 +67,20 @@ class Favorites with ChangeNotifier {
     return [..._items];
   }
 
-  void addFavorite(String item) {
-    _items.add(item);
-    _save();
+  Future<void> addFavorite(String item) async {
     final firestore = GetIt.instance<FirestoreDatabase>();
-    firestore.addFavorite(FavoriteFire());
-    notifyListeners();
+    final newFavorite = FavoriteFire(
+      createdAt: DateTime.now(),
+      songId: item,
+      song: Firestore.instance.document(FirestorePath.song(item)),
+    );
+    await firestore.addFavorite(newFavorite);
+    // notifyListeners();
   }
 
-  void removeFavorite(String item) {
-    _items.remove(item);
-    _save();
-    // repository.remove(item);
-    notifyListeners();
+  Future<void> removeFavorite(String favroiteId) async {
+    final firestore = GetIt.instance<FirestoreDatabase>();
+    await firestore.removeFavorite(favroiteId);
   }
 
   /// use those references to fill [_favorites].
@@ -65,8 +94,10 @@ class Favorites with ChangeNotifier {
   }
 
   /// if exist heart in items
-  bool exist(String id) {
-    return _items.any((f) => f == id);
+  Future<bool> exist(String id) async {
+    // return _items.any((f) => f == id);
+    final firestore = GetIt.instance<FirestoreDatabase>();
+    return await firestore.favoriteStream(id).isEmpty;
   }
 
   /// Persists the data to disk.

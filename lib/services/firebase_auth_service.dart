@@ -55,11 +55,11 @@ class FirebaseAuthService {
   }
 
   // da rimuovere perché verranno usate le functions di firebase
-  Future<void> _addUserIfNotExist(FirebaseUser user) async {
+  Future<void> addUserIfNotExist(User user) async {
     final firestore = GetIt.instance<FirestoreDatabase>();
     // final userFirestore = await firestore.userStream(user.uid)?.first;
     // if (userFirestore != null) return;
-    firestore.setUser(User.fromFirebaseUser(user), user.uid);
+    firestore.setUser(user, user.uid);
   }
 
   Stream<User> get onAuthStateChanged {
@@ -69,7 +69,7 @@ class FirebaseAuthService {
   Future<User> signInAnonymously() async {
     final AuthResult authResult = await _firebaseAuth.signInAnonymously();
     final FirebaseUser user = authResult.user;
-    await _addUserIfNotExist(user);
+    // await _addUserIfNotExist(user);
     return _userFromFirebase(user);
   }
 

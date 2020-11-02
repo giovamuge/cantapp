@@ -1,3 +1,5 @@
+import 'package:cantapp/favorite/favorite.dart';
+
 class FirestorePath {
   // static String job(String uid, String jobId) => 'users/$uid/jobs/$jobId';
   // static String jobs(String uid) => 'users/$uid/jobs';
@@ -12,4 +14,8 @@ class FirestorePath {
 
   static String users() => 'users';
   static String user(String userId) => 'users/$userId';
+
+  static String favorites(String userId) => '${user(userId)}/favorites';
+  static String favorite(String userId, String favoriteId) =>
+      '${user(userId)}/favorites/$favoriteId';
 }

@@ -47,6 +47,14 @@ class _PlaylistScreenState extends State<PlaylistScreen>
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _animation = null;
+    _animationController.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _onScrolling() {
     // valore di offset costante
     const offset = 40;

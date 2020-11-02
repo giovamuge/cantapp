@@ -30,6 +30,9 @@ class FirestoreDatabase {
   //   await _service.deleteData(path: FirestorePath.job(uid, job.id));
   // }
 
+  Future<void> removeFavorite(String favoriteId) async =>
+      await _service.deleteData(path: FirestorePath.favorite(uid, favoriteId));
+
   Future<void> incrementView(String songId) async => await _service.updateData(
         path: FirestorePath.song(songId),
         data: {'numberViews': FieldValue.increment(1)},
@@ -86,11 +89,27 @@ class FirestoreDatabase {
       path: FirestorePath.user(userId),
       builder: (data, documentId) => User.fromMap(data));
 
-  void setUser(User user, String userId) =>
-      _service.setData(path: FirestorePath.user(userId), data: user.toJson());
+  Future<void> setUser(User user, String userId) async => await _service
+      .setData(path: FirestorePath.user(userId), data: user.toJson());
 
-  void addFavorite(FavoriteFire favorite) =>
-      _service.addData(path: FirestorePath.user(uid), data: favorite.toJson());
+  Future<void> addFavorite(FavoriteFire favorite) async => await _service
+      .addData(path: FirestorePath.favorites(uid), data: favorite.toJson());
+
+  Stream<List<FavoriteFire>> favoritesStream() => _service.collectionStream(
+      path: FirestorePath.favorites(uid),
+      builder: (data, documentId) => FavoriteFire.fromMap(data, documentId));
+
+  Stream<FavoriteFire> favoriteStream(String favoriteId) =>
+      _service.documentStream(
+          path: FirestorePath.favorite(uid, favoriteId),
+          builder: (data, documentId) =>
+              FavoriteFire.fromMap(data, documentId));
+
+  Stream<bool> existSongInFavoriteStream(String songId) => Firestore.instance
+      .collection(FirestorePath.favorites(uid))
+      .where("songId", isEqualTo: songId)
+      .snapshots()
+      .map((value) => value.documents.isNotEmpty);
 
   // void setFavorite(String userId, String songId) => _service
   //     .setData(path: FirestorePath.user(userId), data: );

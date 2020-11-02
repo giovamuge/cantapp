@@ -157,12 +157,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           if (items.isNotEmpty) {
             return ListView.builder(
               shrinkWrap: true,
+              itemCount: items.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 final SongLight item = items[index];
                 return SongWidget(song: item, number: index);
               },
-              itemCount: items.length,
             );
           } else {
             return Container(
@@ -178,6 +178,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
 
         var theme = Provider.of<ThemeChanger>(context, listen: false);
+        final sizeWidth = MediaQuery.of(context).size.width;
+
         return Shimmer.fromColors(
           // baseColor: Theme.of(context).primaryColorLight,
           // highlightColor: Theme.of(context).primaryColor,
@@ -201,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 title: Container(
-                  width: double.infinity,
+                  width: sizeWidth - 35.00,
                   height: 30.00,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),

@@ -9,3 +9,8 @@ void setupLocator() {
   getIt.registerSingleton<FirebaseAuthService>(FirebaseAuthService());
   // getIt.registerFactory<FirestoreDatabase>(() => FirestoreDatabase(uid: ""));
 }
+
+void setupLocatorFirestore(String uid) {
+  getIt.unregister<FirestoreDatabase>();
+  getIt.registerSingleton<FirestoreDatabase>(FirestoreDatabase(uid: uid));
+}

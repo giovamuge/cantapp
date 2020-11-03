@@ -11,32 +11,51 @@ class CategoryScreen extends StatefulWidget {
   _CategoryScreenState createState() => _CategoryScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _CategoryScreenState extends State<CategoryScreen>
+    with TickerProviderStateMixin {
   bool _visible;
   ScrollController _controller;
   String _title;
+  AnimationController _animationController;
+  Animation _animation;
 
   @override
   void initState() {
     _title = "Categorie";
     _visible = false;
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 150));
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     _controller = new ScrollController();
     _controller.addListener(_onScrolling);
     super.initState();
   }
 
   void _onScrolling() {
+    // valore di offset costante
+    const offset = 40;
     // Mostra il bottone search quando raggiungo
-    // 100 di altezza del title (impostazione custom)
-    if (_controller.offset <= 40 && _visible) {
-      setState(() => _visible = false);
+    // 120 di altezza, dove si trovara il bottone
+    // grande search.
+    if (_controller.offset <= offset && _visible) {
+      _visible = false;
+      _animationController.reverse();
     }
 
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
-    if (_controller.offset > 40 && !_visible) {
-      setState(() => _visible = true);
+    if (_controller.offset > offset && !_visible) {
+      _visible = true;
+      _animationController.forward();
     }
+  }
+
+  @override
+  void dispose() {
+    _animation = null;
+    _animationController.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,12 +64,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: AnimatedOpacity(
-            // If the widget is visible, animate to 0.0 (invisible).
-            // If the widget is hidden, animate to 1.0 (fully visible).
-            opacity: _visible ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 200),
-            child: Text(_title)),
+        title: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) =>
+              Opacity(opacity: _animation.value, child: child),
+          child: Text(_title),
+        ),
         actions: <Widget>[
           Center(
             child: IconButton(

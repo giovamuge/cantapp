@@ -152,7 +152,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return StreamBuilder<List<SongLight>>(
       stream: database.songsLightStream(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState != ConnectionState.waiting &&
+            snapshot.hasData) {
           final List<SongLight> items = snapshot.data;
           if (items.isNotEmpty) {
             return ListView.builder(
@@ -175,46 +176,46 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               child: Center(
                   child: Text("C'è un errore 😖\nriprova tra qualche istante.",
                       textAlign: TextAlign.center)));
+        } else {
+          var theme = Provider.of<ThemeChanger>(context, listen: false);
+          final sizeWidth = MediaQuery.of(context).size.width;
+
+          return Shimmer.fromColors(
+            // baseColor: Theme.of(context).primaryColorLight,
+            // highlightColor: Theme.of(context).primaryColor,
+            baseColor: theme.getThemeName() == Constants.themeLight
+                ? Colors.grey[100]
+                : Colors.grey[600],
+            highlightColor: theme.getThemeName() == Constants.themeLight
+                ? Colors.grey[300]
+                : Colors.grey[900],
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  leading: Container(
+                    width: 35.00,
+                    height: 35.00,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: Colors.white,
+                    ),
+                  ),
+                  title: Container(
+                    width: sizeWidth - 35.00,
+                    height: 30.00,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              },
+              itemCount: List.generate(10, (i) => i++).length,
+            ),
+          );
         }
-
-        var theme = Provider.of<ThemeChanger>(context, listen: false);
-        final sizeWidth = MediaQuery.of(context).size.width;
-
-        return Shimmer.fromColors(
-          // baseColor: Theme.of(context).primaryColorLight,
-          // highlightColor: Theme.of(context).primaryColor,
-          baseColor: theme.getThemeName() == Constants.themeLight
-              ? Colors.grey[100]
-              : Colors.grey[600],
-          highlightColor: theme.getThemeName() == Constants.themeLight
-              ? Colors.grey[300]
-              : Colors.grey[900],
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                leading: Container(
-                  width: 35.00,
-                  height: 35.00,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    color: Colors.white,
-                  ),
-                ),
-                title: Container(
-                  width: sizeWidth - 35.00,
-                  height: 30.00,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            },
-            itemCount: List.generate(10, (i) => i++).length,
-          ),
-        );
       },
     );
   }

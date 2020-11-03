@@ -33,6 +33,16 @@ class FirestoreDatabase {
   Future<void> removeFavorite(String favoriteId) async =>
       await _service.deleteData(path: FirestorePath.favorite(uid, favoriteId));
 
+  Future<void> removeFavoriteFromSong(String songId) async {
+    // delete where entry.jobId == job.jobId
+    final allFavorites = await favoritesStream().first;
+    for (FavoriteFire favorite in allFavorites) {
+      if (favorite.songId == songId) {
+        await removeFavorite(favorite.id);
+      }
+    }
+  }
+
   Future<void> incrementView(String songId) async => await _service.updateData(
         path: FirestorePath.song(songId),
         data: {'numberViews': FieldValue.increment(1)},
@@ -110,6 +120,12 @@ class FirestoreDatabase {
       .where("songId", isEqualTo: songId)
       .snapshots()
       .map((value) => value.documents.isNotEmpty);
+
+  Stream<String> favoriteIdFromSongStram(String songId) => Firestore.instance
+      .collection(FirestorePath.favorites(uid))
+      .where("songId", isEqualTo: songId)
+      .snapshots()
+      .map((value) => value.documents.first.documentID);
 
   // void setFavorite(String userId, String songId) => _service
   //     .setData(path: FirestorePath.user(userId), data: );

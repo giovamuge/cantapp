@@ -114,7 +114,6 @@ class _ActivityScreenState extends State<ActivityScreen>
                             itemBuilder: (BuildContext context, int index) {
                               return SongWidget(
                                 song: items[index],
-                                number: index,
                                 avatarColor: widget.color,
                                 textColor: widget.color,
                               );

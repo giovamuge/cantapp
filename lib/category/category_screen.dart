@@ -4,7 +4,6 @@ import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override
@@ -123,17 +122,19 @@ class _CategoryScreenState extends State<CategoryScreen>
       // Provider.of<FirestoreDatabase>(context, listen: false)
       GetIt.instance<FirestoreDatabase>()
           .songsFromCategorySearchStream(category: category)
-          .listen((songs) async {
-        if (songs.isNotEmpty && songs.length > 0) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ListSongsScreen(items: songs, title: category.title)));
-        } else {
-          await _showMyDialog(category);
-        }
-      });
+          .listen(
+        (songs) async {
+          if (songs.isNotEmpty && songs.length > 0) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ListSongsScreen(items: songs, title: category.title)));
+          } else {
+            await _showMyDialog(category);
+          }
+        },
+      );
 
   Future<void> _showMyDialog(
     category,

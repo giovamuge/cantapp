@@ -119,10 +119,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                       if (songMapData.exists) {
                         final SongLight song = SongLight.fromMap(
                             songMapData.data, songMapData.documentID);
-                        return SongWidget(
-                          song: song,
-                          number: 0,
-                        );
+                        return SongWidget(song: song);
                       } else {
                         return Container(
                           height: 300,

@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 final SongLight item = items[index];
-                return SongWidget(song: item, number: index);
+                return SongWidget(song: item);
               },
             );
           } else {

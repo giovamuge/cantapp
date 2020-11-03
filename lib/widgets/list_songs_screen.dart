@@ -88,7 +88,6 @@ class _ListSongsScreenState extends State<ListSongsScreen> {
       itemBuilder: (BuildContext context, int index) {
         return SongWidget(
           song: items[index],
-          number: index,
           avatarColor: widget.avatarColor,
           textColor: widget.textColor,
         );

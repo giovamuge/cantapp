@@ -312,7 +312,7 @@ class SongWidget extends StatelessWidget {
       msg = '${song.title} 💔 rimosso dai preferiti';
     }
     SnackBar snackBar = SnackBar(
-      backgroundColor: Colors.purple[100],
+      backgroundColor: lightSecondary,
       elevation: 5,
       behavior: SnackBarBehavior.floating,
       content: Text(msg),
@@ -320,7 +320,7 @@ class SongWidget extends StatelessWidget {
           ? null
           : SnackBarAction(
               label: 'visualizza',
-              textColor: Colors.purple[800],
+              textColor: lightPrimary,
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => FavoriteScreen()),
               ),

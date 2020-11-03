@@ -16,16 +16,14 @@ class FavoriteFire {
   final DocumentReference song;
   final DateTime updatedAt;
   final DateTime createdAt;
+  final String id;
 
-  const FavoriteFire({
-    this.songId,
-    this.song,
-    this.createdAt,
-    this.updatedAt,
-  });
+  const FavoriteFire(
+      {this.songId, this.song, this.createdAt, this.updatedAt, this.id});
 
   FavoriteFire.fromMap(Map maps, String documentId)
-      : songId = maps["songId"],
+      : id = documentId,
+        songId = maps["songId"],
         song = maps["song"],
         updatedAt = null,
         createdAt = null;
@@ -40,6 +38,7 @@ class FavoriteFire {
   // }
 
   toJson() => {
+        "id": this.id,
         "songId": this.songId,
         "createdAt": this.createdAt,
         "updatedAt": this.updatedAt,

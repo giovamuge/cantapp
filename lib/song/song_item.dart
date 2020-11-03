@@ -14,7 +14,6 @@ import 'package:shimmer/shimmer.dart';
 
 class SongWidget extends StatelessWidget {
   final SongLight song;
-  final int number;
   final MaterialColor _avatarColor;
   final MaterialColor _textColor;
 
@@ -36,12 +35,7 @@ class SongWidget extends StatelessWidget {
     },
   );
 
-  const SongWidget(
-      {Key key,
-      @required this.song,
-      @required this.number,
-      avatarColor,
-      textColor})
+  const SongWidget({Key key, @required this.song, avatarColor, textColor})
       : _avatarColor = avatarColor ?? Colors.purple,
         _textColor = textColor ?? _defaultTextColor,
         super(key: key);
@@ -60,7 +54,7 @@ class SongWidget extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              '${number + 1}',
+              '${song.number}',
               style: TextStyle(
                   color: Color(0xFFFFFFFF), //_avatarColor[900],
                   fontWeight: FontWeight.w800,

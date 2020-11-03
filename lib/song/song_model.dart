@@ -10,21 +10,30 @@ class SongLight extends Equatable {
   final String id;
   final String title;
   final String artist;
+  final int number;
   final List<Link> links;
 
-  SongLight({this.title, this.id, this.artist, this.links});
+  SongLight({
+    this.title,
+    this.id,
+    this.artist,
+    this.links,
+    this.number,
+  });
 
   SongLight.fromSnapshot(
       DocumentSnapshot snapshot, String number, String artist)
       : id = snapshot.documentID, //snapshot.documentID,
         title = snapshot.data["title"],
         artist = snapshot.data["artist"],
+        number = snapshot.data["number"],
         links = new List<Link>();
 
   SongLight.fromJson(Map<String, dynamic> maps)
       : artist = maps["artist"],
         title = maps["title"],
         id = maps["id"],
+        number = maps["number"],
         links = new List<Link>();
 
   static fromMap(Map maps, String id) {
@@ -38,11 +47,21 @@ class SongLight extends Equatable {
     }
 
     return SongLight(
-        id: id, title: maps["title"], artist: maps["artist"], links: links);
+        id: id,
+        title: maps["title"],
+        artist: maps["artist"],
+        links: links,
+        number: maps["number"]);
   }
 
   toJson() {
-    return {"id": id, "title": title, "artist": artist, "links": links};
+    return {
+      "id": id,
+      "title": title,
+      "artist": artist,
+      "links": links,
+      "number": number
+    };
   }
 
   @override
@@ -57,14 +76,22 @@ class SongResult extends Equatable {
   final String title;
   final String artist;
   final String lyric;
+  final int number;
 
   SongResult.fromJson(Map<String, dynamic> maps)
       : id = maps["id"],
         title = maps["title"],
         lyric = maps["lyric"],
+        number = maps["number"],
         artist = maps["artist"] ?? "";
 
-  SongResult({this.id, this.title, this.artist, this.lyric});
+  const SongResult({
+    this.id,
+    this.title,
+    this.artist,
+    this.lyric,
+    this.number,
+  });
 
   @override
   List<Object> get props => [];
@@ -132,12 +159,12 @@ class Song extends Equatable {
     this.artist,
   });
 
-  Song.fromSnapshot(DocumentSnapshot snapshot, String number)
+  Song.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.documentID,
         title = snapshot.data["title"],
         lyric = snapshot.data["lyric"],
         chord = snapshot.data["chord"],
-        number = number,
+        number = snapshot.data["number"],
         numberViews = snapshot.data["numberViews"] ?? 0,
         createdAt = snapshot.data["createdAd"],
         updatedAt = snapshot.data["updatedAt"],
@@ -341,19 +368,17 @@ class Songs with ChangeNotifier {
     return _items.where((s) => favs.any((f) => f == s.id)).toList();
   }
 
-  Future fetchSongs() async {
-    var count = 0;
-    final docs = await databaseReference
-        .collection("songs")
-        .orderBy("title")
-        // .limit(15)
-        .getDocuments();
-    final songs = docs.documents
-        .map((doc) => Song.fromSnapshot(doc, '${count++}'))
-        .toList();
-    _items = songs;
-    notifyListeners();
-  }
+  // Future fetchSongs() async {
+  //   var count = 0;
+  //   final docs = await databaseReference
+  //       .collection("songs")
+  //       .orderBy("title")
+  //       // .limit(15)
+  //       .getDocuments();
+  //   final songs = docs.documents.map((doc) => Song.fromSnapshot(doc)).toList();
+  //   _items = songs;
+  //   notifyListeners();
+  // }
 }
 
 class Link {

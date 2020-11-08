@@ -1,5 +1,4 @@
-import 'package:cantapp/root.dart';
-import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/root/root.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:flutter/material.dart';
 

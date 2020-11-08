@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
+import 'package:cantapp/responsive/screen_type_layout.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
@@ -47,6 +48,8 @@ class SongScreen extends StatelessWidget {
 
     return Scaffold(
       body: StreamBuilder<Song>(
+        // possibile sostituzione in future perché viene rebuild
+        // quando inserisco una nuova visualizzazione in più
         stream: database.songStream(_id),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -59,11 +62,14 @@ class SongScreen extends StatelessWidget {
                       floating: true,
                       pinned: false,
                       snap: true,
-                      leading: BackButton(
-                        onPressed: () {
-                          Future.microtask(() => sessionTask.cancel());
-                          Navigator.pop(context);
-                        },
+                      leading: ScreenTypeLayout(
+                        mobile: BackButton(
+                          onPressed: () {
+                            Future.microtask(() => sessionTask.cancel());
+                            Navigator.pop(context);
+                          },
+                        ),
+                        tablet: Container(),
                       ),
                       title: Row(
                         mainAxisSize: MainAxisSize.max,

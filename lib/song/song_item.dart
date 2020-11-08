@@ -3,6 +3,9 @@ import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
+import 'package:cantapp/responsive/device_screen_type.dart';
+import 'package:cantapp/responsive/responsive_utils.dart';
+import 'package:cantapp/root/navigator_tablet.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
@@ -42,66 +45,65 @@ class SongWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var favoritesData = Provider.of<Favorites>(context);
-    return Consumer<Favorites>(
-      builder: (ctx, favoritesData, child) => ListTile(
-        leading: Container(
-          width: 35,
-          height: 35,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7),
-            color: Color(0xFF48639C), //_avatarColor[100]
+    return ListTile(
+      key: key,
+      selectedTileColor: Theme.of(context).accentColor,
+      leading: Container(
+        width: 35,
+        height: 35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(7),
+          color: Color(0xFF48639C), //_avatarColor[100]
+        ),
+        child: Center(
+          child: Text(
+            '${song.number}',
+            style: TextStyle(
+                color: Color(0xFFFFFFFF), //_avatarColor[900],
+                fontWeight: FontWeight.w800,
+                fontSize: 11),
           ),
-          child: Center(
-            child: Text(
-              '${song.number}',
-              style: TextStyle(
-                  color: Color(0xFFFFFFFF), //_avatarColor[900],
-                  fontWeight: FontWeight.w800,
-                  fontSize: 11),
-            ),
-          ),
         ),
-        title: Text(
-          '${song.title}',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              // color: _textColor[900],
-              color: Theme.of(context).primaryColor,
-              fontSize: 15),
-        ),
-        // subtitle: Text('Artista sconosciuto',
-        //     style: TextStyle(color: _textColor[900], fontSize: 11)),
-        subtitle: Container(
-          child: Row(children: _buildSubtitle()),
-        ),
-        // isThreeLine: true,
-        // subtitle: Text("Prova"),
-        dense: true,
-        onTap: () => _navigateToSong(context, song),
-        // trailing: PopupMenuButton<OptionSong>(
-        //   // color: _textColor[900],
-        //   onSelected: (OptionSong result) async {
-        //     if (result == OptionSong.add) {
-        //       await favoritesData.addFavorite(song.id);
-        //       _messageSnackbar(context, OptionSong.add);
-        //     }
-
-        //     if (result == OptionSong.remove) {
-        //       await favoritesData.removeFavorite(song.id);
-        //       _messageSnackbar(context, OptionSong.remove);
-        //     }
-
-        //     if (result == OptionSong.view) {
-        //       _navigateToSong(context, song);
-        //     }
-        //   },
-        //   itemBuilder: (ctx) => _buildOptions(ctx, favoritesData),
-        // ),
-        trailing: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () => _settingModalBottomSheet(context, song.id)),
       ),
+      title: Text(
+        '${song.title}',
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            // color: _textColor[900],
+            color: Theme.of(context).primaryColor,
+            fontSize: 15),
+      ),
+      // subtitle: Text('Artista sconosciuto',
+      //     style: TextStyle(color: _textColor[900], fontSize: 11)),
+      subtitle: Container(
+        child: Row(children: _buildSubtitle()),
+      ),
+      // isThreeLine: true,
+      // subtitle: Text("Prova"),
+      dense: true,
+      onTap: () => _navigateToSong(context, song),
+      // trailing: PopupMenuButton<OptionSong>(
+      //   // color: _textColor[900],
+      //   onSelected: (OptionSong result) async {
+      //     if (result == OptionSong.add) {
+      //       await favoritesData.addFavorite(song.id);
+      //       _messageSnackbar(context, OptionSong.add);
+      //     }
+
+      //     if (result == OptionSong.remove) {
+      //       await favoritesData.removeFavorite(song.id);
+      //       _messageSnackbar(context, OptionSong.remove);
+      //     }
+
+      //     if (result == OptionSong.view) {
+      //       _navigateToSong(context, song);
+      //     }
+      //   },
+      //   itemBuilder: (ctx) => _buildOptions(ctx, favoritesData),
+      // ),
+      trailing: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () => _settingModalBottomSheet(context, song.id)),
     );
   }
 
@@ -324,11 +326,21 @@ class SongWidget extends StatelessWidget {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-  _navigateToSong(context, song) => Navigator.of(context).push(
+  _navigateToSong(context, song) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final DeviceScreenType device = getDeviceType(mediaQuery);
+
+    if (device == DeviceScreenType.Mobile) {
+      Navigator.of(context).push(
         MaterialPageRoute(
             // fullscreenDialog: true, // sono sicuro?
             builder: (context) => SongScreen(id: song.id)),
       );
+    } else {
+      Provider.of<NavigatorTablet>(context, listen: false).view =
+          SongScreen(id: song.id);
+    }
+  }
 }
 
 enum OptionSong { add, remove, view }

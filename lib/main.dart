@@ -5,7 +5,7 @@ import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/landing/landing_screen.dart';
 import 'package:cantapp/locator.dart';
-import 'package:cantapp/root.dart';
+import 'package:cantapp/root/root.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firebase_auth_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
@@ -15,6 +15,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'root/navigator_tablet.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
         ChangeNotifierProvider.value(
             value: Songs(databaseReference: Firestore.instance)),
+        ChangeNotifierProvider.value(value: NavigatorTablet()),
         // Provider<FirebaseAuthService>(
         //     create: (context) => FirebaseAuthService()),
         // Provider<FirestoreDatabase>(

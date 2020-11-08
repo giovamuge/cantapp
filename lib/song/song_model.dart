@@ -135,7 +135,7 @@ class Song extends Equatable {
   final String title;
   final String lyric;
   final String chord;
-  final String number;
+  final int number;
   final bool isFavorite;
   final List<String> categories;
   final int numberViews;

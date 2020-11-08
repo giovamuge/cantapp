@@ -3,18 +3,18 @@ import 'dart:math';
 import 'package:cantapp/category/category_screen.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
-import 'package:cantapp/playlist/playlist.dart';
 import 'package:cantapp/playlist/playlist_screen.dart';
 import 'package:cantapp/setting/setting_screen.dart';
 import 'package:cantapp/widgets/navbar_bottom.dart';
 import 'package:flutter/material.dart';
 
-class RootScreen extends StatefulWidget {
+class RootScreenMobile extends StatefulWidget {
   @override
-  _RootScreenState createState() => _RootScreenState();
+  _RootScreenMobileState createState() => _RootScreenMobileState();
 }
 
-class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
+class _RootScreenMobileState extends State<RootScreenMobile>
+    with TickerProviderStateMixin {
   int _selectedNavIndex = 0;
   List<Widget> _viewsByIndex;
 

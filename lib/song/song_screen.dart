@@ -16,6 +16,8 @@ import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
 
+import 'song_full_screen.dart';
+
 class SongScreen extends StatelessWidget {
   final String _id;
   final EdgeInsets safeAreaChildScroll =
@@ -79,6 +81,16 @@ class SongScreen extends StatelessWidget {
                         ],
                       ),
                       actions: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.fullscreen),
+                          onPressed: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SongFullScreen(
+                                        body: _song.lyric,
+                                        title: _song.title,
+                                      ),
+                                  fullscreenDialog: true)),
+                        ),
                         FavoriteIconButtonWidget(songId: _song.id),
                         IconButton(
                           icon: Icon(Icons.format_size),

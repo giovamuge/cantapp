@@ -12,6 +12,8 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +54,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // initialize firebase ads
     FirebaseAdsService()..initialaze();
+    FirebaseAnalytics analytics = FirebaseAnalytics();
 
     return MultiProvider(
       providers: [
@@ -77,6 +80,9 @@ class MyApp extends StatelessWidget {
             title: 'Cantapp',
             theme: theme.getTheme(),
             localeResolutionCallback: onLocaleResolutionCallback,
+            navigatorObservers: [
+              FirebaseAnalyticsObserver(analytics: analytics),
+            ],
             // routes: appRoutes,
             home: LandingScreen(child: RootScreen()),
           );

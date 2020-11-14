@@ -10,7 +10,7 @@ class SongLight extends Equatable {
   final String id;
   final String title;
   final String artist;
-  final int number;
+  final String number;
   final List<Link> links;
 
   SongLight({
@@ -76,7 +76,7 @@ class SongResult extends Equatable {
   final String title;
   final String artist;
   final String lyric;
-  final int number;
+  final String number;
 
   SongResult.fromJson(Map<String, dynamic> maps)
       : id = maps["id"],
@@ -135,7 +135,7 @@ class Song extends Equatable {
   final String title;
   final String lyric;
   final String chord;
-  final int number;
+  final String number;
   final bool isFavorite;
   final List<String> categories;
   final int numberViews;

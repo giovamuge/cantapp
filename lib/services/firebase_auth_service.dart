@@ -54,14 +54,6 @@ class FirebaseAuthService {
     );
   }
 
-  // da rimuovere perché verranno usate le functions di firebase
-  Future<void> addUserIfNotExist(User user) async {
-    final firestore = GetIt.instance<FirestoreDatabase>();
-    // final userFirestore = await firestore.userStream(user.uid)?.first;
-    // if (userFirestore != null) return;
-    firestore.setUser(user, user.uid);
-  }
-
   Stream<User> get onAuthStateChanged {
     return _firebaseAuth.onAuthStateChanged.map(_userFromFirebase);
   }

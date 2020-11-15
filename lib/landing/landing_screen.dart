@@ -1,6 +1,5 @@
 import 'package:cantapp/locator.dart';
 import 'package:cantapp/services/firebase_auth_service.dart';
-import 'package:cantapp/services/firestore_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -23,7 +22,6 @@ class LandingScreen extends StatelessWidget {
           auth.signInAnonymously();
         } else {
           setupLocatorFirestore(user.uid);
-          auth.addUserIfNotExist(user);
         }
 
         return _child;

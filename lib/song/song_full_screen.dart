@@ -26,9 +26,12 @@ class SongFullScreen extends StatelessWidget {
 
   final String _title;
   final String _body;
-  const SongFullScreen({@required String body, @required String title})
+  final Widget _child;
+  const SongFullScreen(
+      {@required String body, @required String title, Widget child})
       : _body = body,
-        _title = title;
+        _title = title,
+        _child = child;
 
   @override
   Widget build(BuildContext context) {
@@ -82,17 +85,31 @@ class SongFullScreen extends StatelessWidget {
     final maxWidth = MediaQuery.of(context).size.width * .33; // oppure .5
     // print(fontSize);
     var lines = _body.split('\n');
-    return lines.map(
-      (e) => Container(
-        // color: Colors.red,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: maxWidth),
-          child: RichText(
-            text: TextSpan(children: [..._fontWeight(e, fontSize)]),
+    var result = new List<Widget>();
+
+    for (var i = 0; i < lines.length; i++) {
+      if (i % 20 == 0) {
+        result.add(_child);
+      }
+
+      result.add(
+        Container(
+          // color: Colors.red,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            child: RichText(
+              text: TextSpan(children: [..._fontWeight(lines[i], fontSize)]),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
+
+    if (lines.length < 20) {
+      result.add(_child);
+    }
+
+    return result;
   }
 
   List<TextSpan> _fontWeight(String lineText, double fontSize) {

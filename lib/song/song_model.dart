@@ -1,13 +1,7 @@
-import 'dart:async';
-
 import 'package:cantapp/category/category_model.dart';
-import 'package:cantapp/category/category_root.dart';
-import 'package:cantapp/services/firestore_database.dart';
-import 'package:cantapp/services/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 // potrei usarlo come abstract class
 // da inserrire come classe base di song
@@ -18,6 +12,7 @@ class SongLight extends Equatable {
   final String artist;
   final String number;
   final List<Link> links;
+  final bool isChord;
 
   SongLight({
     this.title,
@@ -25,6 +20,7 @@ class SongLight extends Equatable {
     this.artist,
     this.links,
     this.number,
+    this.isChord = false,
   });
 
   SongLight.fromSnapshot(
@@ -33,6 +29,7 @@ class SongLight extends Equatable {
         title = snapshot.data["title"],
         artist = snapshot.data["artist"],
         number = snapshot.data["number"],
+        isChord = snapshot.data["chord"] != null,
         links = new List<Link>();
 
   SongLight.fromJson(Map<String, dynamic> maps)
@@ -40,6 +37,7 @@ class SongLight extends Equatable {
         title = maps["title"],
         id = maps["id"],
         number = maps["number"],
+        isChord = maps["chord"] != null,
         links = new List<Link>();
 
   static fromMap(Map maps, String id) {
@@ -57,6 +55,7 @@ class SongLight extends Equatable {
         title: maps["title"],
         artist: maps["artist"],
         links: links,
+        isChord: maps["chord"] != null,
         number: maps["number"]);
   }
 

@@ -127,8 +127,6 @@ class _AppState extends State<App> {
       TabNavigatorRoutes.home: (context) => HomeScreen(),
       TabNavigatorRoutes.categories: (context) => CategoryScreen(),
       TabNavigatorRoutes.favorites: (context) => FavoriteScreen(),
-      TabNavigatorRoutes.home: (context) => HomeScreen(),
-      TabNavigatorRoutes.home: (context) => HomeScreen(),
       // TabNavigatorRoutes.root: (context) => ColorsListPage(
       //       color: activeTabColor[tabItem],
       //       title: tabName[tabItem],

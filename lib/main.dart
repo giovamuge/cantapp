@@ -1,5 +1,5 @@
 import 'package:cantapp/common/constants.dart';
-import 'package:cantapp/common/route.dart';
+import 'package:cantapp/common/router.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';

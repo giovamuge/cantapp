@@ -116,6 +116,10 @@ class _ActivityScreenState extends State<ActivityScreen>
                                 song: items[index],
                                 avatarColor: widget.color,
                                 textColor: widget.color,
+                                onNavigateSong: (context) {
+                                  _animationController.reverse().then(
+                                      (value) => Navigator.of(context).pop());
+                                },
                               );
                             },
                             itemCount: items.length,

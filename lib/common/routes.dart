@@ -1,0 +1,9 @@
+const String defaultRoute = '/';
+const String homeRoute = '/home';
+const String songRoute = '/song';
+const String settingRoute = '/setting';
+const String playlistRoute = '/playlist';
+const String favoriteRoute = '/favorite';
+const String songFullscreenRoute = '/songFullsreen';
+const String categoryRoute = '/category';
+const String serviziRoute = '/song/servizi';

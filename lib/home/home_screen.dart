@@ -1,3 +1,4 @@
+import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/firestore_database.dart';
@@ -22,16 +23,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   ScrollController _controller;
   Animation _animation;
   AnimationController _animationController;
+  AnimationController _fadeController;
+  Animation<double> _fadeAnimation;
 
   @override
   void initState() {
+    super.initState();
     _visible = false;
     _controller = ScrollController();
     _controller.addListener(_onScrolling);
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-    super.initState();
+    _fadeController = AnimationController(
+        duration: const Duration(milliseconds: 250), vsync: this);
+    _fadeAnimation =
+        CurvedAnimation(parent: _fadeController, curve: Curves.easeIn);
+
+    _fadeAnimation.addStatusListener((status) {
+      print(status);
+      if (status == AnimationStatus.dismissed) {
+        _fadeController.forward();
+      }
+    });
+
+    //this will start the animation
+    _fadeController.forward();
   }
 
   @override
@@ -137,6 +154,52 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           // SizedBox(height: 15),
           // ListActivityCardsWidget(),
+          // SizedBox(height: 20),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 20),
+          //   child: Text(
+          //     "Scegli una categoria",
+          //     style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold),
+          //   ),
+          // ),
+          SizedBox(height: 20),
+          Container(
+              height: 30.00,
+              // padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  SizedBox(width: 20),
+                  ...Categories().items.map(
+                        (e) => Consumer<Songs>(
+                          builder: (context, songs, child) {
+                            return Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2.5),
+                              child: RaisedButton(
+                                color: songs.selected == e
+                                    ? lightAccent
+                                    : Theme.of(context).buttonColor,
+                                child: Text(
+                                  e.title,
+                                  style: TextStyle(color: lightBG),
+                                ),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0)),
+                                onPressed: () {
+                                  _fadeController
+                                      .reverse()
+                                      .then((value) => songs.selected = e);
+                                  // songs.streamController.add(e);
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                ],
+              )),
           SizedBox(height: 15),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -147,76 +210,85 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContents(BuildContext context) {
-    final database = GetIt.instance<FirestoreDatabase>();
-    // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
-    return StreamBuilder<List<SongLight>>(
-      stream: database.songsLightStream(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.waiting &&
-            snapshot.hasData) {
-          final List<SongLight> items = snapshot.data;
-          if (items.isNotEmpty) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: items.length,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                final SongLight item = items[index];
-                return SongWidget(song: item);
-              },
-            );
-          } else {
-            return Container(
-                height: 300,
-                child: Center(child: Text("Non ci sono canzoni 🤷‍♂️")));
-          }
-        } else if (snapshot.hasError) {
-          return Container(
-              height: 300,
-              child: Center(
-                  child: Text("C'è un errore 😖\nriprova tra qualche istante.",
-                      textAlign: TextAlign.center)));
-        } else {
-          var theme = Provider.of<ThemeChanger>(context, listen: false);
-          final sizeWidth = MediaQuery.of(context).size.width;
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Consumer<Songs>(
+        builder: (context, songs, child) {
+          return StreamBuilder<List<SongLight>>(
+            // se null seleziona il primo elemento, ovvero 'tutti'
+            stream: GetIt.instance<FirestoreDatabase>()
+                .songsFromCategorySearchStream(
+                    category: songs.selected ?? Categories().items[0]),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.waiting &&
+                  snapshot.hasData) {
+                final List<SongLight> items = snapshot.data;
+                if (items.isNotEmpty) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: items.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      final SongLight item = items[index];
+                      return SongWidget(song: item);
+                    },
+                  );
+                } else {
+                  return Container(
+                      height: 300,
+                      child: Center(child: Text("Non ci sono canzoni 🤷‍♂️")));
+                }
+              } else if (snapshot.hasError) {
+                return Container(
+                    height: 300,
+                    child: Center(
+                        child: Text(
+                            "C'è un errore 😖\nriprova tra qualche istante.",
+                            textAlign: TextAlign.center)));
+              } else {
+                var theme = Provider.of<ThemeChanger>(context, listen: false);
+                final sizeWidth = MediaQuery.of(context).size.width;
 
-          return Shimmer.fromColors(
-            // baseColor: Theme.of(context).primaryColorLight,
-            // highlightColor: Theme.of(context).primaryColor,
-            baseColor: theme.getThemeName() == Constants.themeLight
-                ? Colors.grey[100]
-                : Colors.grey[600],
-            highlightColor: theme.getThemeName() == Constants.themeLight
-                ? Colors.grey[300]
-                : Colors.grey[900],
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  leading: Container(
-                    width: 35.00,
-                    height: 35.00,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: Container(
-                    width: sizeWidth - 35.00,
-                    height: 30.00,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      color: Colors.white,
-                    ),
+                return Shimmer.fromColors(
+                  // baseColor: Theme.of(context).primaryColorLight,
+                  // highlightColor: Theme.of(context).primaryColor,
+                  baseColor: theme.getThemeName() == Constants.themeLight
+                      ? Colors.grey[100]
+                      : Colors.grey[600],
+                  highlightColor: theme.getThemeName() == Constants.themeLight
+                      ? Colors.grey[300]
+                      : Colors.grey[900],
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        leading: Container(
+                          width: 35.00,
+                          height: 35.00,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Container(
+                          width: sizeWidth - 35.00,
+                          height: 30.00,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: List.generate(10, (i) => i++).length,
                   ),
                 );
-              },
-              itemCount: List.generate(10, (i) => i++).length,
-            ),
+              }
+            },
           );
-        }
-      },
+        },
+      ),
     );
   }
 

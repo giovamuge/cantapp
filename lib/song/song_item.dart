@@ -19,6 +19,7 @@ class SongWidget extends StatelessWidget {
   final SongLight song;
   final MaterialColor _avatarColor;
   final MaterialColor _textColor;
+  final Function(BuildContext) _onNavigateSong;
 
   // static const Color _defaultPrimaryColor = Theme.of(context).primaryColor;
 
@@ -38,9 +39,11 @@ class SongWidget extends StatelessWidget {
     },
   );
 
-  const SongWidget({Key key, @required this.song, avatarColor, textColor})
+  const SongWidget(
+      {Key key, @required this.song, avatarColor, textColor, onNavigateSong})
       : _avatarColor = avatarColor ?? Colors.purple,
         _textColor = textColor ?? _defaultTextColor,
+        _onNavigateSong = onNavigateSong,
         super(key: key);
 
   @override
@@ -339,6 +342,8 @@ class SongWidget extends StatelessWidget {
     } else {
       Provider.of<NavigatorTablet>(context, listen: false).view =
           SongScreen(id: song.id);
+
+      if (_onNavigateSong != null) _onNavigateSong.call(context);
     }
   }
 }

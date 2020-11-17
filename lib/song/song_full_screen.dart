@@ -88,7 +88,7 @@ class SongFullScreen extends StatelessWidget {
     var result = new List<Widget>();
 
     for (var i = 0; i < lines.length; i++) {
-      if (i % 20 == 0) {
+      if (i % 20 == 0 && i != 0) {
         result.add(_child);
       }
 

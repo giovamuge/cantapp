@@ -16,7 +16,8 @@ enum CategoryEnum {
   credo,
   alleluia,
   gloria,
-  signorepieta
+  signorepieta,
+  tutti
 }
 
 class Category {
@@ -25,6 +26,11 @@ class Category {
   final String title;
   final CategoryEnum value;
   final List<Song> songs;
+
+  @override
+  bool operator ==(other) {
+    return (other.value == value);
+  }
 
   toString() {
     var valueData = value.toString();
@@ -35,6 +41,7 @@ class Category {
 
 class Categories {
   List<Category> _items = [
+    new Category(value: CategoryEnum.tutti, title: 'Tutti'),
     new Category(value: CategoryEnum.agnellodidio, title: 'Agnello di Dio'),
     new Category(value: CategoryEnum.alleluia, title: 'Alleluia'),
     new Category(value: CategoryEnum.canoni, title: 'Canoni'),
@@ -55,6 +62,8 @@ class Categories {
   List<Category> get items {
     return [..._items];
   }
+
+  initialCategory() => _items[0];
 
   // Future<void> fetchSongsToCategories(List<Song> songs) async {
   //   songs.forEach((s) {

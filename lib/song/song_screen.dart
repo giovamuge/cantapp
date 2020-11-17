@@ -39,7 +39,7 @@ class SongScreen extends StatelessWidget {
 
     var sessionTask = Future.delayed(Duration(seconds: 10))
         .asStream()
-        .listen((res) => _incrementViewAsync());
+        .listen((res) => _incrementViews());
     // .listen((res) => database.incrementView(_song.id));
 
     var service = new FirebaseAdsService();
@@ -49,6 +49,7 @@ class SongScreen extends StatelessWidget {
         FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
     return Scaffold(
+      drawerScrimColor: Colors.transparent,
       body: StreamBuilder<Song>(
         // possibile sostituzione in future perché viene rebuild
         // quando inserisco una nuova visualizzazione in più
@@ -88,6 +89,7 @@ class SongScreen extends StatelessWidget {
                                   builder: (context) => SongFullScreen(
                                         body: _song.lyric,
                                         title: _song.title,
+                                        child: service.banner,
                                       ),
                                   fullscreenDialog: true)),
                         ),
@@ -171,7 +173,7 @@ class SongScreen extends StatelessWidget {
     }
   }
 
-  void _incrementViews(BuildContext context) {
+  void _incrementViews() {
     final database = GetIt.instance<
         FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 

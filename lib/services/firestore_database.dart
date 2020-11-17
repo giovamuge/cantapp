@@ -51,10 +51,12 @@ class FirestoreDatabase {
   Stream<List<SongLight>> songsFromCategorySearchStream({Category category}) =>
       _service.collectionStream<SongLight>(
           path: FirestorePath.songs(),
-          queryBuilder: (query) => query
-              .where('categories', arrayContains: category.toString())
-              .orderBy('title'),
-          builder: (data, documentID) => SongLight.fromMap(data, documentID));
+          builder: (data, documentID) => SongLight.fromMap(data, documentID),
+          queryBuilder: (query) => category.value == CategoryEnum.tutti
+              ? query.orderBy('title')
+              : query
+                  .where('categories', arrayContains: category.toString())
+                  .orderBy('title'));
 
   Stream<List<Song>> songsSearchStream({String textSearch}) =>
       _service.collectionStream<Song>(
@@ -64,17 +66,18 @@ class FirestoreDatabase {
               .orderBy('title'),
           builder: (data, documentID) => Song.fromMap(data, documentID));
 
-  Stream<List<Song>> songsStream() => _service.collectionStream(
+  Stream<List<Song>> songsStream() => _service.collectionStream<Song>(
       path: FirestorePath.songs(),
       queryBuilder: (query) => query.orderBy('title'),
       builder: (data, documentId) => Song.fromMap(data, documentId));
 
-  Stream<List<SongLight>> songsLightStream() => _service.collectionStream(
-      path: FirestorePath.songs(),
-      queryBuilder: (query) => query.orderBy('title'),
-      builder: (data, documentId) => SongLight.fromMap(data, documentId));
+  Stream<List<SongLight>> songsLightStream() =>
+      _service.collectionStream<SongLight>(
+          path: FirestorePath.songs(),
+          queryBuilder: (query) => query.orderBy('title'),
+          builder: (data, documentId) => SongLight.fromMap(data, documentId));
 
-  Stream<Song> songStream(String id) => _service.documentStream(
+  Stream<Song> songStream(String id) => _service.documentStream<Song>(
       path: FirestorePath.song(id),
       builder: (data, documentId) => Song.fromMap(data, documentId));
 
@@ -95,7 +98,7 @@ class FirestoreDatabase {
           },
           builder: (data, documentId) => SongLight.fromMap(data, documentId));
 
-  Stream<User> userStream(String userId) => _service.documentStream(
+  Stream<User> userStream(String userId) => _service.documentStream<User>(
       path: FirestorePath.user(userId),
       builder: (data, documentId) => User.fromMap(data));
 
@@ -105,12 +108,14 @@ class FirestoreDatabase {
   Future<void> addFavorite(FavoriteFire favorite) async => await _service
       .addData(path: FirestorePath.favorites(uid), data: favorite.toJson());
 
-  Stream<List<FavoriteFire>> favoritesStream() => _service.collectionStream(
-      path: FirestorePath.favorites(uid),
-      builder: (data, documentId) => FavoriteFire.fromMap(data, documentId));
+  Stream<List<FavoriteFire>> favoritesStream() =>
+      _service.collectionStream<FavoriteFire>(
+          path: FirestorePath.favorites(uid),
+          builder: (data, documentId) =>
+              FavoriteFire.fromMap(data, documentId));
 
   Stream<FavoriteFire> favoriteStream(String favoriteId) =>
-      _service.documentStream(
+      _service.documentStream<FavoriteFire>(
           path: FirestorePath.favorite(uid, favoriteId),
           builder: (data, documentId) =>
               FavoriteFire.fromMap(data, documentId));

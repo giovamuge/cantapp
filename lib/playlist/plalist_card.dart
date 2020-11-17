@@ -1,4 +1,5 @@
 import 'package:cantapp/activity/activity_screen.dart';
+import 'package:cantapp/common/theme.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
@@ -31,14 +32,28 @@ class PlaylistCardWidget extends StatelessWidget {
       // width: screenWidth,
       height: MediaQuery.of(context).size.width * 0.5,
       padding: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: lightAccent.withOpacity(0.5),
+            spreadRadius: .5,
+            blurRadius: 15,
+            offset: Offset(0, 0), // changes position of shadow
+          ),
+        ],
+      ),
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
         onTap: () => Navigator.push(
           context,
           PageRouteBuilder(
             // transitionDuration: const Duration(milliseconds: 400),
-            pageBuilder: (context, _, __) =>
-                ActivityScreen(index: _index, color: _color, title: _title),
+            pageBuilder: (context, _, __) => ActivityScreen(
+              index: _index,
+              color: _color,
+              title: _title,
+            ),
           ),
         ),
         child: Stack(

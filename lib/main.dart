@@ -16,9 +16,11 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'root/navigator_tablet.dart';
+import 'services/navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,6 +80,8 @@ class MyApp extends StatelessWidget {
             // navigatorKey: navigatorKey,
             // debugShowCheckedModeBanner: false,
             title: 'Cantapp',
+            // navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
+            // onGenerateRoute: generateRoute,
             theme: theme.getTheme(),
             localeResolutionCallback: onLocaleResolutionCallback,
             navigatorObservers: [

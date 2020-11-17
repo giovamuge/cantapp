@@ -113,17 +113,17 @@ class SongWidget extends StatelessWidget {
   List<Widget> _buildSubtitle() {
     final result = new List<Widget>();
 
-    // if (!song.chord.isNullOrEmpty()) {
-    //   result.add(
-    //     Padding(
-    //       padding: const EdgeInsets.only(right: 5),
-    //       child: BadgetWidget(
-    //         title: 'accordi',
-    //         color: Colors.pink,
-    //       ),
-    //     ),
-    //   );
-    // }
+    if (song.isChord) {
+      result.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: BadgetWidget(
+            title: 'accordi',
+            color: lightAccent,
+          ),
+        ),
+      );
+    }
 
     if (song.links.any((l) => l.type == 'youtube')) {
       result.add(
@@ -131,7 +131,7 @@ class SongWidget extends StatelessWidget {
           padding: const EdgeInsets.only(right: 5),
           child: BadgetWidget(
             title: 'video',
-            color: Colors.lightGreen,
+            color: lightAccent,
           ),
         ),
       );
@@ -143,7 +143,7 @@ class SongWidget extends StatelessWidget {
           padding: const EdgeInsets.only(right: 5),
           child: BadgetWidget(
             title: 'audio',
-            color: Colors.lightBlue,
+            color: lightAccent,
           ),
         ),
       );
@@ -339,6 +339,8 @@ class SongWidget extends StatelessWidget {
             // fullscreenDialog: true, // sono sicuro?
             builder: (context) => SongScreen(id: song.id)),
       );
+      // GetIt.instance<NavigationService>()
+      //     .navigateTo(songRoute, arguments: song.id);
     } else {
       Provider.of<NavigatorTablet>(context, listen: false).view =
           SongScreen(id: song.id);

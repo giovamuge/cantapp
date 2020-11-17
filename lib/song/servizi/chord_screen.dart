@@ -6,6 +6,8 @@ import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../song_full_screen.dart';
+
 class ChordScreen extends StatefulWidget {
   final Song _song;
   const ChordScreen({@required Song song}) : _song = song;
@@ -32,6 +34,16 @@ class _ChordScreenState extends State<ChordScreen> {
             pinned: false,
             snap: true,
             actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.fullscreen),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SongFullScreen(
+                          body: widget._song.chord,
+                          title: widget._song.title,
+                          child: service.banner,
+                        ),
+                    fullscreenDialog: true)),
+              ),
               IconButton(
                 icon: Icon(Icons.format_size),
                 onPressed: lyricData.collaspe,

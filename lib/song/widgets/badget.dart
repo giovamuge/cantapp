@@ -1,24 +1,33 @@
+import 'package:cantapp/common/constants.dart';
+import 'package:cantapp/common/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BadgetWidget extends StatelessWidget {
   final String title;
-  final MaterialColor color;
+  final Color color;
 
   const BadgetWidget({Key key, @required this.color, @required this.title})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var theme = Provider.of<ThemeChanger>(context, listen: false);
+
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
-        color: color[100],
+        color: color,
       ),
       child: Text(
         title,
-        style: TextStyle(color: color[900], fontSize: 10),
+        style: TextStyle(
+          fontSize: 10,
+          color:
+              theme.getThemeName() == Constants.themeLight ? lightBG : darkBG,
+        ),
         textAlign: TextAlign.center,
       ),
     );

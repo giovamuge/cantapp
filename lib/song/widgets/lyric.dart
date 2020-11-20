@@ -4,12 +4,18 @@ class LyricWidget extends StatelessWidget {
   final String _text;
   final double _fontSize;
   final Widget _child;
+  final Future<Widget> _futureChild;
 
-  const LyricWidget(
-      {Key key, @required String text, @required double fontSize, Widget child})
-      : _fontSize = fontSize,
+  const LyricWidget({
+    Key key,
+    @required String text,
+    @required double fontSize,
+    Widget child,
+    Future<Widget> futureChild,
+  })  : _fontSize = fontSize,
         _text = text,
         _child = child,
+        _futureChild = futureChild,
         super(key: key);
 
   @override
@@ -24,7 +30,21 @@ class LyricWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 30),
-        _child,
+        if (_child != null)
+          _child
+        else if (_child == null && _futureChild != null)
+          FutureBuilder(
+            future: _futureChild,
+            builder: (context, data) {
+              if (data.hasData && data.data is Widget) {
+                return data.data;
+              } else {
+                return Container();
+              }
+            },
+          )
+        else
+          Container()
       ],
     );
     // return Column(

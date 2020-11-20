@@ -11,7 +11,8 @@ class AlgoliaService {
     apiKey: 'bcf8b392f6dacaa188445ccf24e2467d',
   );
 
-  AlgoliaIndexReference get _songsIndex => _algolia.instance.index('dev_SONGS');
+  AlgoliaIndexReference get _songsIndex =>
+      _algolia.instance.index('prod_SONGS');
 
   Future<List<SongResult>> performMovieQuery({text: String}) async {
     // if (_songsIndex == null) return new List<SongLight>();

@@ -18,12 +18,44 @@ import 'package:cantapp/song/servizi/servizi_screen.dart';
 
 import 'song_full_screen.dart';
 
-class SongScreen extends StatelessWidget {
+class SongScreen extends StatefulWidget {
   final String _id;
+
+  const SongScreen({@required String id}) : _id = id;
+
+  @override
+  _SongScreenState createState() => _SongScreenState();
+}
+
+class _SongScreenState extends State<SongScreen> {
   final EdgeInsets safeAreaChildScroll =
       const EdgeInsets.symmetric(horizontal: 25);
 
-  const SongScreen({@required String id}) : _id = id;
+  StreamSubscription<dynamic> _sessionTask;
+  FirestoreDatabase _database;
+  FirebaseAdsService _service;
+
+  @override
+  void initState() {
+    _sessionTask = Future.delayed(Duration(seconds: 10))
+        .asStream()
+        .listen((res) => _incrementViews());
+    // .listen((res) => database.incrementView(_song.id));
+
+    _service = new FirebaseAdsService();
+    _service.createBannerAd();
+
+    _database = GetIt.instance<
+        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _sessionTask.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,23 +69,12 @@ class SongScreen extends StatelessWidget {
     // final database = Provider.of<FirestoreDatabase>(context,
     //     listen: false); // potrebbe essere true, da verificare
 
-    var sessionTask = Future.delayed(Duration(seconds: 10))
-        .asStream()
-        .listen((res) => _incrementViews());
-    // .listen((res) => database.incrementView(_song.id));
-
-    var service = new FirebaseAdsService();
-    service.createBannerAd();
-
-    final database = GetIt.instance<
-        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
-
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       body: StreamBuilder<Song>(
         // possibile sostituzione in future perché viene rebuild
         // quando inserisco una nuova visualizzazione in più
-        stream: database.songStream(_id),
+        stream: _database.songStream(widget._id),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final Song _song = snapshot.data;
@@ -68,7 +89,7 @@ class SongScreen extends StatelessWidget {
                       leading: ScreenTypeLayout(
                         mobile: BackButton(
                           onPressed: () {
-                            Future.microtask(() => sessionTask.cancel());
+                            // Future.microtask(() => sessionTask.cancel());
                             Navigator.pop(context);
                           },
                         ),
@@ -82,17 +103,19 @@ class SongScreen extends StatelessWidget {
                         ],
                       ),
                       actions: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.fullscreen),
-                          onPressed: () =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SongFullScreen(
-                                        body: _song.lyric,
-                                        title: _song.title,
-                                        child: service.banner,
-                                      ),
-                                  fullscreenDialog: true)),
-                        ),
+                        // todo: da riabilitare
+                        // IconButton(
+                        //   icon: Icon(Icons.fullscreen),
+                        //   onPressed: () => Navigator.of(context).push(
+                        //     MaterialPageRoute(
+                        //         builder: (context) => SongFullScreen(
+                        //               body: _song.lyric,
+                        //               title: _song.title,
+                        //               child: _service.banner,
+                        //             ),
+                        //         fullscreenDialog: true),
+                        //   ),
+                        // ),
                         FavoriteIconButtonWidget(songId: _song.id),
                         IconButton(
                           icon: Icon(Icons.format_size),
@@ -119,7 +142,7 @@ class SongScreen extends StatelessWidget {
                           child: LyricWidget(
                             text: _song.lyric,
                             fontSize: lyricData.fontSize,
-                            child: service.banner,
+                            futureChild: _service.createBannerAdAsync(),
                           ),
                         ),
                         // Padding(
@@ -174,17 +197,18 @@ class SongScreen extends StatelessWidget {
   }
 
   void _incrementViews() {
-    final database = GetIt.instance<
-        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
+    // final database = GetIt.instance<
+    //     FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
-    Future.delayed(Duration(seconds: 5))
-        .asStream()
-        .listen((res) => database.incrementView(_id));
+    // Future.delayed(Duration(seconds: 5))
+    //     .asStream()
+    //     .listen((res) => database.incrementView(widget._id));
+    _database.incrementView(widget._id);
   }
 
   Future<void> _incrementViewAsync() async {
     final String url =
-        'https://us-central1-mgc-cantapp.cloudfunctions.net/incrementView?songId=${_id}';
+        'https://us-central1-mgc-cantapp.cloudfunctions.net/incrementView?songId=${widget._id}';
     final Response response = await put(url);
     if (response.statusCode == 200) {
       // If the server did return a 201 CREATED response,

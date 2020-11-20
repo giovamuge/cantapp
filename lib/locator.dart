@@ -1,3 +1,4 @@
+import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firebase_auth_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/services/navigation_service.dart';
@@ -9,6 +10,7 @@ void setupLocator() {
   locator.registerSingleton<FirestoreDatabase>(FirestoreDatabase(uid: ""));
   locator.registerSingleton<FirebaseAuthService>(FirebaseAuthService());
   locator.registerSingleton<NavigationService>(NavigationService());
+  locator.registerSingleton<FirebaseAdsService>(FirebaseAdsService());
 
   // esempio di register factory
   // potrebbe essere una soluzione

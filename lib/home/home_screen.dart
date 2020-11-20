@@ -16,8 +16,9 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  // implements  AutomaticKeepAliveClientMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with TickerProviderStateMixin
+    implements AutomaticKeepAliveClientMixin<HomeScreen> {
   // Songs _songsData;
   bool _visible;
   ScrollController _controller;
@@ -36,16 +37,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     _fadeController = AnimationController(
-        duration: const Duration(milliseconds: 250), vsync: this);
+        duration: const Duration(milliseconds: 300), vsync: this);
     _fadeAnimation =
         CurvedAnimation(parent: _fadeController, curve: Curves.easeIn);
-
-    _fadeAnimation.addStatusListener((status) {
-      print(status);
-      if (status == AnimationStatus.dismissed) {
-        _fadeController.forward();
-      }
-    });
+    _fadeAnimation.addStatusListener(_onFadeAnimation);
+    // _fadeController.
 
     //this will start the animation
     _fadeController.forward();
@@ -56,6 +52,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.didChangeDependencies();
     // _songsData = Provider.of<Songs>(context);
     // await _songsData.fetchSongs();
+  }
+
+  void _onFadeAnimation(AnimationStatus status) {
+    print(status);
+    if (status == AnimationStatus.dismissed) {
+      // _fadeController.forward();
+    }
   }
 
   void _onScrolling() {
@@ -164,42 +167,43 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           // ),
           SizedBox(height: 20),
           Container(
-              height: 30.00,
-              // padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  SizedBox(width: 20),
-                  ...Categories().items.map(
-                        (e) => Consumer<Songs>(
-                          builder: (context, songs, child) {
-                            return Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2.5),
-                              child: RaisedButton(
-                                color: songs.selected == e
-                                    ? lightAccent
-                                    : Theme.of(context).buttonColor,
-                                child: Text(
-                                  e.title,
-                                  style: TextStyle(color: lightBG),
-                                ),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0)),
-                                onPressed: () {
-                                  _fadeController
-                                      .reverse()
-                                      .then((value) => songs.selected = e);
-                                  // songs.streamController.add(e);
-                                },
+            height: 30.00,
+            // padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                SizedBox(width: 20),
+                ...Categories().items.map(
+                      (e) => Consumer<Songs>(
+                        builder: (context, songs, child) {
+                          return Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 2.5),
+                            child: RaisedButton(
+                              color: songs.selected == e
+                                  ? lightAccent
+                                  : Theme.of(context).buttonColor,
+                              child: Text(
+                                e.title,
+                                style: TextStyle(color: lightBG),
                               ),
-                            );
-                          },
-                        ),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0)),
+                              onPressed: () {
+                                _fadeController
+                                    .reverse()
+                                    .then((value) => songs.selected = e);
+                                // songs.streamController.add(e);
+                              },
+                            ),
+                          );
+                        },
                       ),
-                ],
-              )),
+                    ),
+              ],
+            ),
+          ),
           SizedBox(height: 15),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -210,84 +214,88 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContents(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Consumer<Songs>(
-        builder: (context, songs, child) {
-          return StreamBuilder<List<SongLight>>(
-            // se null seleziona il primo elemento, ovvero 'tutti'
-            stream: GetIt.instance<FirestoreDatabase>()
-                .songsFromCategorySearchStream(
-                    category: songs.selected ?? Categories().items[0]),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.waiting &&
-                  snapshot.hasData) {
-                final List<SongLight> items = snapshot.data;
-                if (items.isNotEmpty) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: items.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      final SongLight item = items[index];
-                      return SongWidget(song: item);
-                    },
-                  );
-                } else {
-                  return Container(
-                      height: 300,
-                      child: Center(child: Text("Non ci sono canzoni 🤷‍♂️")));
-                }
-              } else if (snapshot.hasError) {
+    return Consumer<Songs>(
+      builder: (context, songs, child) {
+        return StreamBuilder<List<SongLight>>(
+          // se null seleziona il primo elemento, ovvero 'tutti'
+          stream: GetIt.instance<FirestoreDatabase>()
+              .songsFromCategorySearchStream(
+                  category: songs.selected ?? Categories().items[0]),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.waiting &&
+                snapshot.hasData) {
+              final List<SongLight> items = snapshot.data;
+              if (items.isNotEmpty) {
+                _fadeController.forward();
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    final SongLight item = items[index];
+                    return SongWidget(song: item);
+                  },
+                );
+              } else {
                 return Container(
                     height: 300,
-                    child: Center(
-                        child: Text(
-                            "C'è un errore 😖\nriprova tra qualche istante.",
-                            textAlign: TextAlign.center)));
-              } else {
-                var theme = Provider.of<ThemeChanger>(context, listen: false);
-                final sizeWidth = MediaQuery.of(context).size.width;
-
-                return Shimmer.fromColors(
-                  // baseColor: Theme.of(context).primaryColorLight,
-                  // highlightColor: Theme.of(context).primaryColor,
-                  baseColor: theme.getThemeName() == Constants.themeLight
-                      ? Colors.grey[100]
-                      : Colors.grey[600],
-                  highlightColor: theme.getThemeName() == Constants.themeLight
-                      ? Colors.grey[300]
-                      : Colors.grey[900],
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        leading: Container(
-                          width: 35.00,
-                          height: 35.00,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color: Colors.white,
-                          ),
-                        ),
-                        title: Container(
-                          width: sizeWidth - 35.00,
-                          height: 30.00,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
-                    },
-                    itemCount: List.generate(10, (i) => i++).length,
-                  ),
-                );
+                    child: Center(child: Text("Non ci sono canzoni 🤷‍♂️")));
               }
-            },
+            } else if (snapshot.hasError) {
+              return Container(
+                  height: 300,
+                  child: Center(
+                      child: Text(
+                          "C'è un errore 😖\nriprova tra qualche istante.",
+                          textAlign: TextAlign.center)));
+            } else {
+              // var theme = Provider.of<ThemeChanger>(context, listen: false);
+              // final sizeWidth = MediaQuery.of(context).size.width;
+              return child;
+            }
+          },
+        );
+      },
+      child: Consumer<ThemeChanger>(
+        builder: (context, theme, child) {
+          _fadeController.forward();
+          return Shimmer.fromColors(
+            // baseColor: Theme.of(context).primaryColorLight,
+            // highlightColor: Theme.of(context).primaryColor,
+            baseColor: theme.getThemeName() == Constants.themeLight
+                ? Colors.grey[100]
+                : Colors.grey[600],
+            highlightColor: theme.getThemeName() == Constants.themeLight
+                ? Colors.grey[300]
+                : Colors.grey[900],
+            child: child,
           );
         },
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              leading: Container(
+                width: 35.00,
+                height: 35.00,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: Colors.white,
+                ),
+              ),
+              title: Container(
+                width: MediaQuery.of(context).size.width - 35.00,
+                height: 30.00,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: Colors.white,
+                ),
+              ),
+            );
+          },
+          itemCount: List.generate(10, (i) => i++).length,
+        ),
       ),
     );
   }
@@ -296,6 +304,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void dispose() {
     _animation = null;
     _animationController.dispose();
+    _fadeController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -303,9 +312,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // @override
   // Ticker createTicker(void Function(Duration elapsed) onTick) {}
 
-  // @override
-  // void updateKeepAlive() {}
+  @override
+  void updateKeepAlive() {}
 
-  // @override
-  // bool get wantKeepAlive => true;
+  @override
+  bool get wantKeepAlive => true;
 }

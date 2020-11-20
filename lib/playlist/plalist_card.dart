@@ -28,7 +28,7 @@ class PlaylistCardWidget extends StatelessWidget {
     final screenWidth = 150.00;
 
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
+      margin: EdgeInsets.only(bottom: 25),
       // width: screenWidth,
       height: MediaQuery.of(context).size.width * 0.5,
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -37,8 +37,8 @@ class PlaylistCardWidget extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: lightAccent.withOpacity(0.5),
-            spreadRadius: .5,
-            blurRadius: 15,
+            spreadRadius: 2.5,
+            blurRadius: 10,
             offset: Offset(0, 0), // changes position of shadow
           ),
         ],

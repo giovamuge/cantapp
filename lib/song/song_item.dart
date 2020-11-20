@@ -164,30 +164,6 @@ class SongWidget extends StatelessWidget {
     return result;
   }
 
-  List<PopupMenuEntry<OptionSong>> _buildOptions(
-      BuildContext context, Favorites data) {
-    PopupMenuItem<OptionSong> result;
-    // if (data.exist(song.id)) {
-    //   result = const PopupMenuItem<OptionSong>(
-    //     value: OptionSong.remove,
-    //     child: Text('💔 elimina preferito'),
-    //   );
-    // } else {
-    //   result = const PopupMenuItem<OptionSong>(
-    //     value: OptionSong.add,
-    //     child: Text('❤️ salva preferito'),
-    //   );
-    // }
-
-    return [
-      result,
-      const PopupMenuItem<OptionSong>(
-        value: OptionSong.view,
-        child: Text('🎶 canta'),
-      ),
-    ];
-  }
-
   Future<void> _settingModalBottomSheet(contextScaffold, songId) async {
     final firestore = GetIt.instance<FirestoreDatabase>();
     return await showModalBottomSheet(

@@ -55,7 +55,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // initialize firebase ads
-    FirebaseAdsService()..initialaze();
+    // FirebaseAdsService()..initialaze();
+    GetIt.instance<FirebaseAdsService>()..initialaze();
     FirebaseAnalytics analytics = FirebaseAnalytics();
 
     return MultiProvider(
@@ -66,17 +67,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
             value: Songs(databaseReference: Firestore.instance)),
         ChangeNotifierProvider.value(value: NavigatorTablet()),
-        // Provider<FirebaseAuthService>(
-        //     create: (context) => FirebaseAuthService()),
-        // Provider<FirestoreDatabase>(
-        //   create: (context) => FirestoreDatabase(
-        //       uid: ""), // da modificare in caso di registrazione utente
-        // ),
       ],
       child: Consumer<ThemeChanger>(
         builder: (context, theme, child) {
           return MaterialApp(
-            // showPerformanceOverlay: true,
+            showPerformanceOverlay: true,
             // navigatorKey: navigatorKey,
             // debugShowCheckedModeBanner: false,
             title: 'Cantapp',

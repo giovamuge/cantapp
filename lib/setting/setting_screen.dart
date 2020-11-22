@@ -3,6 +3,7 @@ import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/common/utils.dart';
 import 'package:cantapp/song/song_lyric.dart';
+import 'package:cantapp/song/utils/song_util.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info/package_info.dart';
@@ -64,7 +65,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 title: 'Testo',
                 subtitle: Provider.of<SongLyric>(context).toStringFontSize(),
                 leading: Icon(Icons.format_size),
-                onTap: () async => await _settingModalBottomSheet(context),
+                onTap: () async =>
+                    await SongUtil().settingModalBottomSheet(context),
               ),
               SettingsTile.switchTile(
                 title: 'Modalità Giorno',
@@ -109,66 +111,5 @@ class _SettingScreenState extends State<SettingScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _settingModalBottomSheet(context) async {
-    await showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              return ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  color: Theme.of(context).dialogBackgroundColor,
-                  width: constraints.maxWidth,
-                  height: 200,
-                  child: Consumer<SongLyric>(
-                    builder: (context, data, child) {
-                      return Wrap(
-                        // mainAxisSize: MainAxisSize.max,
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ListTile(
-                              leading: Icon(Icons.text_fields, size: 30),
-                              title: Text('Grande'),
-                              trailing: data.fontSize >= 30
-                                  ? Icon(FontAwesomeIcons.check, size: 16)
-                                  : Text('imposta'),
-                              onTap: () {
-                                data.fontSize = 30;
-                                Navigator.of(context).pop();
-                              }),
-                          ListTile(
-                              leading: Icon(Icons.text_fields, size: 22.5),
-                              title: Text('Normale'),
-                              trailing: data.fontSize < 30 && data.fontSize > 15
-                                  ? Icon(FontAwesomeIcons.check, size: 16)
-                                  : Text('imposta'),
-                              onTap: () {
-                                data.fontSize = 22.5;
-                                Navigator.of(context).pop();
-                              }),
-                          ListTile(
-                              leading: Icon(Icons.text_fields, size: 15),
-                              title: Text('Piccolo'),
-                              trailing: data.fontSize <= 15
-                                  ? Icon(FontAwesomeIcons.check, size: 16)
-                                  : Text('imposta'),
-                              onTap: () {
-                                data.fontSize = 15;
-                                Navigator.of(context).pop();
-                              }),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
-          );
-        });
   }
 }

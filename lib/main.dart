@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeChanger>(
         builder: (context, theme, child) {
           return MaterialApp(
-            showPerformanceOverlay: true,
+            // showPerformanceOverlay: true,
             // navigatorKey: navigatorKey,
             // debugShowCheckedModeBanner: false,
             title: 'Cantapp',

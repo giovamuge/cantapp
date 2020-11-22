@@ -25,6 +25,8 @@ class FavoriteIconButtonWidget extends StatelessWidget {
                 ? firestore.removeFavorite(favoriteId)
                 : firestore.addFavorite(
                     FavoriteFire(
+                      songId: songId,
+                      createdAt: DateTime.now(),
                       song: Firestore.instance
                           .document(FirestorePath.song(songId)),
                     ),

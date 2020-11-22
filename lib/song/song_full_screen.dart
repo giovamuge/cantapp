@@ -87,8 +87,22 @@ class SongFullScreen extends StatelessWidget {
     var lines = _body.split('\n');
     var result = new List<Widget>();
 
+    var paragraphArray = [];
+    var paragraphValue = "";
     for (var i = 0; i < lines.length; i++) {
-      if (i % 20 == 0 && i != 0) {
+      if (lines[i] == "") {
+        // se la riga precedente è vuota
+        if (i > 0 && lines[i - 1] == "") continue;
+        paragraphArray.add(paragraphValue);
+        paragraphValue = "";
+        continue;
+      }
+
+      paragraphValue += lines[i] + "\n";
+    }
+
+    for (var i = 0; i < paragraphArray.length; i++) {
+      if (i % 3 == 0 && i != 0) {
         result.add(_child);
       }
 
@@ -98,14 +112,15 @@ class SongFullScreen extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: maxWidth),
             child: RichText(
-              text: TextSpan(children: [..._fontWeight(lines[i], fontSize)]),
+              text: TextSpan(
+                  children: [..._fontWeight(paragraphArray[i], fontSize)]),
             ),
           ),
         ),
       );
     }
 
-    if (lines.length < 20) {
+    if (lines.length < 3) {
       result.add(_child);
     }
 

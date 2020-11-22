@@ -104,18 +104,18 @@ class _SongScreenState extends State<SongScreen> {
                       ),
                       actions: <Widget>[
                         // todo: da riabilitare
-                        // IconButton(
-                        //   icon: Icon(Icons.fullscreen),
-                        //   onPressed: () => Navigator.of(context).push(
-                        //     MaterialPageRoute(
-                        //         builder: (context) => SongFullScreen(
-                        //               body: _song.lyric,
-                        //               title: _song.title,
-                        //               child: _service.banner,
-                        //             ),
-                        //         fullscreenDialog: true),
-                        //   ),
-                        // ),
+                        IconButton(
+                          icon: Icon(Icons.fullscreen),
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => SongFullScreen(
+                                      body: _song.lyric,
+                                      title: _song.title,
+                                      child: _service.banner,
+                                    ),
+                                fullscreenDialog: true),
+                          ),
+                        ),
                         FavoriteIconButtonWidget(songId: _song.id),
                         IconButton(
                           icon: Icon(Icons.format_size),
@@ -142,7 +142,24 @@ class _SongScreenState extends State<SongScreen> {
                           child: LyricWidget(
                             text: _song.lyric,
                             fontSize: lyricData.fontSize,
-                            futureChild: _service.createBannerAdAsync(),
+                            child: FutureBuilder(
+                              future: _service.createBannerAdAsync(),
+                              builder: (context, data) {
+                                if (data.hasData && data.data is Widget) {
+                                  return Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 20,
+                                      ),
+                                      child: data.data,
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
                           ),
                         ),
                         // Padding(
@@ -186,8 +203,11 @@ class _SongScreenState extends State<SongScreen> {
           onPressed: () {
             // adsData.hide();
             lyricData.isCollapsed = false;
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ServiziScreen(song: song)));
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ServiziScreen(song: song),
+              ),
+            );
           },
         ),
       );

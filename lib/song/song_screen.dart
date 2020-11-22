@@ -111,7 +111,7 @@ class _SongScreenState extends State<SongScreen> {
                                 builder: (context) => SongFullScreen(
                                       body: _song.lyric,
                                       title: _song.title,
-                                      child: _service.banner,
+                                      child: _buildBannerAd(),
                                     ),
                                 fullscreenDialog: true),
                           ),
@@ -142,24 +142,7 @@ class _SongScreenState extends State<SongScreen> {
                           child: LyricWidget(
                             text: _song.lyric,
                             fontSize: lyricData.fontSize,
-                            child: FutureBuilder(
-                              future: _service.createBannerAdAsync(),
-                              builder: (context, data) {
-                                if (data.hasData && data.data is Widget) {
-                                  return Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 20,
-                                      ),
-                                      child: data.data,
-                                    ),
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              },
-                            ),
+                            child: _buildBannerAd(),
                           ),
                         ),
                         // Padding(
@@ -181,6 +164,24 @@ class _SongScreenState extends State<SongScreen> {
           }
         },
       ),
+    );
+  }
+
+  FutureBuilder<Widget> _buildBannerAd() {
+    return FutureBuilder(
+      future: _service.createBannerAdAsync(),
+      builder: (context, data) {
+        if (data.hasData && data.data is Widget) {
+          return Padding(
+            padding: const EdgeInsets.only(
+              bottom: 20,
+            ),
+            child: data.data,
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 

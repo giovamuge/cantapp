@@ -8,6 +8,7 @@ import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/home/home_screen.dart';
 import 'package:cantapp/playlist/playlist_screen.dart';
 import 'package:cantapp/setting/setting_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class RootScreenTablet extends StatefulWidget {
@@ -37,11 +38,19 @@ class _RootScreenTabletState extends State<RootScreenTablet>
       SettingScreen(),
       PlaylistScreen()
     ];
+    // SystemChrome.setPreferredOrientations(
+    //     [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   }
 
   @override
   void dispose() {
     // _controller?.dispose();
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeRight,
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
     super.dispose();
   }
 

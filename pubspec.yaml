@@ -21,12 +21,8 @@ dependencies:
     sdk: flutter
   # Add the dependency for the Firebase Core Flutter SDK
   firebase_core: ^0.4.0+6
-
-  # Add the dependency for the FlutterFire plugin for Google Analytics
   firebase_analytics: ^3.0.3
-
-  # Add the dependencies for any other Firebase products you want to use in your app
-  # For example, to use Firebase Authentication and Cloud Firestore
+  firebase_crashlytics: ^0.0.4+8
   firebase_auth: ^0.15.4
   cloud_firestore: ^0.13.7
 

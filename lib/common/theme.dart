@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 //Colors for theme
 final Color lightPrimary = Color(0xfffcfcff);
 final Color darkPrimary = Colors.black;
-final Color lightSecondary = Color(0xFF48639C);
-final Color lightAccent = Color(0xffffbd59);
-final Color darkAccent = Color(0xffffbd59); //Colors.orangeAccent;
+final Color lightSecondary = Color(0xFF003049);
+final Color lightAccent = Color(0xfff77f00);
+final Color darkAccent = Color(0xfff77f00); //Colors.orangeAccent;
 final Color lightBG = Color(0xfffcfcff);
 final Color darkBG = Colors.black;
 

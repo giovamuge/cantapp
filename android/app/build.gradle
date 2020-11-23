@@ -32,6 +32,8 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+apply plugin: 'com.google.firebase.crashlytics'
+
 android {
     compileSdkVersion 28
 

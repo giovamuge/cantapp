@@ -15,7 +15,7 @@ final List<SingleChildWidget> appProviders = [
   ChangeNotifierProvider.value(
       value: ThemeChanger(appTheme, Constants.themeLight)),
   ChangeNotifierProvider.value(
-      value: Songs(databaseReference: Firestore.instance)),
+      value: Songs(databaseReference: FirebaseFirestore.instance)),
   // Provider<FirestoreDatabase>(
   //   create: (context) => FirestoreDatabase(
   //       uid: ""), // da modificare in caso di registrazione utente

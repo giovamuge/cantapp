@@ -25,11 +25,11 @@ class SongLight extends Equatable {
 
   SongLight.fromSnapshot(
       DocumentSnapshot snapshot, String number, String artist)
-      : id = snapshot.documentID, //snapshot.documentID,
-        title = snapshot.data["title"],
-        artist = snapshot.data["artist"],
-        number = snapshot.data["number"],
-        isChord = snapshot.data["chord"] != null,
+      : id = snapshot.id, //snapshot.documentID,
+        title = snapshot.data()["title"],
+        artist = snapshot.data()["artist"],
+        number = snapshot.data()["number"],
+        isChord = snapshot.data()["chord"] != null,
         links = new List<Link>();
 
   SongLight.fromJson(Map<String, dynamic> maps)
@@ -78,13 +78,15 @@ class SongLight extends Equatable {
 
 class SongResult extends Equatable {
   final String id;
+  final String objectID;
   final String title;
   final String artist;
   final String lyric;
   final String number;
 
-  SongResult.fromJson(Map<String, dynamic> maps)
+  SongResult.fromJson(Map<String, dynamic> maps, String objectID)
       : id = maps["id"],
+        objectID = objectID,
         title = maps["title"],
         lyric = maps["lyric"],
         number = maps["number"],
@@ -92,6 +94,7 @@ class SongResult extends Equatable {
 
   const SongResult({
     this.id,
+    this.objectID,
     this.title,
     this.artist,
     this.lyric,
@@ -111,9 +114,9 @@ abstract class SongBase extends Equatable {
   SongBase({this.title, this.id, this.artist, this.links});
 
   SongBase.fromSnapshot(DocumentSnapshot snapshot, String number, String artist)
-      : id = snapshot.documentID, //snapshot.documentID,
-        title = snapshot.data["title"],
-        artist = snapshot.data["artist"],
+      : id = snapshot.id, //snapshot.documentID,
+        title = snapshot.data()["title"],
+        artist = snapshot.data()["artist"],
         links = new List<Link>();
 
   SongBase.fromJson(Map<String, dynamic> maps)
@@ -165,22 +168,22 @@ class Song extends Equatable {
   });
 
   Song.fromSnapshot(DocumentSnapshot snapshot)
-      : id = snapshot.documentID,
-        title = snapshot.data["title"],
-        lyric = snapshot.data["lyric"],
-        chord = snapshot.data["chord"],
-        number = snapshot.data["number"],
-        numberViews = snapshot.data["numberViews"] ?? 0,
-        createdAt = snapshot.data["createdAd"],
-        updatedAt = snapshot.data["updatedAt"],
-        categories = snapshot.data["categories"] != null
-            ? new List<String>.from(snapshot.data["categories"])
+      : id = snapshot.id,
+        title = snapshot.data()["title"],
+        lyric = snapshot.data()["lyric"],
+        chord = snapshot.data()["chord"],
+        number = snapshot.data()["number"],
+        numberViews = snapshot.data()["numberViews"] ?? 0,
+        createdAt = snapshot.data()["createdAd"],
+        updatedAt = snapshot.data()["updatedAt"],
+        categories = snapshot.data()["categories"] != null
+            ? new List<String>.from(snapshot.data()["categories"])
             : new List<String>(),
-        // links = snapshot.data["links"] != null
-        //     ? new List<Link>.from(snapshot.data["links"])
+        // links = snapshot.data()["links"] != null
+        //     ? new List<Link>.from(snapshot.data()["links"])
         //     : new List<Link>(),
         links = new List<Link>(),
-        artist = snapshot.data["artist"],
+        artist = snapshot.data()["artist"],
         isFavorite = false;
 
   // Song.fromMap(Map maps, String id)
@@ -254,7 +257,7 @@ class Song extends Equatable {
 }
 
 class Songs with ChangeNotifier {
-  final Firestore databaseReference;
+  final FirebaseFirestore databaseReference;
 
   Songs({@required this.databaseReference}) {
     // _selected = Categories().items[0];

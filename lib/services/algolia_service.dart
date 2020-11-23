@@ -19,7 +19,8 @@ class AlgoliaService {
     final query = _songsIndex.search(text);
     // if (query == null) return new List<SongLight>();
     final snap = await query.getObjects();
-    final songs = snap.hits.map((f) => SongResult.fromJson(f.data)).toList();
+    final songs =
+        snap.hits.map((f) => SongResult.fromJson(f.data, f.objectID)).toList();
     return songs;
   }
 }

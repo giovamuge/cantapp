@@ -153,8 +153,8 @@ class SongSearchDelegate extends SearchDelegate<String> {
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          print('id:' + songs[i].id);
-                          return SongScreen(id: songs[i].id);
+                          print('id:' + songs[i].objectID);
+                          return SongScreen(id: songs[i].objectID);
                         },
                       ),
                     ),
@@ -216,14 +216,10 @@ class SongSearchDelegate extends SearchDelegate<String> {
             },
           );
         } else {
-          // List<Song> songListData = List<Song>();
-          final database = GetIt.instance<
-              FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
-
           print('i am searching:  -> $query');
-
           return StreamBuilder(
-            stream: database.songsSearchStream(textSearch: query.toLowerCase()),
+            stream: GetIt.instance<FirestoreDatabase>()
+                .songsSearchStream(textSearch: query.toLowerCase()),
             builder:
                 (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
               if (snapshot.hasData && snapshot.data.isNotEmpty) {

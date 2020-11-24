@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class LyricUtil {
   Iterable<Widget> buildLyric(
       BuildContext context, String text, double fontSize, Widget child) {
-    final maxWidth = MediaQuery.of(context).size.width * .33; // oppure .5
+    // final maxWidth = MediaQuery.of(context).size.width * .33; // oppure .5
     // print(fontSize);
     var lines = text.split('\n');
     var result = new List<Widget>();
@@ -30,14 +30,15 @@ class LyricUtil {
       result.add(
         Container(
           // color: Colors.red,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: maxWidth),
-            child: RichText(
-              text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: [...fontWeight(paragraphArray[i], fontSize)]),
-            ),
+          // child:
+          // ConstrainedBox(
+          //   constraints: BoxConstraints(maxWidth: maxWidth),
+          child: RichText(
+            text: TextSpan(
+                style: DefaultTextStyle.of(context).style,
+                children: [...fontWeight(paragraphArray[i], fontSize)]),
           ),
+          // ),
         ),
       );
     }

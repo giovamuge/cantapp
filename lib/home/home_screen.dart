@@ -222,32 +222,38 @@ class _HomeScreenState extends State<HomeScreen>
               .songsFromCategorySearchStream(
                   category: songs.selected ?? Categories().items[0]),
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.waiting &&
-                snapshot.hasData) {
-              final List<SongLight> items = snapshot.data;
-              if (items.isNotEmpty) {
-                _fadeController.forward();
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    final SongLight item = items[index];
-                    return SongWidget(song: item);
-                  },
-                );
+            if (snapshot.connectionState != ConnectionState.waiting) {
+              if (snapshot.hasData) {
+                final List<SongLight> items = snapshot.data;
+                if (items.isNotEmpty) {
+                  _fadeController.forward();
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: items.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      final SongLight item = items[index];
+                      return SongWidget(song: item);
+                    },
+                  );
+                } else {
+                  return Container(
+                    height: 300,
+                    child: Center(
+                      child: Text("Non ci sono canzoni 🤷‍♂️"),
+                    ),
+                  );
+                }
               } else {
                 return Container(
-                    height: 300,
-                    child: Center(child: Text("Non ci sono canzoni 🤷‍♂️")));
-              }
-            } else if (snapshot.hasError) {
-              return Container(
                   height: 300,
                   child: Center(
-                      child: Text(
-                          "C'è un errore 😖\nriprova tra qualche istante.",
-                          textAlign: TextAlign.center)));
+                    child: Text(
+                        "C'è un errore 😖\nriprova tra qualche istante.",
+                        textAlign: TextAlign.center),
+                  ),
+                );
+              }
             } else {
               // var theme = Provider.of<ThemeChanger>(context, listen: false);
               // final sizeWidth = MediaQuery.of(context).size.width;

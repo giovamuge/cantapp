@@ -56,7 +56,7 @@ class FirestoreDatabase {
               ? query.orderBy('title')
               : query
                   .where('categories', arrayContains: category.toString())
-                  .orderBy('title'));
+                  .orderBy('title', descending: false));
 
   Stream<List<Song>> songsSearchStream({String textSearch}) =>
       _service.collectionStream<Song>(
@@ -120,17 +120,19 @@ class FirestoreDatabase {
           builder: (data, documentId) =>
               FavoriteFire.fromMap(data, documentId));
 
-  Stream<bool> existSongInFavoriteStream(String songId) => Firestore.instance
-      .collection(FirestorePath.favorites(uid))
-      .where("songId", isEqualTo: songId)
-      .snapshots()
-      .map((value) => value.documents.isNotEmpty);
+  Stream<bool> existSongInFavoriteStream(String songId) =>
+      FirebaseFirestore.instance
+          .collection(FirestorePath.favorites(uid))
+          .where("songId", isEqualTo: songId)
+          .snapshots()
+          .map((value) => value.docs.isNotEmpty);
 
-  Stream<String> favoriteIdFromSongStram(String songId) => Firestore.instance
-      .collection(FirestorePath.favorites(uid))
-      .where("songId", isEqualTo: songId)
-      .snapshots()
-      .map((value) => value.documents.first.documentID);
+  Stream<String> favoriteIdFromSongStram(String songId) =>
+      FirebaseFirestore.instance
+          .collection(FirestorePath.favorites(uid))
+          .where("songId", isEqualTo: songId)
+          .snapshots()
+          .map((value) => value.docs.first.id);
 
   // void setFavorite(String userId, String songId) => _service
   //     .setData(path: FirestorePath.user(userId), data: );

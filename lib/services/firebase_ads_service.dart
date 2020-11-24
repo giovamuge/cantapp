@@ -47,16 +47,8 @@ class FirebaseAdsService {
   }
 
   Future<Widget> createBannerAdAsync() async {
-    // return BannerAd(
-    //   adUnitId: getBannerAdUnitId(),
-    //   size: AdSize.banner,
-    //   targetingInfo: targetingInfo,
-    //   listener: (MobileAdEvent event) {
-    //     print("BannerAd event $event");
-    //   },
-    // );
-
     return Future(() {
+      // return Container();
       return AdmobBanner(
         adUnitId: getBannerAdUnitId(),
         adSize: AdmobBannerSize.MEDIUM_RECTANGLE,

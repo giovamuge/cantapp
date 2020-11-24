@@ -35,6 +35,7 @@ final appTheme = ThemeData.light().copyWith(
 final appThemeDark = ThemeData.dark().copyWith(
   primaryColorDark: lightAccent,
   accentColor: lightAccent,
+  buttonColor: Colors.grey,
   accentColorBrightness: Brightness.dark,
   primaryIconTheme: IconThemeData(color: Colors.white),
   backgroundColor: darkBG,

@@ -74,20 +74,20 @@ class PlaylistCardWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              alignment: Alignment.topRight,
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-              child: Image(
-                image: AssetImage("icons/music.png"),
-                width: 75,
-                height: 75,
-              ),
-              // child: SvgPicture.asset(_assetsImage,
-              //   semanticsLabel: 'Popularity',
-              //   height: 70,
-              //   width: 70,
-              // ),
-            ),
+            // Container(
+            //   alignment: Alignment.topRight,
+            //   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+            //   child: Image(
+            //     image: AssetImage("icons/music.png"),
+            //     width: 75,
+            //     height: 75,
+            //   ),
+            //   // child: SvgPicture.asset(_assetsImage,
+            //   //   semanticsLabel: 'Popularity',
+            //   //   height: 70,
+            //   //   width: 70,
+            //   // ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
               child: Column(

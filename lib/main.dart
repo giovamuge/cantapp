@@ -15,6 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -43,6 +44,9 @@ void main() async {
     // e.g. allow your users to opt-in to crash reporting.
   }
 
+  FirebaseInAppMessaging.instance.triggerEvent("donate");
+  FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
+
   setupLocator();
   runApp(MyApp(theme: theme, themeName: themeString));
 }
@@ -69,7 +73,6 @@ class MyApp extends StatelessWidget {
     // initialize firebase ads
     // FirebaseAdsService()..initialaze();
     GetIt.instance<FirebaseAdsService>()..initialaze();
-    FirebaseAnalytics analytics = FirebaseAnalytics();
 
     return MultiProvider(
       providers: [
@@ -85,14 +88,14 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             // showPerformanceOverlay: true,
             // navigatorKey: navigatorKey,
-            // debugShowCheckedModeBanner: false,
+            debugShowCheckedModeBanner: false,
             title: 'Cantapp',
             // navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
             // onGenerateRoute: generateRoute,
             theme: theme.getTheme(),
             localeResolutionCallback: onLocaleResolutionCallback,
             navigatorObservers: [
-              FirebaseAnalyticsObserver(analytics: analytics),
+              FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
             ],
             // routes: appRoutes,
             home: LandingScreen(child: RootScreen()),

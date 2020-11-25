@@ -1,5 +1,4 @@
 import 'package:cantapp/common/constants.dart';
-import 'package:cantapp/common/router.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/favorite.dart';
@@ -7,8 +6,6 @@ import 'package:cantapp/landing/landing_screen.dart';
 import 'package:cantapp/locator.dart';
 import 'package:cantapp/root/root.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
-import 'package:cantapp/services/firebase_auth_service.dart';
-import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,7 +68,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // initialize firebase ads
-    // FirebaseAdsService()..initialaze();
     GetIt.instance<FirebaseAdsService>()..initialaze();
 
     return MultiProvider(

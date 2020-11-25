@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:algolia/algolia.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';

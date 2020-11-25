@@ -11,7 +11,7 @@ description: un'applicazione dedicata ai canti liturgici.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.0+6 #1.0.1+1
+version: 1.2.1+7 #1.0.1+1
 
 environment:
   sdk: ">=2.6.0 <3.0.0" #before >=2.1.0 <3.0.0
@@ -39,8 +39,6 @@ dependencies:
 
   # service locator
   get_it: ^5.0.1
-
-
 
   # Non ho inserito il numero di versione, nella speranza che siano compatibili
   # Avere sempre un riguardo particolare a questi pacchetti
@@ -74,7 +72,7 @@ dev_dependencies:
  
     
 flutter_icons:
-  image_path_ios: "assets/icon/icon_ios.png"
+  image_path_ios: "assets/icon/icon_ios.jpg"
   image_path_android: "assets/icon/icon_android.png"
   android: true 
   ios: true

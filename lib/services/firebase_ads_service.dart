@@ -7,7 +7,7 @@ class FirebaseAdsService {
   // final FirebaseAdMob _firebaseAd = FirebaseAdMob.instance;
   initialaze() {
     // _firebaseAd.initialize(appId: getAppId(), analyticsEnabled: true);
-    Admob.initialize();
+    Admob.requestTrackingAuthorization().then((value) => Admob.initialize());
   }
 
   static String getAppId() => Platform.isIOS
@@ -25,19 +25,8 @@ class FirebaseAdsService {
   //   testDevices: <String>[], // Android emulators are considered test devices
   // );
 
-  AdmobBanner banner;
-
-  createBannerAd() {
-    // return BannerAd(
-    //   adUnitId: getBannerAdUnitId(),
-    //   size: AdSize.banner,
-    //   targetingInfo: targetingInfo,
-    //   listener: (MobileAdEvent event) {
-    //     print("BannerAd event $event");
-    //   },
-    // );
-
-    banner = AdmobBanner(
+  AdmobBanner createBannerAd() {
+    return AdmobBanner(
       adUnitId: getBannerAdUnitId(),
       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
       listener: (event, listner) {

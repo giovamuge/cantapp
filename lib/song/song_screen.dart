@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/responsive/screen_type_layout.dart';
-import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/song/utils/song_util.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,17 +33,14 @@ class _SongScreenState extends State<SongScreen> {
 
   StreamSubscription<dynamic> _sessionTask;
   FirestoreDatabase _database;
-  FirebaseAdsService _service;
+  SongUtil _songUtil;
 
   @override
   void initState() {
+    _songUtil = SongUtil();
     _sessionTask = Future.delayed(Duration(seconds: 10))
         .asStream()
         .listen((res) => _incrementViews());
-    // .listen((res) => database.incrementView(_song.id));
-
-    _service = new FirebaseAdsService();
-    _service.createBannerAd();
 
     _database = GetIt.instance<
         FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
@@ -59,16 +56,6 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var adsData = Provider.of<Ads>(context);
-    // adsData.initState();
-
-    // incrementa view della canzone
-    // esegue funziona asincrona
-    // _incrementViews(context);
-
-    // final database = Provider.of<FirestoreDatabase>(context,
-    //     listen: false); // potrebbe essere true, da verificare
-
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       body: StreamBuilder<Song>(
@@ -111,7 +98,7 @@ class _SongScreenState extends State<SongScreen> {
                                 builder: (context) => SongFullScreen(
                                       body: _song.lyric,
                                       title: _song.title,
-                                      child: _buildBannerAd(),
+                                      child: _songUtil.buildFutureBannerAd(),
                                     ),
                                 fullscreenDialog: true),
                           ),
@@ -142,7 +129,7 @@ class _SongScreenState extends State<SongScreen> {
                           child: LyricWidget(
                             text: _song.lyric,
                             fontSize: lyricData.fontSize,
-                            child: _buildBannerAd(),
+                            child: _songUtil.buildFutureBannerAd(),
                           ),
                         ),
                         // Padding(
@@ -164,24 +151,6 @@ class _SongScreenState extends State<SongScreen> {
           }
         },
       ),
-    );
-  }
-
-  FutureBuilder<Widget> _buildBannerAd() {
-    return FutureBuilder(
-      future: _service.createBannerAdAsync(),
-      builder: (context, data) {
-        if (data.hasData && data.data is Widget) {
-          return Padding(
-            padding: const EdgeInsets.only(
-              bottom: 20,
-            ),
-            child: data.data,
-          );
-        } else {
-          return Container();
-        }
-      },
     );
   }
 

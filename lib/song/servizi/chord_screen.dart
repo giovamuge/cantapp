@@ -1,6 +1,6 @@
-import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/song/utils/song_util.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +21,8 @@ class _ChordScreenState extends State<ChordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var lyricData = Provider.of<SongLyric>(context);
-
-    var service = new FirebaseAdsService();
-    service.createBannerAd();
+    final SongLyric lyricData = Provider.of<SongLyric>(context);
+    final SongUtil songUtil = SongUtil();
 
     return Scaffold(
       body: CustomScrollView(
@@ -40,7 +38,7 @@ class _ChordScreenState extends State<ChordScreen> {
                     builder: (context) => SongFullScreen(
                           body: widget._song.chord,
                           title: widget._song.title,
-                          child: service.banner,
+                          child: songUtil.buildFutureBannerAd(),
                         ),
                     fullscreenDialog: true)),
               ),
@@ -69,7 +67,7 @@ class _ChordScreenState extends State<ChordScreen> {
                 child: LyricWidget(
                   text: widget._song.chord,
                   fontSize: lyricData.fontSize,
-                  child: service.banner,
+                  child: songUtil.buildFutureBannerAd(),
                 ),
               ),
             ]),

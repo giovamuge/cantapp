@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
@@ -13,16 +13,24 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="LaunchImg" translatesAutoresizingMaskIntoConstraints="NO" id="Jvd-AS-57O">
-                                <rect key="frame" x="42.105263157894342" y="361.55263157893114" width="329.00000000000011" height="175.00000000000011"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchImg" translatesAutoresizingMaskIntoConstraints="NO" id="Jvd-AS-57O">
+                                <rect key="frame" x="49.666666666666657" y="375.66666666666669" width="329" height="175.00000000000006"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="175" id="36Q-bT-2gs"/>
+                                    <constraint firstAttribute="width" secondItem="Jvd-AS-57O" secondAttribute="height" multiplier="47:25" id="FVP-Gv-P3P"/>
+                                    <constraint firstAttribute="width" constant="329" id="jpg-oz-hZo"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Jvd-AS-57O" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Fd4-kh-4wf"/>
+                            <constraint firstItem="Jvd-AS-57O" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="bCF-Nl-dEi"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -31,6 +39,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LaunchImg" width="333.5" height="167"/>
+        <image name="LaunchImg" width="333.33334350585938" height="166.66667175292969"/>
     </resources>
 </document>

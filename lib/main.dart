@@ -6,6 +6,8 @@ import 'package:cantapp/landing/landing_screen.dart';
 import 'package:cantapp/locator.dart';
 import 'package:cantapp/root/root.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
+import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/bloc/song_bloc.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +17,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -70,33 +73,42 @@ class MyApp extends StatelessWidget {
     // initialize firebase ads
     GetIt.instance<FirebaseAdsService>()..initialaze();
 
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider.value(value: Favorites()),
-        ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
-        ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
-        ChangeNotifierProvider.value(
-            value: Songs(databaseReference: FirebaseFirestore.instance)),
-        ChangeNotifierProvider.value(value: NavigatorTablet()),
+        BlocProvider(
+          create: (context) => SongBloc(
+            firestoreDatabase: FirestoreDatabase(uid: ""),
+          ),
+        )
       ],
-      child: Consumer<ThemeChanger>(
-        builder: (context, theme, child) {
-          return MaterialApp(
-            // showPerformanceOverlay: true,
-            // navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            title: 'Cantapp',
-            // navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
-            // onGenerateRoute: generateRoute,
-            theme: theme.getTheme(),
-            localeResolutionCallback: onLocaleResolutionCallback,
-            navigatorObservers: [
-              FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
-            ],
-            // routes: appRoutes,
-            home: LandingScreen(child: RootScreen()),
-          );
-        },
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: Favorites()),
+          ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
+          ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
+          ChangeNotifierProvider.value(
+              value: Songs(databaseReference: FirebaseFirestore.instance)),
+          ChangeNotifierProvider.value(value: NavigatorTablet()),
+        ],
+        child: Consumer<ThemeChanger>(
+          builder: (context, theme, child) {
+            return MaterialApp(
+              // showPerformanceOverlay: true,
+              // navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
+              title: 'Cantapp',
+              // navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
+              // onGenerateRoute: generateRoute,
+              theme: theme.getTheme(),
+              localeResolutionCallback: onLocaleResolutionCallback,
+              navigatorObservers: [
+                FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+              ],
+              // routes: appRoutes,
+              home: LandingScreen(child: RootScreen()),
+            );
+          },
+        ),
       ),
     );
   }

@@ -40,6 +40,12 @@ dependencies:
   # service locator
   get_it: ^5.0.1
 
+  # bloc
+  flutter_bloc: ^6.1.1
+
+  # rxdart reactive ui
+  rxdart: ^0.24.1
+
   # Non ho inserito il numero di versione, nella speranza che siano compatibili
   # Avere sempre un riguardo particolare a questi pacchetti
   equatable:

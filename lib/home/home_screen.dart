@@ -2,11 +2,13 @@ import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/bloc/song_bloc.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -24,8 +26,6 @@ class _HomeScreenState extends State<HomeScreen>
   ScrollController _controller;
   Animation _animation;
   AnimationController _animationController;
-  AnimationController _fadeController;
-  Animation<double> _fadeAnimation;
 
   @override
   void initState() {
@@ -36,15 +36,6 @@ class _HomeScreenState extends State<HomeScreen>
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-    _fadeController = AnimationController(
-        duration: const Duration(milliseconds: 300), vsync: this);
-    _fadeAnimation =
-        CurvedAnimation(parent: _fadeController, curve: Curves.easeIn);
-    _fadeAnimation.addStatusListener(_onFadeAnimation);
-    // _fadeController.
-
-    //this will start the animation
-    _fadeController.forward();
   }
 
   @override
@@ -52,13 +43,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.didChangeDependencies();
     // _songsData = Provider.of<Songs>(context);
     // await _songsData.fetchSongs();
-  }
-
-  void _onFadeAnimation(AnimationStatus status) {
-    print(status);
-    if (status == AnimationStatus.dismissed) {
-      // _fadeController.forward();
-    }
   }
 
   void _onScrolling() {
@@ -191,9 +175,7 @@ class _HomeScreenState extends State<HomeScreen>
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(18.0)),
                               onPressed: () {
-                                _fadeController
-                                    .reverse()
-                                    .then((value) => songs.selected = e);
+                                songs.selected = e;
                                 // songs.streamController.add(e);
                               },
                             ),
@@ -216,55 +198,38 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildContents(BuildContext context) {
     return Consumer<Songs>(
       builder: (context, songs, child) {
-        return StreamBuilder<List<SongLight>>(
-          // se null seleziona il primo elemento, ovvero 'tutti'
-          stream: GetIt.instance<FirestoreDatabase>()
-              .songsFromCategorySearchStream(
-                  category: songs.selected ?? Categories().items[0]),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.waiting) {
-              if (snapshot.hasData) {
-                final List<SongLight> items = snapshot.data;
-                if (items.isNotEmpty) {
-                  _fadeController.forward();
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: items.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      final SongLight item = items[index];
-                      return SongWidget(song: item);
-                    },
-                  );
-                } else {
-                  return Container(
-                    height: 300,
-                    child: Center(
-                      child: Text("Non ci sono canzoni 🤷‍♂️"),
-                    ),
-                  );
-                }
-              } else {
-                return Container(
-                  height: 300,
-                  child: Center(
-                    child: Text(
-                        "C'è un errore 😖\nriprova tra qualche istante.",
-                        textAlign: TextAlign.center),
-                  ),
-                );
-              }
-            } else {
-              // var theme = Provider.of<ThemeChanger>(context, listen: false);
-              // final sizeWidth = MediaQuery.of(context).size.width;
+        return BlocBuilder<SongBloc, SongState>(
+          builder: (context, state) {
+            if (state is SongsLoading) {
               return child;
+            } else if (state is SongsLoaded) {
+              final List<Song> items = state.songs;
+              // if (items.isNotEmpty) {
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: items.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  final SongLight item = new SongLight(
+                      title: items[index].title, number: items[index].number);
+                  return SongWidget(song: item);
+                },
+              );
+              // }
+            } else {
+              return Container(
+                height: 300,
+                child: Center(
+                  child: Text("C'è un errore 😖\nriprova tra qualche istante.",
+                      textAlign: TextAlign.center),
+                ),
+              );
             }
           },
         );
       },
       child: Consumer<ThemeChanger>(
         builder: (context, theme, child) {
-          _fadeController.forward();
           return Shimmer.fromColors(
             // baseColor: Theme.of(context).primaryColorLight,
             // highlightColor: Theme.of(context).primaryColor,
@@ -310,7 +275,6 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _animation = null;
     _animationController.dispose();
-    _fadeController.dispose();
     _controller.dispose();
     super.dispose();
   }

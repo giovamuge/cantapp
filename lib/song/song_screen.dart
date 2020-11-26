@@ -12,7 +12,6 @@ import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
 
@@ -194,21 +193,5 @@ class _SongScreenState extends State<SongScreen> {
     //     .asStream()
     //     .listen((res) => database.incrementView(widget._id));
     _database.incrementView(widget._id);
-  }
-
-  Future<void> _incrementViewAsync() async {
-    final String url =
-        'https://us-central1-mgc-cantapp.cloudfunctions.net/incrementView?songId=${widget._id}';
-    final Response response = await put(url);
-    if (response.statusCode == 200) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
-      print('song incremented corretly');
-      return;
-    } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      throw Exception('Failed to increment views');
-    }
   }
 }

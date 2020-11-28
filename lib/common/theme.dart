@@ -15,17 +15,17 @@ final Color darkBG = Colors.black;
 
 final appTheme = ThemeData.light().copyWith(
   // primarySwatch: Colors.yellow,
-  primaryColorLight: lightAccent,
-  primaryIconTheme: IconThemeData(color: darkPrimary),
-  accentColor: lightAccent,
+  primaryColorLight: AppTheme.accent,
+  primaryIconTheme: IconThemeData(color: AppTheme.primaryDark),
+  accentColor: AppTheme.accent,
   accentColorBrightness: Brightness.light,
-  backgroundColor: lightBG,
-  primaryColor: darkPrimary,
-  cursorColor: lightAccent,
-  scaffoldBackgroundColor: lightBG,
+  backgroundColor: AppTheme.background,
+  primaryColor: AppTheme.primaryDark,
+  cursorColor: AppTheme.accent,
+  scaffoldBackgroundColor: AppTheme.background,
   appBarTheme: AppBarTheme(
     elevation: 0,
-    color: lightBG,
+    color: AppTheme.background,
     brightness: Brightness.light,
     textTheme:
         TextTheme(headline6: TextStyle(color: Colors.black, fontSize: 18.0)),
@@ -33,23 +33,48 @@ final appTheme = ThemeData.light().copyWith(
 );
 
 final appThemeDark = ThemeData.dark().copyWith(
-  primaryColorDark: lightAccent,
-  accentColor: lightAccent,
+  primaryColorDark: AppTheme.accent,
+  accentColor: AppTheme.accent,
   buttonColor: Colors.grey,
   accentColorBrightness: Brightness.dark,
   primaryIconTheme: IconThemeData(color: Colors.white),
-  backgroundColor: darkBG,
+  backgroundColor: AppTheme.backgroundDark,
   primaryColor: Colors.white,
-  cursorColor: lightAccent,
-  scaffoldBackgroundColor: darkBG,
+  cursorColor: AppTheme.accent,
+  scaffoldBackgroundColor: AppTheme.backgroundDark,
   appBarTheme: AppBarTheme(
     elevation: 0,
-    color: darkBG,
+    color: AppTheme.backgroundDark,
     brightness: Brightness.dark,
     textTheme:
         TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18.0)),
   ),
 );
+
+// examples theme
+// theme: ThemeData(
+//           primaryColor: AppTheme.primary,
+//           primaryColorDark: AppTheme.primaryDark,
+//           accentColor: AppTheme.accent,
+//           textTheme: GoogleFonts.acmeTextTheme().copyWith(
+//               button: GoogleFonts.ubuntuMono(
+//                 fontSize: 16,
+//                 fontWeight: FontWeight.bold,
+//               )),
+
+class AppTheme {
+  // static const Color primary = Color(0xFFFDCF4A);
+  // static const Color primaryDark = Color(0xFFFFC41C);
+  // static const Color accent = Color(0xFF329F4F);
+
+  static const Color primary = Color(0xfffcfcff);
+  static const Color primaryDark = Color(0xff000000);
+  static const Color secondary = Color(0xFF003049);
+  static const Color accent = Color(0xfff77f00);
+  static const Color accentDark = Color(0xfff77f00); //Colors.orangeAccent;
+  static const Color background = Color(0xfffcfcff);
+  static const Color backgroundDark = Color(0xff000000);
+}
 
 class ThemeChanger with ChangeNotifier {
   ThemeData _themeData;

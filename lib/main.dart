@@ -9,13 +9,13 @@ import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'root/navigator_tablet.dart';
@@ -44,6 +44,8 @@ void main() async {
   FirebaseInAppMessaging.instance.triggerEvent("donate");
   FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
 
+  FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+
   setupLocator();
   runApp(MyApp(theme: theme, themeName: themeString));
 }
@@ -68,7 +70,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // initialize firebase ads
-    GetIt.instance<FirebaseAdsService>()..initialaze();
+    // GetIt.instance<FirebaseAdsService>()..initialaze();
 
     return MultiProvider(
       providers: [

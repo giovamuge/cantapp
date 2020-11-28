@@ -2,14 +2,17 @@ import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:cantapp/services/firebase_ads_service.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,8 +27,37 @@ class _HomeScreenState extends State<HomeScreen>
   ScrollController _controller;
   Animation _animation;
   AnimationController _animationController;
-  AnimationController _fadeController;
-  Animation<double> _fadeAnimation;
+  InterstitialAd _interstitialAd;
+  bool _isInterstitialAdReady;
+  String _songIdSelected;
+
+  void _loadInterstitialAd() {
+    _interstitialAd.load();
+  }
+
+  void _onInterstitialAdEvent(MobileAdEvent event) {
+    switch (event) {
+      case MobileAdEvent.loaded:
+        _isInterstitialAdReady = true;
+        break;
+      case MobileAdEvent.failedToLoad:
+        _isInterstitialAdReady = false;
+        print('Failed to load an interstitial ad');
+        break;
+      case MobileAdEvent.closed:
+        // _moveToHome();
+        // if (_songIdSelected != null) {
+        //   Navigator.of(context).push(
+        //     MaterialPageRoute(
+        //         // fullscreenDialog: true, // sono sicuro?
+        //         builder: (context) => SongScreen(id: _songIdSelected)),
+        //   );
+        // }
+        break;
+      default:
+      // do nothing
+    }
+  }
 
   @override
   void initState() {
@@ -36,15 +68,13 @@ class _HomeScreenState extends State<HomeScreen>
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-    _fadeController = AnimationController(
-        duration: const Duration(milliseconds: 300), vsync: this);
-    _fadeAnimation =
-        CurvedAnimation(parent: _fadeController, curve: Curves.easeIn);
-    _fadeAnimation.addStatusListener(_onFadeAnimation);
-    // _fadeController.
+    _isInterstitialAdReady = false;
+    _interstitialAd = InterstitialAd(
+      adUnitId: AdManager.interstitialAdUnitId,
+      listener: _onInterstitialAdEvent,
+    );
 
-    //this will start the animation
-    _fadeController.forward();
+    _loadInterstitialAd();
   }
 
   @override
@@ -52,13 +82,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.didChangeDependencies();
     // _songsData = Provider.of<Songs>(context);
     // await _songsData.fetchSongs();
-  }
-
-  void _onFadeAnimation(AnimationStatus status) {
-    print(status);
-    if (status == AnimationStatus.dismissed) {
-      // _fadeController.forward();
-    }
   }
 
   void _onScrolling() {
@@ -191,9 +214,7 @@ class _HomeScreenState extends State<HomeScreen>
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(18.0)),
                               onPressed: () {
-                                _fadeController
-                                    .reverse()
-                                    .then((value) => songs.selected = e);
+                                songs.selected = e;
                                 // songs.streamController.add(e);
                               },
                             ),
@@ -226,14 +247,32 @@ class _HomeScreenState extends State<HomeScreen>
               if (snapshot.hasData) {
                 final List<SongLight> items = snapshot.data;
                 if (items.isNotEmpty) {
-                  _fadeController.forward();
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: items.length,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       final SongLight item = items[index];
-                      return SongWidget(song: item);
+                      return SongWidget(
+                        song: item,
+                        onNavigateSong: (context) async {
+                          try {
+                            if (!await _interstitialAd.isLoaded()) {
+                              _interstitialAd.show();
+                            }
+
+                            _songIdSelected = item.id;
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  // fullscreenDialog: true, // sono sicuro?
+                                  builder: (context) =>
+                                      SongScreen(id: _songIdSelected)),
+                            );
+                          } catch (e) {
+                            print(e.message);
+                          }
+                        },
+                      );
                     },
                   );
                 } else {
@@ -264,7 +303,6 @@ class _HomeScreenState extends State<HomeScreen>
       },
       child: Consumer<ThemeChanger>(
         builder: (context, theme, child) {
-          _fadeController.forward();
           return Shimmer.fromColors(
             // baseColor: Theme.of(context).primaryColorLight,
             // highlightColor: Theme.of(context).primaryColor,
@@ -310,7 +348,6 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _animation = null;
     _animationController.dispose();
-    _fadeController.dispose();
     _controller.dispose();
     super.dispose();
   }

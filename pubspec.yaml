@@ -28,8 +28,8 @@ dependencies:
   cloud_firestore: ^0.14.3
 
   # Add the dependency for adb mob, set key for iOS and Android
-  # firebase_admob: ^0.9.3+1
-  admob_flutter: ^1.0.1
+  firebase_admob: ^0.10.2
+  # admob_flutter: ^1.0.1
 
   # Full text search algolia
   algolia: ^0.1.7

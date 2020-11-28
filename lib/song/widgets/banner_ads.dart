@@ -17,12 +17,12 @@ class _BannerAdsWidgetState extends State<BannerAdsWidget> {
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: _service.createBannerAd());
+    return Container();
+    // return Container(child: _service.createBannerAd());
   }
 }

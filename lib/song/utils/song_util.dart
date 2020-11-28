@@ -1,31 +1,11 @@
-import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../song_lyric.dart';
 
 class SongUtil {
   const SongUtil();
-
-  FutureBuilder<Widget> buildFutureBannerAd() {
-    return FutureBuilder(
-      future: GetIt.instance<FirebaseAdsService>().createBannerAdAsync(),
-      builder: (context, data) {
-        if (data.hasData && data.data is Widget) {
-          return Padding(
-            padding: const EdgeInsets.only(
-              bottom: 20,
-            ),
-            child: data.data,
-          );
-        } else {
-          return Container();
-        }
-      },
-    );
-  }
 
   Future<void> settingModalBottomSheet(context) async {
     return showModalBottomSheet(

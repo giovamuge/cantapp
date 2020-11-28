@@ -38,7 +38,7 @@ class _ChordScreenState extends State<ChordScreen> {
                     builder: (context) => SongFullScreen(
                           body: widget._song.chord,
                           title: widget._song.title,
-                          child: songUtil.buildFutureBannerAd(),
+                          child: Container(),
                         ),
                     fullscreenDialog: true)),
               ),
@@ -67,7 +67,7 @@ class _ChordScreenState extends State<ChordScreen> {
                 child: LyricWidget(
                   text: widget._song.chord,
                   fontSize: lyricData.fontSize,
-                  child: songUtil.buildFutureBannerAd(),
+                  child: Container(),
                 ),
               ),
             ]),

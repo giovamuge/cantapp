@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/responsive/screen_type_layout.dart';
+import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/utils/song_util.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -33,6 +35,13 @@ class _SongScreenState extends State<SongScreen> {
   StreamSubscription<dynamic> _sessionTask;
   FirestoreDatabase _database;
   SongUtil _songUtil;
+  BannerAd _bannerAd;
+
+  void _loadBannerAd() {
+    _bannerAd
+      ..load()
+      ..show(anchorType: AnchorType.bottom);
+  }
 
   @override
   void initState() {
@@ -44,12 +53,20 @@ class _SongScreenState extends State<SongScreen> {
     _database = GetIt.instance<
         FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
+    _bannerAd = BannerAd(
+      adUnitId: AdManager.bannerAdUnitId,
+      size: AdSize.banner,
+    );
+
+    _loadBannerAd();
+
     super.initState();
   }
 
   @override
   void dispose() {
-    _sessionTask.cancel();
+    _sessionTask?.cancel();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -97,7 +114,7 @@ class _SongScreenState extends State<SongScreen> {
                                 builder: (context) => SongFullScreen(
                                       body: _song.lyric,
                                       title: _song.title,
-                                      child: _songUtil.buildFutureBannerAd(),
+                                      child: Container(),
                                     ),
                                 fullscreenDialog: true),
                           ),
@@ -128,7 +145,7 @@ class _SongScreenState extends State<SongScreen> {
                           child: LyricWidget(
                             text: _song.lyric,
                             fontSize: lyricData.fontSize,
-                            child: _songUtil.buildFutureBannerAd(),
+                            child: Container(),
                           ),
                         ),
                         // Padding(

@@ -4,15 +4,6 @@
 
 import 'package:flutter/material.dart';
 
-//Colors for theme
-final Color lightPrimary = Color(0xfffcfcff);
-final Color darkPrimary = Colors.black;
-final Color lightSecondary = Color(0xFF003049);
-final Color lightAccent = Color(0xfff77f00);
-final Color darkAccent = Color(0xfff77f00); //Colors.orangeAccent;
-final Color lightBG = Color(0xfffcfcff);
-final Color darkBG = Colors.black;
-
 final appTheme = ThemeData.light().copyWith(
   // primarySwatch: Colors.yellow,
   primaryColorLight: AppTheme.accent,
@@ -63,17 +54,14 @@ final appThemeDark = ThemeData.dark().copyWith(
 //               )),
 
 class AppTheme {
-  // static const Color primary = Color(0xFFFDCF4A);
-  // static const Color primaryDark = Color(0xFFFFC41C);
-  // static const Color accent = Color(0xFF329F4F);
-
   static const Color primary = Color(0xfffcfcff);
   static const Color primaryDark = Color(0xff000000);
   static const Color secondary = Color(0xFF003049);
   static const Color accent = Color(0xfff77f00);
-  static const Color accentDark = Color(0xfff77f00); //Colors.orangeAccent;
+  static const Color accentDark = Color(0xfff77f00);
   static const Color background = Color(0xfffcfcff);
-  static const Color backgroundDark = Color(0xff000000);
+  static const Color backgroundDark =
+      Color(0xff000000); // TODO: potrebbe anche essere Color(0xFF003049)
 }
 
 class ThemeChanger with ChangeNotifier {

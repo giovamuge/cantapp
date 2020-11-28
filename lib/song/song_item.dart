@@ -119,7 +119,7 @@ class SongWidget extends StatelessWidget {
           padding: const EdgeInsets.only(right: 5),
           child: BadgetWidget(
             title: 'accordi',
-            color: lightAccent,
+            color: AppTheme.accent,
           ),
         ),
       );
@@ -131,7 +131,7 @@ class SongWidget extends StatelessWidget {
           padding: const EdgeInsets.only(right: 5),
           child: BadgetWidget(
             title: 'video',
-            color: lightAccent,
+            color: AppTheme.accent,
           ),
         ),
       );
@@ -143,7 +143,7 @@ class SongWidget extends StatelessWidget {
           padding: const EdgeInsets.only(right: 5),
           child: BadgetWidget(
             title: 'audio',
-            color: lightAccent,
+            color: AppTheme.accent,
           ),
         ),
       );
@@ -287,7 +287,7 @@ class SongWidget extends StatelessWidget {
       msg = '${song.title} 💔 rimosso dai preferiti';
     }
     SnackBar snackBar = SnackBar(
-      backgroundColor: lightSecondary,
+      backgroundColor: AppTheme.secondary,
       elevation: 5,
       behavior: SnackBarBehavior.floating,
       content: Text(msg),
@@ -295,7 +295,7 @@ class SongWidget extends StatelessWidget {
           ? null
           : SnackBarAction(
               label: 'visualizza',
-              textColor: lightPrimary,
+              textColor: AppTheme.primary,
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => FavoriteScreen()),
               ),

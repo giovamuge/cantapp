@@ -100,33 +100,33 @@ class _RootScreenTabletState extends State<RootScreenTablet>
                     IconButton(
                         icon: Icon(Icons.home,
                             color: _selectedNavIndex == 0
-                                ? lightAccent
+                                ? AppTheme.accent
                                 : Colors.grey),
                         onPressed: () => _handleNavBtnTapped(0)),
                     // IconButton(
                     //   icon: Icon(Icons.dashboard,
                     //       color: _selectedNavIndex == 1
-                    //           ? lightAccent
+                    //           ? AppTheme.accent
                     //           : Colors.grey),
                     //   onPressed: () => _handleNavBtnTapped(1),
                     // ),
                     IconButton(
                         icon: Icon(Icons.favorite,
                             color: _selectedNavIndex == 2
-                                ? lightAccent
+                                ? AppTheme.accent
                                 : Colors.grey),
                         onPressed: () => _handleNavBtnTapped(2)),
                     IconButton(
                         icon: Icon(Icons.featured_play_list,
                             color: _selectedNavIndex == 4
-                                ? lightAccent
+                                ? AppTheme.accent
                                 : Colors.grey),
                         onPressed: () => _handleNavBtnTapped(4)),
                     IconButton(
                         icon: Icon(
                           Icons.settings,
                           color: _selectedNavIndex == 3
-                              ? lightAccent
+                              ? AppTheme.accent
                               : Colors.grey,
                         ),
                         onPressed: () => _handleNavBtnTapped(3)),

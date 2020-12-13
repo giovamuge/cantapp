@@ -165,11 +165,11 @@ class _HomeScreenState extends State<HomeScreen>
                                 const EdgeInsets.symmetric(horizontal: 2.5),
                             child: RaisedButton(
                               color: songs.selected == e
-                                  ? lightAccent
+                                  ? AppTheme.accent
                                   : Theme.of(context).buttonColor,
                               child: Text(
                                 e.title,
-                                style: TextStyle(color: lightBG),
+                                style: TextStyle(color: AppTheme.background),
                               ),
                               elevation: 0,
                               shape: RoundedRectangleBorder(

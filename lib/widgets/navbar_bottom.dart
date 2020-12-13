@@ -51,33 +51,33 @@ class NavbarBottomWidget extends StatelessWidget {
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
                 icon: Icon(Icons.dashboard,
-                    color: _currentIndex == 1 ? lightAccent : Colors.grey),
+                    color: _currentIndex == 1 ? AppTheme.accent : Colors.grey),
                 onPressed: () => _itemTapped(1)),
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
                 icon: Icon(Icons.favorite,
-                    color: _currentIndex == 2 ? lightAccent : Colors.grey),
+                    color: _currentIndex == 2 ? AppTheme.accent : Colors.grey),
                 onPressed: () => _itemTapped(2)),
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
                 icon: Icon(
                   Icons.home,
-                  color: _currentIndex == 0 ? lightAccent : Colors.grey,
+                  color: _currentIndex == 0 ? AppTheme.accent : Colors.grey,
                 ),
                 onPressed: () => _itemTapped(0)),
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
                 icon: Icon(Icons.featured_play_list,
-                    color: _currentIndex == 4 ? lightAccent : Colors.grey),
+                    color: _currentIndex == 4 ? AppTheme.accent : Colors.grey),
                 onPressed: () => _itemTapped(4)),
             IconButton(
                 splashColor: _splashColor,
                 highlightColor: _highlightColor,
                 icon: Icon(Icons.settings,
-                    color: _currentIndex == 3 ? lightAccent : Colors.grey),
+                    color: _currentIndex == 3 ? AppTheme.accent : Colors.grey),
                 onPressed: () => _itemTapped(3))
           ],
         ),

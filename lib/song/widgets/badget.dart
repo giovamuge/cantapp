@@ -25,8 +25,9 @@ class BadgetWidget extends StatelessWidget {
         title,
         style: TextStyle(
           fontSize: 10,
-          color:
-              theme.getThemeName() == Constants.themeLight ? lightBG : darkBG,
+          color: theme.getThemeName() == Constants.themeLight
+              ? AppTheme.background
+              : AppTheme.backgroundDark,
         ),
         textAlign: TextAlign.center,
       ),

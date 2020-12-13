@@ -36,7 +36,7 @@ class PlaylistCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: lightAccent.withOpacity(0.5),
+            color: AppTheme.accent.withOpacity(0.5),
             spreadRadius: 2.5,
             blurRadius: 10,
             offset: Offset(0, 0), // changes position of shadow

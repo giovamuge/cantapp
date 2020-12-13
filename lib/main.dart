@@ -22,7 +22,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'root/navigator_tablet.dart';
-// import 'services/navigation_service.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 

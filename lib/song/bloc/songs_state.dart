@@ -1,4 +1,4 @@
-part of 'song_bloc.dart';
+part of 'songs_bloc.dart';
 
 abstract class SongState extends Equatable {
   const SongState();
@@ -12,7 +12,7 @@ class SongInitial extends SongState {}
 class SongsLoading extends SongState {}
 
 class SongsLoaded extends SongState {
-  final List<Song> songs;
+  final List<SongLight> songs;
 
   const SongsLoaded([this.songs = const []]);
 

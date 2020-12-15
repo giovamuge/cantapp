@@ -59,7 +59,7 @@ class _CategoryScreenState extends State<CategoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    var categories = Categories().items;
+    var categories = Categories.items;
 
     return Scaffold(
       appBar: AppBar(

@@ -1,4 +1,4 @@
-part of 'song_bloc.dart';
+part of 'songs_bloc.dart';
 
 abstract class SongEvent extends Equatable {
   const SongEvent();
@@ -16,6 +16,8 @@ class SongsFetch extends SongEvent {
   List<Object> get props => [songs];
 }
 
+// class SongsFetch extends SongEvent {}
+
 class UpdateSong extends SongEvent {
   final Song updatedSong;
   const UpdateSong(this.updatedSong);
@@ -28,7 +30,7 @@ class UpdateSong extends SongEvent {
 }
 
 class SongsUpdated extends SongEvent {
-  final List<Song> songs;
+  final List<SongLight> songs;
 
   const SongsUpdated(this.songs);
 

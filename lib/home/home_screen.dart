@@ -2,7 +2,8 @@ import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/firestore_database.dart';
-import 'package:cantapp/song/bloc/song_bloc.dart';
+import 'package:cantapp/song/bloc/filtered_songs_bloc.dart';
+import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
@@ -150,42 +151,53 @@ class _HomeScreenState extends State<HomeScreen>
           //   ),
           // ),
           SizedBox(height: 20),
-          Container(
-            height: 30.00,
-            // padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                SizedBox(width: 20),
-                ...Categories().items.map(
-                      (e) => Consumer<Songs>(
-                        builder: (context, songs, child) {
-                          return Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 2.5),
-                            child: RaisedButton(
-                              color: songs.selected == e
-                                  ? AppTheme.accent
-                                  : Theme.of(context).buttonColor,
-                              child: Text(
-                                e.title,
-                                style: TextStyle(color: AppTheme.background),
-                              ),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0)),
-                              onPressed: () {
-                                songs.selected = e;
-                                // songs.streamController.add(e);
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-              ],
-            ),
+          BlocBuilder<FilteredSongsBloc, FilteredSongsState>(
+            builder: (context, state) {
+              if (state is FilteredSongsLoaded) {
+                final List<Category> cats = Categories.items;
+                return Container(
+                  height: 30.00,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: cats.length,
+                    itemBuilder: (context, index) {
+                      final Category cat = cats[index];
+                      final double paddingLeft = index == 0 ? 22.5 : 2.5;
+                      final double paddingRight =
+                          index == cats.length - 1 ? 22.5 : 2.5;
+                      return Container(
+                        padding: EdgeInsets.only(
+                            left: paddingLeft, right: paddingRight),
+                        child: RaisedButton(
+                          color: state.activeFilter == cat
+                              ? AppTheme.accent
+                              : Theme.of(context).buttonColor,
+                          child: Text(
+                            cat.title,
+                            style: TextStyle(color: AppTheme.background),
+                          ),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0)),
+                          onPressed: () {
+                            BlocProvider.of<FilteredSongsBloc>(context)
+                                .add(UpdateFilter(cat));
+                            // songs.selected = e;
+                            // songs.streamController.add(e);
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                );
+                // } else if (state is FilteredSongsLoading) {
+                //   return CircularProgressIndicator();
+              } else {
+                return Container();
+              }
+            },
           ),
+
           SizedBox(height: 15),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -198,20 +210,19 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildContents(BuildContext context) {
     return Consumer<Songs>(
       builder: (context, songs, child) {
-        return BlocBuilder<SongBloc, SongState>(
+        return BlocBuilder<FilteredSongsBloc, FilteredSongsState>(
           builder: (context, state) {
-            if (state is SongsLoading) {
+            if (state is FilteredSongsLoading) {
               return child;
-            } else if (state is SongsLoaded) {
-              final List<Song> items = state.songs;
+            } else if (state is FilteredSongsLoaded) {
+              final List<SongLight> items = state.songsFiltered;
               // if (items.isNotEmpty) {
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: items.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
-                  final SongLight item = new SongLight(
-                      title: items[index].title, number: items[index].number);
+                  final SongLight item = items[index];
                   return SongWidget(song: item);
                 },
               );

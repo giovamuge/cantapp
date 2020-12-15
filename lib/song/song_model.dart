@@ -13,6 +13,7 @@ class SongLight extends Equatable {
   final String number;
   final List<Link> links;
   final bool isChord;
+  final List<String> categories;
 
   SongLight({
     this.title,
@@ -21,6 +22,7 @@ class SongLight extends Equatable {
     this.links,
     this.number,
     this.isChord = false,
+    this.categories,
   });
 
   SongLight.fromSnapshot(
@@ -30,6 +32,9 @@ class SongLight extends Equatable {
         artist = snapshot.data()["artist"],
         number = snapshot.data()["number"],
         isChord = snapshot.data()["chord"] != null,
+        categories = snapshot.data()["categories"] != null
+            ? new List<String>.from(snapshot.data()["categories"])
+            : new List<String>(),
         links = new List<Link>();
 
   SongLight.fromJson(Map<String, dynamic> maps)
@@ -38,6 +43,9 @@ class SongLight extends Equatable {
         id = maps["id"],
         number = maps["number"],
         isChord = maps["chord"] != null,
+        categories = maps["categories"] != null
+            ? new List<String>.from(maps["categories"])
+            : new List<String>(),
         links = new List<Link>();
 
   static fromMap(Map maps, String id) {
@@ -56,6 +64,9 @@ class SongLight extends Equatable {
         artist: maps["artist"],
         links: links,
         isChord: maps["chord"] != null,
+        categories: maps["categories"] != null
+            ? new List<String>.from(maps["categories"])
+            : new List<String>(),
         number: maps["number"]);
   }
 
@@ -73,7 +84,8 @@ class SongLight extends Equatable {
   List<Object> get props => [id, title];
 
   @override
-  String toString() => 'Song { id: $id, title: $title }';
+  String toString() =>
+      'Song { id: $id, number: $number, artist: $artist, title: $title, }';
 }
 
 class SongResult extends Equatable {
@@ -284,7 +296,7 @@ class Songs with ChangeNotifier {
   }
 
   Category _selected;
-  Category get selected => _selected ?? Categories().items[0];
+  Category get selected => _selected ?? Categories.first();
   set selected(Category value) {
     _selected = value;
     // streamController.add(_selected);

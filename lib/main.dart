@@ -7,7 +7,7 @@ import 'package:cantapp/locator.dart';
 import 'package:cantapp/root/root.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/services/firestore_database.dart';
-import 'package:cantapp/song/bloc/song_bloc.dart';
+import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,6 +24,8 @@ import 'package:provider/provider.dart';
 import 'root/navigator_tablet.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
+import 'song/bloc/filtered_songs_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,10 +77,15 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => SongBloc(
+          create: (context) => SongsBloc(
             firestoreDatabase: FirestoreDatabase(uid: ""),
+          )..add(SongsFetch([])),
+        ),
+        BlocProvider<FilteredSongsBloc>(
+          create: (context) => FilteredSongsBloc(
+            songsBloc: BlocProvider.of<SongsBloc>(context),
           ),
-        )
+        ),
       ],
       child: MultiProvider(
         providers: [

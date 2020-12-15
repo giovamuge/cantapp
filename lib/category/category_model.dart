@@ -40,7 +40,7 @@ class Category {
 }
 
 class Categories {
-  List<Category> _items = [
+  static List<Category> items = [
     new Category(value: CategoryEnum.tutti, title: 'Tutti'),
     new Category(value: CategoryEnum.agnellodidio, title: 'Agnello di Dio'),
     new Category(value: CategoryEnum.alleluia, title: 'Alleluia'),
@@ -59,11 +59,11 @@ class Categories {
     new Category(value: CategoryEnum.signorepieta, title: 'Signore Pietà'),
   ];
 
-  List<Category> get items {
-    return [..._items];
-  }
+  // List<Category> get items {
+  //   return [..._items];
+  // }
 
-  initialCategory() => _items[0];
+  static first() => items[0];
 
   // Future<void> fetchSongsToCategories(List<Song> songs) async {
   //   songs.forEach((s) {

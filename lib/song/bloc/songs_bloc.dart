@@ -6,16 +6,16 @@ import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-part 'song_event.dart';
-part 'song_state.dart';
+part 'songs_event.dart';
+part 'songs_state.dart';
 
-class SongBloc extends Bloc<SongEvent, SongState> {
+class SongsBloc extends Bloc<SongEvent, SongState> {
   // SongBloc() : super(SongInitial());
 
   final FirestoreDatabase _firestoreDatabase;
-  StreamSubscription _todosSubscription;
+  StreamSubscription _songsSubscription;
 
-  SongBloc({@required FirestoreDatabase firestoreDatabase})
+  SongsBloc({@required FirestoreDatabase firestoreDatabase})
       : assert(firestoreDatabase != null),
         _firestoreDatabase = firestoreDatabase,
         super(SongsLoading());
@@ -26,19 +26,25 @@ class SongBloc extends Bloc<SongEvent, SongState> {
   ) async* {
     if (event is SongsFetch) {
       yield* _mapLoadSongsToState();
+    } else if (event is SongsUpdated) {
+      yield* _mapSongsUpdateToState(event);
     }
   }
 
   Stream<SongState> _mapLoadSongsToState() async* {
-    _todosSubscription?.cancel();
-    _todosSubscription = _firestoreDatabase
-        .songsStream()
-        .listen((todos) => add(SongsUpdated(todos)));
+    _songsSubscription?.cancel();
+    _songsSubscription = _firestoreDatabase
+        .songsLightStream()
+        .listen((songs) => add(SongsUpdated(songs)));
+  }
+
+  Stream<SongState> _mapSongsUpdateToState(SongsUpdated event) async* {
+    yield SongsLoaded(event.songs);
   }
 
   @override
   Future<void> close() {
-    _todosSubscription?.cancel();
+    _songsSubscription?.cancel();
     return super.close();
   }
 }

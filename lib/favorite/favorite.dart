@@ -71,7 +71,7 @@ class Favorites with ChangeNotifier {
     final newFavorite = FavoriteFire(
       createdAt: DateTime.now(),
       songId: item,
-      song: Firestore.instance.document(FirestorePath.song(item)),
+      song: FirebaseFirestore.instance.doc(FirestorePath.song(item)),
     );
     await firestore.addFavorite(newFavorite);
     // notifyListeners();

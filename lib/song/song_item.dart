@@ -7,9 +7,11 @@ import 'package:cantapp/responsive/device_screen_type.dart';
 import 'package:cantapp/responsive/responsive_utils.dart';
 import 'package:cantapp/root/navigator_tablet.dart';
 import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/services/firestore_path.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/song/widgets/badget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -179,97 +181,106 @@ class SongWidget extends StatelessWidget {
                   color: Theme.of(context).dialogBackgroundColor,
                   width: constraints.maxWidth,
                   height: 200,
-                  child: Consumer<Favorites>(
-                    builder: (context, favoritesData, child) {
-                      return StreamBuilder<bool>(
-                        stream: firestore.existSongInFavoriteStream(songId),
-                        builder: (context, data) {
-                          if (data.connectionState != ConnectionState.waiting &&
-                              data.hasData) {
-                            final exist = data.data;
-                            return Wrap(
-                              children: <Widget>[
-                                if (exist)
-                                  ListTile(
-                                    leading: Icon(Icons.favorite),
-                                    title: Text("Rimuovi preferito"),
-                                    onTap: () async {
-                                      await favoritesData
-                                          .removeFavorite(song.id);
-                                      Navigator.of(context).pop();
-                                      await _messageSnackbar(
-                                          contextScaffold, OptionSong.remove);
-                                    },
-                                  ),
-                                if (!exist)
-                                  ListTile(
-                                      leading: Icon(Icons.favorite_border),
-                                      title: Text("Aggiungi preferito"),
-                                      onTap: () async {
-                                        await favoritesData
-                                            .addFavorite(song.id);
-                                        Navigator.of(context).pop();
-                                        await _messageSnackbar(
-                                            contextScaffold, OptionSong.add);
-                                      }),
-                                ListTile(
-                                    leading: Icon(Icons.book),
-                                    title: Text("Visualizza canto"),
-                                    onTap: () => Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                FavoriteScreen()))),
-                                ListTile(
-                                    leading: Icon(Icons.cancel),
-                                    title: Text("Annulla"),
-                                    onTap: () => Navigator.of(context).pop())
-                              ],
-                            );
-                          } else {
-                            final sizeWidth = MediaQuery.of(context).size.width;
-                            var theme = Provider.of<ThemeChanger>(context,
-                                listen: false);
-
-                            return Shimmer.fromColors(
-                              // baseColor: Theme.of(context).primaryColorLight,
-                              // highlightColor: Theme.of(context).primaryColor,
-                              baseColor:
-                                  theme.getThemeName() == Constants.themeLight
-                                      ? Colors.grey[100]
-                                      : Colors.grey[600],
-                              highlightColor:
-                                  theme.getThemeName() == Constants.themeLight
-                                      ? Colors.grey[300]
-                                      : Colors.grey[900],
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    leading: Container(
-                                      width: 35.00,
-                                      height: 35.00,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7),
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    title: Container(
-                                      width: sizeWidth - 35.00,
-                                      height: 30.00,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7),
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  );
+                  child: StreamBuilder<bool>(
+                    stream: firestore.existSongInFavoriteStream(songId),
+                    builder: (context, data) {
+                      if (data.connectionState != ConnectionState.waiting &&
+                          data.hasData) {
+                        final exist = data.data;
+                        return Wrap(
+                          children: <Widget>[
+                            if (exist)
+                              ListTile(
+                                leading: Icon(Icons.favorite),
+                                title: Text("Rimuovi preferito"),
+                                onTap: () async {
+                                  // await favoritesData
+                                  //     .removeFavorite(song.id);
+                                  final firestore =
+                                      GetIt.instance<FirestoreDatabase>();
+                                  await firestore.removeFavorite(song.id);
+                                  Navigator.of(context).pop();
+                                  await _messageSnackbar(
+                                      contextScaffold, OptionSong.remove);
                                 },
-                                itemCount: List.generate(3, (i) => i++).length,
                               ),
-                            );
-                          }
-                        },
-                      );
+                            if (!exist)
+                              ListTile(
+                                  leading: Icon(Icons.favorite_border),
+                                  title: Text("Aggiungi preferito"),
+                                  onTap: () async {
+                                    // await favoritesData
+                                    //     .addFavorite(song.id);
+
+                                    final firestore =
+                                        GetIt.instance<FirestoreDatabase>();
+                                    final newFavorite = FavoriteFire(
+                                      createdAt: DateTime.now(),
+                                      songId: song.id,
+                                      song: FirebaseFirestore.instance
+                                          .doc(FirestorePath.song(song.id)),
+                                    );
+                                    await firestore.addFavorite(newFavorite);
+                                    Navigator.of(context).pop();
+                                    await _messageSnackbar(
+                                        contextScaffold, OptionSong.add);
+                                  }),
+                            ListTile(
+                                leading: Icon(Icons.book),
+                                title: Text("Visualizza canto"),
+                                onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            FavoriteScreen()))),
+                            ListTile(
+                                leading: Icon(Icons.cancel),
+                                title: Text("Annulla"),
+                                onTap: () => Navigator.of(context).pop())
+                          ],
+                        );
+                      } else {
+                        final sizeWidth = MediaQuery.of(context).size.width;
+                        var theme =
+                            Provider.of<ThemeChanger>(context, listen: false);
+
+                        return Shimmer.fromColors(
+                          // baseColor: Theme.of(context).primaryColorLight,
+                          // highlightColor: Theme.of(context).primaryColor,
+                          baseColor:
+                              theme.getThemeName() == Constants.themeLight
+                                  ? Colors.grey[100]
+                                  : Colors.grey[600],
+                          highlightColor:
+                              theme.getThemeName() == Constants.themeLight
+                                  ? Colors.grey[300]
+                                  : Colors.grey[900],
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                leading: Container(
+                                  width: 35.00,
+                                  height: 35.00,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                title: Container(
+                                  width: sizeWidth - 35.00,
+                                  height: 30.00,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: List.generate(3, (i) => i++).length,
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),

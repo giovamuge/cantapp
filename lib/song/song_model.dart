@@ -268,94 +268,94 @@ class Song extends Equatable {
       'Song { id: $id, title: $title, lyric: $lyric, chord: $chord, categories: ${categories.join(",")} }';
 }
 
-class Songs with ChangeNotifier {
-  final FirebaseFirestore databaseReference;
+// class Songs with ChangeNotifier {
+//   final FirebaseFirestore databaseReference;
 
-  Songs({@required this.databaseReference}) {
-    // _selected = Categories().items[0];
-  }
+//   Songs({@required this.databaseReference}) {
+//     // _selected = Categories().items[0];
+//   }
 
-  List<Song> _items = [];
+//   List<Song> _items = [];
 
-  List<Song> get items => [..._items];
-  set items(List<Song> value) {
-    _items = value;
-  }
+//   List<Song> get items => [..._items];
+//   set items(List<Song> value) {
+//     _items = value;
+//   }
 
-  List<Song> findByCategory(Category category) {
-    var k = _items
-        .where((s) => s.categories.indexOf(category.toString()) > -1)
-        .toList();
-    return k;
-  }
+//   List<Song> findByCategory(Category category) {
+//     var k = _items
+//         .where((s) => s.categories.indexOf(category.toString()) > -1)
+//         .toList();
+//     return k;
+//   }
 
-  List<Song> findByFavorite(List<String> favs) {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var favs = prefs.getStringList("Favorites");
-    return _items.where((s) => favs.any((f) => f == s.id)).toList();
-  }
+//   List<Song> findByFavorite(List<String> favs) {
+//     // SharedPreferences prefs = await SharedPreferences.getInstance();
+//     // var favs = prefs.getStringList("Favorites");
+//     return _items.where((s) => favs.any((f) => f == s.id)).toList();
+//   }
 
-  Category _selected;
-  Category get selected => _selected ?? Categories.first();
-  set selected(Category value) {
-    _selected = value;
-    // streamController.add(_selected);
-    notifyListeners();
-  }
+//   Category _selected;
+//   Category get selected => _selected ?? Categories.first();
+//   set selected(Category value) {
+//     _selected = value;
+//     // streamController.add(_selected);
+//     notifyListeners();
+//   }
 
-// esempio di stream
-  // StreamController<Category> streamController = StreamController<Category>();
+// // esempio di stream
+//   // StreamController<Category> streamController = StreamController<Category>();
 
-  // Stream<Stream<List<SongLight>>> streamByCategoryStream() async* {
-  //   await for (final category in streamController.stream) {
-  //     var stream = GetIt.instance<FirestoreDatabase>()
-  //         .songsFromCategorySearchStream(category: category);
+//   // Stream<Stream<List<SongLight>>> streamByCategoryStream() async* {
+//   //   await for (final category in streamController.stream) {
+//   //     var stream = GetIt.instance<FirestoreDatabase>()
+//   //         .songsFromCategorySearchStream(category: category);
 
-  //     yield stream;
-  //   }
-  // }
+//   //     yield stream;
+//   //   }
+//   // }
 
-  // secondo esempio di stream
-  // Stream<List<SongLight>> prova() {
-  //   //async*
-  //   final StreamController<List<SongLight>> resultStreamController =
-  //       new StreamController();
+//   // secondo esempio di stream
+//   // Stream<List<SongLight>> prova() {
+//   //   //async*
+//   //   final StreamController<List<SongLight>> resultStreamController =
+//   //       new StreamController();
 
-  //   // initial stream
-  //   resultStreamController
-  //       .addStream(GetIt.instance<FirestoreDatabase>().songsLightStream());
+//   //   // initial stream
+//   //   resultStreamController
+//   //       .addStream(GetIt.instance<FirestoreDatabase>().songsLightStream());
 
-  //   streamController.stream.listen((Category value) {
-  //     if (value == null) {
-  //       resultStreamController.sink
-  //           .addStream(GetIt.instance<FirestoreDatabase>().songsLightStream());
-  //       return;
-  //     }
+//   //   streamController.stream.listen((Category value) {
+//   //     if (value == null) {
+//   //       resultStreamController.sink
+//   //           .addStream(GetIt.instance<FirestoreDatabase>().songsLightStream());
+//   //       return;
+//   //     }
 
-  //     resultStreamController.sink.addStream(GetIt.instance<FirestoreDatabase>()
-  //         .songsFromCategorySearchStream(category: value));
-  //   }, onDone: () {
-  //     print("Task Done");
-  //   }, onError: (error) {
-  //     print("Some Error");
-  //   });
+//   //     resultStreamController.sink.addStream(GetIt.instance<FirestoreDatabase>()
+//   //         .songsFromCategorySearchStream(category: value));
+//   //   }, onDone: () {
+//   //     print("Task Done");
+//   //   }, onError: (error) {
+//   //     print("Some Error");
+//   //   });
 
-  //   return resultStreamController.stream;
-  // }
+//   //   return resultStreamController.stream;
+//   // }
 
-  // esempio di firestore
-  // Future fetchSongs() async {
-  //   var count = 0;
-  //   final docs = await databaseReference
-  //       .collection("songs")
-  //       .orderBy("title")
-  //       // .limit(15)
-  //       .getDocuments();
-  //   final songs = docs.documents.map((doc) => Song.fromSnapshot(doc)).toList();
-  //   _items = songs;
-  //   notifyListeners();
-  // }
-}
+//   // esempio di firestore
+//   // Future fetchSongs() async {
+//   //   var count = 0;
+//   //   final docs = await databaseReference
+//   //       .collection("songs")
+//   //       .orderBy("title")
+//   //       // .limit(15)
+//   //       .getDocuments();
+//   //   final songs = docs.documents.map((doc) => Song.fromSnapshot(doc)).toList();
+//   //   _items = songs;
+//   //   notifyListeners();
+//   // }
+// }
 
 class Link {
   final String type;

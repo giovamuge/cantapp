@@ -39,13 +39,6 @@ class _HomeScreenState extends State<HomeScreen>
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    // _songsData = Provider.of<Songs>(context);
-    // await _songsData.fetchSongs();
-  }
-
   void _onScrolling() {
     // valore di offset costante
     const offset = 125;
@@ -208,77 +201,72 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildContents(BuildContext context) {
-    return Consumer<Songs>(
-      builder: (context, songs, child) {
-        return BlocBuilder<FilteredSongsBloc, FilteredSongsState>(
-          builder: (context, state) {
-            if (state is FilteredSongsLoading) {
-              return child;
-            } else if (state is FilteredSongsLoaded) {
-              final List<SongLight> items = state.songsFiltered;
-              // if (items.isNotEmpty) {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: items.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  final SongLight item = items[index];
-                  return SongWidget(song: item);
-                },
+    return BlocBuilder<FilteredSongsBloc, FilteredSongsState>(
+      builder: (context, state) {
+        if (state is FilteredSongsLoading) {
+          return Consumer<ThemeChanger>(
+            builder: (context, theme, child) {
+              return Shimmer.fromColors(
+                // baseColor: Theme.of(context).primaryColorLight,
+                // highlightColor: Theme.of(context).primaryColor,
+                baseColor: theme.getThemeName() == Constants.themeLight
+                    ? Colors.grey[100]
+                    : Colors.grey[600],
+                highlightColor: theme.getThemeName() == Constants.themeLight
+                    ? Colors.grey[300]
+                    : Colors.grey[900],
+                child: child,
               );
-              // }
-            } else {
-              return Container(
-                height: 300,
-                child: Center(
-                  child: Text("C'è un errore 😖\nriprova tra qualche istante.",
-                      textAlign: TextAlign.center),
-                ),
-              );
-            }
-          },
-        );
-      },
-      child: Consumer<ThemeChanger>(
-        builder: (context, theme, child) {
-          return Shimmer.fromColors(
-            // baseColor: Theme.of(context).primaryColorLight,
-            // highlightColor: Theme.of(context).primaryColor,
-            baseColor: theme.getThemeName() == Constants.themeLight
-                ? Colors.grey[100]
-                : Colors.grey[600],
-            highlightColor: theme.getThemeName() == Constants.themeLight
-                ? Colors.grey[300]
-                : Colors.grey[900],
-            child: child,
+            },
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  leading: Container(
+                    width: 35.00,
+                    height: 35.00,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: Colors.white,
+                    ),
+                  ),
+                  title: Container(
+                    width: MediaQuery.of(context).size.width - 35.00,
+                    height: 30.00,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              },
+              itemCount: List.generate(10, (i) => i++).length,
+            ),
           );
-        },
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              leading: Container(
-                width: 35.00,
-                height: 35.00,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  color: Colors.white,
-                ),
-              ),
-              title: Container(
-                width: MediaQuery.of(context).size.width - 35.00,
-                height: 30.00,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  color: Colors.white,
-                ),
-              ),
-            );
-          },
-          itemCount: List.generate(10, (i) => i++).length,
-        ),
-      ),
+        } else if (state is FilteredSongsLoaded) {
+          final List<SongLight> items = state.songsFiltered;
+          // if (items.isNotEmpty) {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: items.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              final SongLight item = items[index];
+              return SongWidget(song: item);
+            },
+          );
+          // }
+        } else {
+          return Container(
+            height: 300,
+            child: Center(
+              child: Text("C'è un errore 😖\nriprova tra qualche istante.",
+                  textAlign: TextAlign.center),
+            ),
+          );
+        }
+      },
     );
   }
 

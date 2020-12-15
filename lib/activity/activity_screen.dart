@@ -47,9 +47,7 @@ class _ActivityScreenState extends State<ActivityScreen>
   Widget build(BuildContext context) {
     // Per correggere l'animazione rimuovere scaffold
     // Trovare soluzione per iconData
-    // var _songsData = Provider.of<Songs>(context, listen: false);
     final database = GetIt.instance<FirestoreDatabase>();
-    //Provider.of<FirestoreDatabase>(context, listen: false);
 
     return Scaffold(
       backgroundColor: Colors.transparent,

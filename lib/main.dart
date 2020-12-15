@@ -89,11 +89,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider.value(value: Favorites()),
           ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
           ChangeNotifierProvider.value(value: ThemeChanger(_theme, _themeName)),
-          ChangeNotifierProvider.value(
-              value: Songs(databaseReference: FirebaseFirestore.instance)),
           ChangeNotifierProvider.value(value: NavigatorTablet()),
         ],
         child: Consumer<ThemeChanger>(

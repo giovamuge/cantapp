@@ -1,11 +1,13 @@
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
+import 'package:cantapp/favorite/bloc/favorite_bloc.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -97,14 +99,13 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   }
 
   _buildContents(BuildContext context) {
-    final firestore = GetIt.instance<FirestoreDatabase>();
-    return StreamBuilder<List<FavoriteFire>>(
-      stream: firestore.favoritesStream(),
-      builder: (ctx, data) {
-        if (data.hasData) {
-          final favorites = data.data;
+    // final firestore = GetIt.instance<FirestoreDatabase>();
+    return BlocBuilder<FavoriteBloc, FavoriteState>(
+      builder: (context, state) {
+        if (state is FavoriteLoaded) {
+          final List<FavoriteFire> favorites = state.favorites;
 
-          if (favorites.isNotEmpty) {
+          if (favorites.isEmpty == false) {
             return ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -203,6 +204,12 @@ class _FavoriteScreenState extends State<FavoriteScreen>
         );
       },
     );
+    // StreamBuilder<List<FavoriteFire>>(
+    //   stream: firestore.favoritesStream(),
+    //   builder: (ctx, data) {
+
+    //   },
+    // );
   }
 
   @override

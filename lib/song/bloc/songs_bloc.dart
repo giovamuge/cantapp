@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 part 'songs_event.dart';
 part 'songs_state.dart';
@@ -12,13 +12,16 @@ part 'songs_state.dart';
 class SongsBloc extends Bloc<SongEvent, SongState> {
   // SongBloc() : super(SongInitial());
 
-  final FirestoreDatabase _firestoreDatabase;
+  final FirestoreDatabase _firestoreDatabase =
+      GetIt.instance<FirestoreDatabase>();
   StreamSubscription _songsSubscription;
 
-  SongsBloc({@required FirestoreDatabase firestoreDatabase})
-      : assert(firestoreDatabase != null),
-        _firestoreDatabase = firestoreDatabase,
-        super(SongsLoading());
+  // SongsBloc({@required FirestoreDatabase firestoreDatabase})
+  //     : assert(firestoreDatabase != null),
+  //       _firestoreDatabase = firestoreDatabase,
+  //       super(SongsLoading());
+
+  SongsBloc() : super(SongsLoading());
 
   @override
   Stream<SongState> mapEventToState(

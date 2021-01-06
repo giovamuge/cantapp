@@ -3,7 +3,10 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/services/firestore_path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+
+import 'bloc/favorite_bloc.dart';
 
 class FavoriteIconButtonWidget extends StatelessWidget {
   final String songId;
@@ -12,23 +15,26 @@ class FavoriteIconButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firestore = GetIt.instance<FirestoreDatabase>();
     return StreamBuilder<String>(
-      stream: firestore.favoriteIdFromSongStram(songId),
-      builder: (context, data) {
-        if (data.connectionState != ConnectionState.waiting) {
-          final String favoriteId = data.data;
-          final bool exist = favoriteId != null;
+      stream: BlocProvider.of<FavoriteBloc>(context)
+          .favoriteIdFromSongStream(songId),
+      builder: (context, state) {
+        if (state.connectionState != ConnectionState.waiting) {
+          final String favoriteId = state.data;
+          final bool exist = state.hasData;
           return IconButton(
             icon: Icon(exist ? Icons.favorite : Icons.favorite_border),
             onPressed: () => exist
-                ? firestore.removeFavorite(favoriteId)
-                : firestore.addFavorite(
-                    FavoriteFire(
-                      songId: songId,
-                      createdAt: DateTime.now(),
-                      song: Firestore.instance
-                          .document(FirestorePath.song(songId)),
+                ? BlocProvider.of<FavoriteBloc>(context)
+                    .add(RemoveFavorite(favoriteId))
+                : BlocProvider.of<FavoriteBloc>(context).add(
+                    AddFavorite(
+                      FavoriteFire(
+                        songId: songId,
+                        createdAt: DateTime.now(),
+                        song: FirebaseFirestore.instance
+                            .doc(FirestorePath.song(songId)),
+                      ),
                     ),
                   ),
           );

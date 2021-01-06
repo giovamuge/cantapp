@@ -1,150 +1,133 @@
-import 'dart:math';
-
-import 'package:cantapp/category/category_screen.dart';
-import 'package:cantapp/favorite/favorite_screen.dart';
-import 'package:cantapp/home/home_screen.dart';
-import 'package:cantapp/widgets/navbar_bottom.dart';
+import 'package:cantapp/common/theme.dart';
+import 'package:cantapp/favorite/bloc/favorite_bloc.dart';
+import 'package:cantapp/root/root.dart';
+import 'package:cantapp/services/firebase_ads_service.dart';
+import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/bloc/songs_bloc.dart';
+import 'package:cantapp/song/song_lyric.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
-}
+import 'authentication/authentication.dart';
+import 'common/router.dart';
+import 'landing/landing_screen.dart';
+import 'root/navigator_tablet.dart';
 
-class _AppState extends State<App> {
-  int _selectedNavIndex = 0;
-  List<Widget> _viewsByIndex;
-  String _currentTab = "/home";
-  Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
-    "/home": GlobalKey<NavigatorState>(),
-    "/categories": GlobalKey<NavigatorState>(),
-    "/favorites": GlobalKey<NavigatorState>(),
-    "/settings": GlobalKey<NavigatorState>(),
-  };
+import 'song/bloc/filtered_songs_bloc.dart';
 
-  void _selectTab(String tabItem) {
-    if (tabItem == _currentTab) {
-      // pop to first route
-      _navigatorKeys[tabItem].currentState.popUntil((route) => route.isFirst);
-    } else {
-      setState(() => _currentTab = tabItem);
-    }
-  }
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
 
-  void _handleNavBtnTapped(int index) {
-    //Save the new index and trigger a rebuild
-    setState(() {
-      //This will be passed into the NavBar and change it's selected state, also controls the active content page
-      _selectedNavIndex = index;
-    });
-  }
+  // static String _pkg = "bubble_tab_bar";
+  // static String get pkg => Env.getPackage(_pkg);
 
-  @override
-  void initState() {
-    //Declare some buttons for our tab bar
+  // Custom navigator takes a global key if you want to access the
+  // navigator from outside it's widget tree subtree
+  // GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-    //Create the views which will be mapped to the indices for our nav btns
-    _viewsByIndex = <Widget>[
-      HomeScreen(),
-      CategoryScreen(),
-      FavoriteScreen(),
-      Container(),
-    ];
-    super.initState();
-  }
+  final ThemeData _theme;
+  final String _themeName;
+  final AuthenticationRepository authenticationRepository;
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get _navigator => _navigatorKey.currentState;
+
+  /*const*/ MyApp({
+    @required ThemeData theme,
+    @required String themeName,
+    @required this.authenticationRepository,
+  })  : _theme = theme,
+        _themeName = themeName;
 
   @override
   Widget build(BuildContext context) {
-    //Display the correct child view for the current index
-    var contentView =
-        _viewsByIndex[min(_selectedNavIndex, _viewsByIndex.length - 1)];
-    //Wrap our custom navbar + contentView with the app Scaffold
+    // initialize firebase ads
+    GetIt.instance<FirebaseAdsService>()..initialaze();
+    // final firestoreDatabas = GetIt.instance<FirestoreDatabase>();
 
-    return WillPopScope(
-      onWillPop: () async {
-        final isFirstRouteInCurrentTab =
-            !await _navigatorKeys[_currentTab].currentState.maybePop();
-        if (isFirstRouteInCurrentTab) {
-          // if not on the 'main' tab
-          if (_currentTab != "/home") {
-            // select 'main' tab
-            _selectTab("/home");
-            // back button handled by app
-            return false;
-          }
-        }
-        // let system handle back button if we're on the first route
-        return isFirstRouteInCurrentTab;
-      },
-      child: Scaffold(
-        body: Stack(children: <Widget>[
-          _buildOffstageNavigator("/home"),
-          _buildOffstageNavigator("/categories"),
-          _buildOffstageNavigator("/favorites"),
-          _buildOffstageNavigator("/settings"),
-        ]),
-        bottomNavigationBar: NavbarBottomWidget(
-          itemTapped: _handleNavBtnTapped,
-          currentIndex: _selectedNavIndex,
+    return RepositoryProvider.value(
+      value: authenticationRepository,
+      child: BlocProvider<AuthenticationBloc>(
+        create: (_) => AuthenticationBloc(
+          authenticationRepository: authenticationRepository,
+        ),
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
+            ChangeNotifierProvider.value(
+                value: ThemeChanger(_theme, _themeName)),
+            ChangeNotifierProvider.value(value: NavigatorTablet()),
+          ],
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => SongsBloc(
+                    // firestoreDatabase: firestoreDatabas,
+                    )
+                  ..add(SongsFetch([])),
+              ),
+              BlocProvider<FilteredSongsBloc>(
+                create: (context) => FilteredSongsBloc(
+                  songsBloc: BlocProvider.of<SongsBloc>(context),
+                ),
+              ),
+              BlocProvider<FavoriteBloc>(
+                  create: (context) => FavoriteBloc(
+                        firestoreDatabase: FirestoreDatabase(uid: ""),
+                      )
+                  // ..add((FavoritesLoad())),
+                  ),
+            ],
+            child: Consumer<ThemeChanger>(
+              builder: (context, theme, child) {
+                return MaterialApp(
+                  // showPerformanceOverlay: true,
+                  // navigatorKey: navigatorKey,
+                  debugShowCheckedModeBanner: false,
+                  title: 'Cantapp',
+                  // navigatorKey: GetIt.instance<NavigationService>().navigatorKey,
+                  // onGenerateRoute: generateRoute,
+                  theme: theme.getTheme(),
+                  localeResolutionCallback: onLocaleResolutionCallback,
+                  navigatorObservers: [
+                    FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+                  ],
+                  // routes: appRoutes,
+                  home: LandingScreen(
+                    authenticationRepository: authenticationRepository,
+                    child: RootScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildOffstageNavigator(String tabItem) {
-    // build routes
-    final routeBuilders = _routeBuilders(context);
+  Locale onLocaleResolutionCallback(
+      Locale locale, Iterable<Locale> supportedLocales) {
+    if (locale == null) {
+      debugPrint("*language locale is null!!!");
+      return supportedLocales.first;
+    }
 
-    return Offstage(
-      offstage: _currentTab != tabItem,
-      child: Navigator(
-        key: _navigatorKeys[tabItem],
-        initialRoute: TabNavigatorRoutes.home,
-        onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-            builder: (context) => routeBuilders[routeSettings.name](context),
-          );
-        },
-      ),
-    );
+    for (Locale supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode ||
+          supportedLocale.countryCode == locale.countryCode) {
+        debugPrint("*language ok $supportedLocale");
+        return supportedLocale;
+      }
+    }
+
+    debugPrint("*language to fallback ${supportedLocales.first}");
+    return supportedLocales.first;
   }
-
-  void _push(BuildContext context, {int materialIndex: 500}) {
-    var routeBuilders = _routeBuilders(context, materialIndex: materialIndex);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            routeBuilders[TabNavigatorRoutes.categories](context),
-      ),
-    );
-  }
-
-  Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
-      {int materialIndex: 500}) {
-    return {
-      TabNavigatorRoutes.home: (context) => HomeScreen(),
-      TabNavigatorRoutes.categories: (context) => CategoryScreen(),
-      TabNavigatorRoutes.favorites: (context) => FavoriteScreen(),
-      // TabNavigatorRoutes.root: (context) => ColorsListPage(
-      //       color: activeTabColor[tabItem],
-      //       title: tabName[tabItem],
-      //       onPush: (materialIndex) =>
-      //           _push(context, materialIndex: materialIndex),
-      //     ),
-      // TabNavigatorRoutes.detail: (context) => ColorDetailPage(
-      //       color: activeTabColor[tabItem],
-      //       title: tabName[tabItem],
-      //       materialIndex: materialIndex,
-      //     ),
-    };
-  }
-}
-
-class TabNavigatorRoutes {
-  static const String home = '/home';
-  static const String categories = '/categories';
-  static const String favorites = '/favorites';
-  static const String settings = '/settings';
 }

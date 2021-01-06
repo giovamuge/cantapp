@@ -127,12 +127,18 @@ class FirestoreDatabase {
           .snapshots()
           .map((value) => value.docs.isNotEmpty);
 
-  Stream<String> favoriteIdFromSongStram(String songId) =>
+  Stream<String> favoriteIdFromSongStream(String songId) =>
       FirebaseFirestore.instance
           .collection(FirestorePath.favorites(uid))
           .where("songId", isEqualTo: songId)
           .snapshots()
           .map((value) => value.docs.first.id);
+  //     .map((value) {
+  //   final docs = value.docs;
+  //   final empty = docs.isEmpty;
+  //   if (empty) return "";
+  //   return value?.docs?.first?.id;
+  // });
 
   // void setFavorite(String userId, String songId) => _service
   //     .setData(path: FirestorePath.user(userId), data: );

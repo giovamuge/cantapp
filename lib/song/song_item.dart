@@ -1,6 +1,7 @@
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/extensions/string.dart';
+import 'package:cantapp/favorite/bloc/favorite_bloc.dart';
 import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/responsive/device_screen_type.dart';
@@ -13,6 +14,7 @@ import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/song/widgets/badget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -78,37 +80,15 @@ class SongWidget extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             fontSize: 15),
       ),
-      // subtitle: Text('Artista sconosciuto',
-      //     style: TextStyle(color: _textColor[900], fontSize: 11)),
       subtitle: Container(
         child: Row(children: _buildSubtitle()),
       ),
-      // isThreeLine: true,
-      // subtitle: Text("Prova"),
       dense: true,
       onTap: () => _navigateToSong(context, song),
-      // trailing: PopupMenuButton<OptionSong>(
-      //   // color: _textColor[900],
-      //   onSelected: (OptionSong result) async {
-      //     if (result == OptionSong.add) {
-      //       await favoritesData.addFavorite(song.id);
-      //       _messageSnackbar(context, OptionSong.add);
-      //     }
-
-      //     if (result == OptionSong.remove) {
-      //       await favoritesData.removeFavorite(song.id);
-      //       _messageSnackbar(context, OptionSong.remove);
-      //     }
-
-      //     if (result == OptionSong.view) {
-      //       _navigateToSong(context, song);
-      //     }
-      //   },
-      //   itemBuilder: (ctx) => _buildOptions(ctx, favoritesData),
-      // ),
       trailing: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () => _settingModalBottomSheet(context, song.id)),
+        icon: Icon(Icons.menu),
+        onPressed: () => _settingModalBottomSheet(context, song.id, context),
+      ),
     );
   }
 
@@ -166,8 +146,9 @@ class SongWidget extends StatelessWidget {
     return result;
   }
 
-  Future<void> _settingModalBottomSheet(contextScaffold, songId) async {
-    final firestore = GetIt.instance<FirestoreDatabase>();
+  Future<void> _settingModalBottomSheet(
+      contextScaffold, songId, context) async {
+    // final firestore = GetIt.instance<FirestoreDatabase>();
     return await showModalBottomSheet(
         context: contextScaffold,
         backgroundColor: Colors.transparent,
@@ -181,12 +162,12 @@ class SongWidget extends StatelessWidget {
                   color: Theme.of(context).dialogBackgroundColor,
                   width: constraints.maxWidth,
                   height: 200,
-                  child: StreamBuilder<bool>(
-                    stream: firestore.existSongInFavoriteStream(songId),
+                  child: StreamBuilder<String>(
+                    stream: BlocProvider.of<FavoriteBloc>(context)
+                        .favoriteIdFromSongStream(songId),
                     builder: (context, data) {
-                      if (data.connectionState != ConnectionState.waiting &&
-                          data.hasData) {
-                        final exist = data.data;
+                      if (data.connectionState != ConnectionState.waiting) {
+                        final exist = data.hasData;
                         return Wrap(
                           children: <Widget>[
                             if (exist)
@@ -194,11 +175,8 @@ class SongWidget extends StatelessWidget {
                                 leading: Icon(Icons.favorite),
                                 title: Text("Rimuovi preferito"),
                                 onTap: () async {
-                                  // await favoritesData
-                                  //     .removeFavorite(song.id);
-                                  final firestore =
-                                      GetIt.instance<FirestoreDatabase>();
-                                  await firestore.removeFavorite(song.id);
+                                  BlocProvider.of<FavoriteBloc>(context)
+                                      .add(RemoveFavoriteFromSong(song.id));
                                   Navigator.of(context).pop();
                                   await _messageSnackbar(
                                       contextScaffold, OptionSong.remove);
@@ -206,25 +184,22 @@ class SongWidget extends StatelessWidget {
                               ),
                             if (!exist)
                               ListTile(
-                                  leading: Icon(Icons.favorite_border),
-                                  title: Text("Aggiungi preferito"),
-                                  onTap: () async {
-                                    // await favoritesData
-                                    //     .addFavorite(song.id);
-
-                                    final firestore =
-                                        GetIt.instance<FirestoreDatabase>();
-                                    final newFavorite = FavoriteFire(
-                                      createdAt: DateTime.now(),
-                                      songId: song.id,
-                                      song: FirebaseFirestore.instance
-                                          .doc(FirestorePath.song(song.id)),
-                                    );
-                                    await firestore.addFavorite(newFavorite);
-                                    Navigator.of(context).pop();
-                                    await _messageSnackbar(
-                                        contextScaffold, OptionSong.add);
-                                  }),
+                                leading: Icon(Icons.favorite_border),
+                                title: Text("Aggiungi preferito"),
+                                onTap: () async {
+                                  final newFavorite = FavoriteFire(
+                                    createdAt: DateTime.now(),
+                                    songId: song.id,
+                                    song: FirebaseFirestore.instance
+                                        .doc(FirestorePath.song(song.id)),
+                                  );
+                                  BlocProvider.of<FavoriteBloc>(context)
+                                      .add(AddFavorite(newFavorite));
+                                  Navigator.of(context).pop();
+                                  await _messageSnackbar(
+                                      contextScaffold, OptionSong.add);
+                                },
+                              ),
                             ListTile(
                                 leading: Icon(Icons.book),
                                 title: Text("Visualizza canto"),

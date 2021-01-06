@@ -46,6 +46,9 @@ dependencies:
   # rxdart reactive ui
   rxdart: ^0.24.1
 
+  # manager form
+  formz: ^0.3.2
+
   # Non ho inserito il numero di versione, nella speranza che siano compatibili
   # Avere sempre un riguardo particolare a questi pacchetti
   equatable:
@@ -67,6 +70,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+
+  # packages repository
+  authentication_repository:
+    path: packages/authentication_repository
 
   
 

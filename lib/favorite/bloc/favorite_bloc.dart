@@ -106,4 +106,11 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
 
   Stream<List<FavoriteFire>> favoritesStream() =>
       _firestoreDatabase.favoritesStream();
+
+  @override
+  Future<void> close() {
+    _favoritesSubscription?.cancel();
+    _favoriteExistSubscription?.cancel();
+    return super.close();
+  }
 }

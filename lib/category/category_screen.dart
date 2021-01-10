@@ -1,8 +1,10 @@
 import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -118,23 +120,26 @@ class _CategoryScreenState extends State<CategoryScreen>
     );
   }
 
-  void _onNavigateCategory(context, category) async =>
-      // Provider.of<FirestoreDatabase>(context, listen: false)
-      GetIt.instance<FirestoreDatabase>()
-          .songsFromCategorySearchStream(category: category)
-          .listen(
-        (songs) async {
-          if (songs.isNotEmpty && songs.length > 0) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ListSongsScreen(items: songs, title: category.title)));
-          } else {
-            await _showMyDialog(category);
-          }
-        },
-      );
+  void _onNavigateCategory(context, category) async {
+    BlocProvider.of<SongsBloc>(context)
+        .songsFromCategorySearchStream(category)
+        .first
+        .then(
+      (songs) async {
+        if (songs.isNotEmpty && songs.length > 0) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ListSongsScreen(items: songs, title: category.title),
+            ),
+          );
+        } else {
+          await _showMyDialog(category);
+        }
+      },
+    );
+  }
 
   Future<void> _showMyDialog(
     category,

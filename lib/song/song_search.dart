@@ -15,17 +15,28 @@ class DataSearch extends SearchDelegate {
   // Songs _songsData;
   // SongSearchDelegate();
 
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    // return super.appBarTheme(context);
-    final ThemeData theme = Theme.of(context);
-    return theme.copyWith(
-      primaryColor: theme.backgroundColor,
-      // primaryIconTheme: theme.primaryIconTheme,
-      // primaryColorBrightness: theme.primaryColorBrightness,
-      primaryTextTheme: theme.primaryTextTheme,
-    );
-  }
+  // @override
+  // ThemeData appBarTheme(BuildContext context) {
+  //   // return super.appBarTheme(context);
+  //   final themeData = Provider.of<ThemeChanger>(context, listen: false);
+  //   final ThemeData theme = Theme.of(context);
+  //   final result = themeData.getThemeName() == Constants.themeLight
+  //       ? theme.copyWith(
+  //           primaryColor: theme.backgroundColor,
+  //           // primaryIconTheme: theme.primaryIconTheme,
+  //           // primaryColorBrightness: theme.primaryColorBrightness,
+  //           primaryTextTheme: theme.primaryTextTheme,
+  //         )
+  //       : new ThemeData(
+  //           backgroundColor: Colors.black,
+  //           primarySwatch: Colors.grey,
+  //           primaryTextTheme: TextTheme(
+  //             headline6: TextStyle(color: Colors.black),
+  //           ),
+  //         );
+
+  //   return result;
+  // }
 
   @override
   List<Widget> buildActions(BuildContext context) {

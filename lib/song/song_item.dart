@@ -201,16 +201,15 @@ class SongWidget extends StatelessWidget {
                                 },
                               ),
                             ListTile(
-                                leading: Icon(Icons.book),
-                                title: Text("Visualizza canto"),
-                                onTap: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            FavoriteScreen()))),
+                              leading: Icon(Icons.book),
+                              title: Text("Visualizza canto"),
+                              onTap: () => _navigateToSong(context, song),
+                            ),
                             ListTile(
-                                leading: Icon(Icons.cancel),
-                                title: Text("Annulla"),
-                                onTap: () => Navigator.of(context).pop())
+                              leading: Icon(Icons.cancel),
+                              title: Text("Annulla"),
+                              onTap: () => Navigator.of(context).pop(),
+                            )
                           ],
                         );
                       } else {

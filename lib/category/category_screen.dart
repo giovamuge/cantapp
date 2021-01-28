@@ -1,11 +1,9 @@
 import 'package:cantapp/category/category_model.dart';
-import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override

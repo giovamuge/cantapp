@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cantapp/common/constants.dart';
+import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/responsive/screen_type_layout.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'song_full_screen.dart';
 
@@ -56,13 +59,14 @@ class _SongScreenState extends State<SongScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      body: BlocBuilder<SongBloc, SongState>(
+      body: FutureBuilder<Song>(
         // possibile sostituzione in future perché viene rebuild
         // quando inserisco una nuova visualizzazione in più
-        // stream: _database.songStream(widget._id),
-        builder: (context, state) {
-          if (state is SongLoaded) {
-            Song song = state.song;
+        future: BlocProvider.of<SongBloc>(context).fetchSong(widget.id),
+        builder: (context, asyncSnapshot) {
+          if (asyncSnapshot.hasData &&
+              asyncSnapshot.connectionState != ConnectionState.waiting) {
+            Song song = asyncSnapshot.data;
             if (song == null) {
               return Center(
                 child: Text("Errore nel caricamento."),
@@ -95,17 +99,19 @@ class _SongScreenState extends State<SongScreen> {
                         actions: <Widget>[
                           // todo: da riabilitare
                           IconButton(
-                            icon: Icon(Icons.fullscreen),
-                            onPressed: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => SongFullScreen(
-                                        body: song.lyric,
-                                        title: song.title,
-                                        child: _songUtil.buildFutureBannerAd(),
-                                      ),
-                                  fullscreenDialog: true),
-                            ),
-                          ),
+                              icon: Icon(Icons.fullscreen),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => SongFullScreen(
+                                      body: song.lyric,
+                                      title: song.title,
+                                      child: _songUtil.buildFutureBannerAd(),
+                                    ),
+                                    fullscreenDialog: true,
+                                  ),
+                                );
+                              }),
                           FavoriteIconButtonWidget(songId: song.id),
                           IconButton(
                             icon: Icon(Icons.format_size),
@@ -116,15 +122,17 @@ class _SongScreenState extends State<SongScreen> {
                       SliverList(
                         delegate: SliverChildListDelegate([
                           FontSizeSliderWidget(
-                              collasped: lyricData.isCollapsed),
+                            collasped: lyricData.isCollapsed,
+                          ),
                           SizedBox(height: 20),
                           Padding(
                             padding: safeAreaChildScroll,
                             child: Text(
                               song.title,
                               style: TextStyle(
-                                  fontSize: lyricData.fontSize * 1.25,
-                                  fontWeight: FontWeight.w800),
+                                fontSize: lyricData.fontSize * 1.25,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
                           SizedBox(height: 20),
@@ -149,7 +157,57 @@ class _SongScreenState extends State<SongScreen> {
               );
             }
           } else {
-            return Container(); // da sostituire con shimmer
+            final theme = Provider.of<ThemeChanger>(context, listen: false);
+            final double sizeHeight = MediaQuery.of(context).size.height;
+            final double titleHeight = sizeHeight * 0.10;
+            final double subtitleHeight = sizeHeight * 0.05;
+            final double bodyHeight = sizeHeight * 0.80;
+
+            return Shimmer.fromColors(
+              // baseColor: Theme.of(context).primaryColorLight,
+              // highlightColor: Theme.of(context).primaryColor,
+              baseColor: theme.getThemeName() == Constants.themeLight
+                  ? Colors.grey[100]
+                  : Colors.grey[600],
+              highlightColor: theme.getThemeName() == Constants.themeLight
+                  ? Colors.grey[300]
+                  : Colors.grey[900],
+              child: SafeArea(
+                child: ListView(
+                  // mainAxisSize: MainAxisSize.max,
+                  padding: const EdgeInsets.all(20),
+                  // physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    Container(
+                      height: titleHeight,
+                      width: MediaQuery.of(context).size.width * .5,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: subtitleHeight,
+                      width: MediaQuery.of(context).size.width * .25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      height: bodyHeight,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ); // da sostituire con shimmer
           }
         },
       ),

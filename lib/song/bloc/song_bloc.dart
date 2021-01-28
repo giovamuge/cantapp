@@ -47,10 +47,13 @@ class SongBloc extends Bloc<SongEvent, SongState> {
 
   Stream<SongState> _mapSongViewIncrementedToState(
       SongViewIncremented event) async* {
-    // _firestoreDatabase
-    //     .incrementView(/*_song.id*/ /* oppure */ event.songId)
-    //     .then((value) async* {
-    //   yield SongViewIncrementedSuccess();
-    // });
+    _firestoreDatabase
+        .incrementView(/*_song.id*/ /* oppure */ event.songId)
+        .then((value) async* {
+      yield SongViewIncrementedSuccess();
+    });
   }
+
+  Future<Song> fetchSong(String songId) =>
+      _firestoreDatabase.songStream(songId).first;
 }

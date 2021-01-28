@@ -7,15 +7,14 @@ import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/responsive/device_screen_type.dart';
 import 'package:cantapp/responsive/responsive_utils.dart';
 import 'package:cantapp/root/navigator_tablet.dart';
-import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/services/firestore_path.dart';
+import 'package:cantapp/song/bloc/song_bloc.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/song/widgets/badget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -148,7 +147,6 @@ class SongWidget extends StatelessWidget {
 
   Future<void> _settingModalBottomSheet(
       contextScaffold, songId, context) async {
-    // final firestore = GetIt.instance<FirestoreDatabase>();
     return await showModalBottomSheet(
         context: contextScaffold,
         backgroundColor: Colors.transparent,

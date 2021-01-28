@@ -8,7 +8,6 @@ import 'package:provider/single_child_widget.dart';
 // final Firestore _databaseReference = Firestore.instance;
 
 final List<SingleChildWidget> appProviders = [
-  ChangeNotifierProvider.value(value: Favorites()),
   ChangeNotifierProvider.value(value: SongLyric(fontSize: 15.00)),
   ChangeNotifierProvider.value(
       value: ThemeChanger(appTheme, Constants.themeLight)),

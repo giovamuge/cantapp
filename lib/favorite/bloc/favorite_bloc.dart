@@ -98,7 +98,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
 
   Stream<FavoriteState> _mapUpdateAuthIdToState(String authId) async* {
     _firestoreDatabase = FirestoreDatabase(uid: authId);
-    add(FavoritesLoad());
+    // add(FavoritesLoad()); // chiamo lo stesso evento anche in landing_screen
   }
 
   Stream<String> favoriteIdFromSongStream(String songId) =>

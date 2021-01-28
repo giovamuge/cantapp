@@ -5,24 +5,19 @@ import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
 
 part 'songs_event.dart';
 part 'songs_state.dart';
 
 class SongsBloc extends Bloc<SongEvent, SongState> {
-  // SongBloc() : super(SongInitial());
-
-  final FirestoreDatabase _firestoreDatabase =
-      GetIt.instance<FirestoreDatabase>();
+  FirestoreDatabase _firestoreDatabase;
   StreamSubscription _songsSubscription;
 
-  // SongsBloc({@required FirestoreDatabase firestoreDatabase})
-  //     : assert(firestoreDatabase != null),
-  //       _firestoreDatabase = firestoreDatabase,
-  //       super(SongsLoading());
-
-  SongsBloc() : super(SongsLoading());
+  SongsBloc({@required FirestoreDatabase firestoreDatabase})
+      : assert(firestoreDatabase != null),
+        _firestoreDatabase = firestoreDatabase,
+        super(SongsLoading());
 
   @override
   Stream<SongState> mapEventToState(
@@ -32,6 +27,9 @@ class SongsBloc extends Bloc<SongEvent, SongState> {
       yield* _mapLoadSongsToState();
     } else if (event is SongsUpdated) {
       yield* _mapSongsUpdateToState(event);
+    }
+    if (event is UpdateAuthIdSong) {
+      yield* _mapUpdateAuthIdToState(event);
     }
   }
 
@@ -46,8 +44,18 @@ class SongsBloc extends Bloc<SongEvent, SongState> {
     yield SongsLoaded(event.songs);
   }
 
+  _mapUpdateAuthIdToState(UpdateAuthIdSong event) {
+    _firestoreDatabase = FirestoreDatabase(uid: event.authId);
+  }
+
   Stream<List<SongLight>> songsFromCategorySearchStream(Category category) =>
       _firestoreDatabase.songsFromCategorySearchStream(category: category);
+
+  Stream<List<SongLight>> activitySongsStream(int activity) =>
+      _firestoreDatabase.activitySongsStream(activity);
+
+  Stream<List<SongLight>> songsSearchStream(String query) =>
+      _firestoreDatabase.songsSearchStream(textSearch: query);
 
   @override
   Future<void> close() {

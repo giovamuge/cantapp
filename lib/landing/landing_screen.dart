@@ -1,11 +1,8 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cantapp/authentication/bloc/authentication_bloc.dart';
 import 'package:cantapp/favorite/bloc/favorite_bloc.dart';
-import 'package:cantapp/locator.dart';
-import 'package:cantapp/services/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class LandingScreen extends StatelessWidget {
   final Widget _child;
@@ -19,33 +16,6 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var auth = Provider.of<FirebaseAuthService>(context);
-    // final auth = GetIt.instance<FirebaseAuthService>();
-
-    // return StreamBuilder(
-    //   stream: auth.onAuthStateChanged,
-    //   builder: (context, snapshot) {
-    //     // if (snapshot.connectionState == ConnectionState.active) {
-    //     User user = snapshot.data;
-    //     if (user == null) {
-    //       // authenticate anonymous
-    //       // start async sign in
-    //       auth.signInAnonymously();
-    //     } else {
-    //       setupLocatorFirestore(user.uid);
-    //     }
-
-    //     return _child;
-    //     // }
-
-    //     // return Scaffold(
-    //     //   body: Center(
-    //     //     child: Text("caricamento..."),
-    //     //   ),
-    //     // );
-    //   },
-    // );
-
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
         switch (state.status) {
@@ -60,6 +30,14 @@ class LandingScreen extends StatelessWidget {
             BlocProvider.of<FavoriteBloc>(context)
               ..add(UpdateAuthId(state.user.id))
               ..add(FavoritesLoad());
+
+            // errore strano di bloc
+            // final SongsBloc sbloc = BlocProvider.of<SongsBloc>(context);
+            // sbloc.add(UpdateAuthIdSong(state.user.id));
+            // sbloc.add(SongsFetch([]));
+            // ..add(songsBloc.UpdateAuthId(state.user.id));
+            // ..add(songsBloc.SongsFetch([]));
+
             return _child;
             break;
           case AuthenticationStatus.unauthenticated:

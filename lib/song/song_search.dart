@@ -2,49 +2,41 @@ import 'package:algolia/algolia.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/services/algolia_service.dart';
-import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DataSearch extends SearchDelegate {
-  // Songs _songsData;
-  // SongSearchDelegate();
+class SongSearchDelegate extends SearchDelegate<String> {
+  final AlgoliaService _algoliaService = AlgoliaService.instance;
 
-  // @override
-  // ThemeData appBarTheme(BuildContext context) {
-  //   // return super.appBarTheme(context);
-  //   final themeData = Provider.of<ThemeChanger>(context, listen: false);
-  //   final ThemeData theme = Theme.of(context);
-  //   final result = themeData.getThemeName() == Constants.themeLight
-  //       ? theme.copyWith(
-  //           primaryColor: theme.backgroundColor,
-  //           // primaryIconTheme: theme.primaryIconTheme,
-  //           // primaryColorBrightness: theme.primaryColorBrightness,
-  //           primaryTextTheme: theme.primaryTextTheme,
-  //         )
-  //       : new ThemeData(
-  //           backgroundColor: Colors.black,
-  //           primarySwatch: Colors.grey,
-  //           primaryTextTheme: TextTheme(
-  //             headline6: TextStyle(color: Colors.black),
-  //           ),
-  //         );
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final themeData = Provider.of<ThemeChanger>(context, listen: false);
+    final ThemeData theme = Theme.of(context);
+    final result = themeData.getThemeName() == Constants.themeLight
+        ? theme.copyWith(
+            primaryColor: AppTheme.background,
+            primaryColorBrightness: Brightness.light)
+        : theme.copyWith(
+            primaryColor: AppTheme.backgroundDark,
+            primaryColorBrightness: Brightness.dark);
 
-  //   return result;
-  // }
+    return result;
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
+    // Actions for app bar
     return [
       IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {
-          query = '';
+          query = "";
         },
       ),
     ];
@@ -52,88 +44,14 @@ class DataSearch extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) => searchSongs(context);
-
-  @override
-  Widget buildSuggestions(BuildContext context) => searchSongs(
-      context); // da sostituire con Container se non vuoi lasciare in pending l'ultima ricerca
-
-  Widget searchSongs(BuildContext context) {
-    if (query.length < 2) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Text(
-              "Inserisci più di due ✌️ lettere \nper la ricerca. ",
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      );
-    }
-
-    // List<Song> songListData = List<Song>();
-    final database = GetIt.instance<
-        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
-
-    print('i am searching:  -> $query');
-
-    return StreamBuilder(
-      stream: database.songsSearchStream(textSearch: query.toLowerCase()),
-      builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-        if (snapshot.hasData && snapshot.data.isNotEmpty) {
-          final List<Song> items = snapshot.data;
-          return ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                  title: Text(items[index].title),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SongScreen(id: items[index].id))));
-            },
-          );
-        } else {
-          return Center(child: Text("Nessun risultato trovato. 🤔"));
-        }
-      },
-    );
-  }
-}
-
-class SongSearchDelegate extends SearchDelegate<String> {
-  final AlgoliaService _algoliaService = AlgoliaService.instance;
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    // Actions for app bar
-    return [
-      IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            query = "";
-          })
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
     // Leading icon on the left of the app bar
     return IconButton(
-        icon: AnimatedIcon(
-            icon: AnimatedIcons.menu_arrow, progress: transitionAnimation),
-        onPressed: () {
-          close(context, null);
-        });
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () => close(context, null),
+    );
   }
 
   @override
@@ -226,19 +144,19 @@ class SongSearchDelegate extends SearchDelegate<String> {
           );
         } else {
           print('i am searching:  -> $query');
+
           return StreamBuilder(
-            stream: GetIt.instance<FirestoreDatabase>()
-                .songsSearchStream(textSearch: query.toLowerCase()),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+            stream: BlocProvider.of<SongsBloc>(context)
+                .songsSearchStream(query.toLowerCase()),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<SongLight>> snapshot) {
               if (snapshot.hasData && snapshot.data.isNotEmpty) {
-                final List<Song> items = snapshot.data;
+                final List<SongLight> items = snapshot.data;
                 return ListView.builder(
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                         title: Text(items[index].title),
-                        subtitle: Text(items[index].lyric, maxLines: 1),
                         onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (context) =>

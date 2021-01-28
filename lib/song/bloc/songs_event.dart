@@ -16,19 +16,6 @@ class SongsFetch extends SongEvent {
   List<Object> get props => [songs];
 }
 
-// class SongsFetch extends SongEvent {}
-
-class UpdateSong extends SongEvent {
-  final Song updatedSong;
-  const UpdateSong(this.updatedSong);
-
-  @override
-  List<Object> get props => [updatedSong];
-
-  @override
-  String toString() => 'UpdateTodo { updatedTodo: $updatedSong }';
-}
-
 class SongsUpdated extends SongEvent {
   final List<SongLight> songs;
 
@@ -36,4 +23,13 @@ class SongsUpdated extends SongEvent {
 
   @override
   List<Object> get props => [songs];
+}
+
+class UpdateAuthIdSong extends SongEvent {
+  final String authId;
+
+  const UpdateAuthIdSong(this.authId);
+
+  @override
+  List<Object> get props => [authId];
 }

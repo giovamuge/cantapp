@@ -99,7 +99,6 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   }
 
   _buildContents(BuildContext context) {
-    // final firestore = GetIt.instance<FirestoreDatabase>();
     return BlocBuilder<FavoriteBloc, FavoriteState>(
       builder: (context, state) {
         if (state is FavoriteLoaded) {

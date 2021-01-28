@@ -15,11 +15,11 @@ import 'package:provider/provider.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 
 import 'authentication/authentication.dart';
-import 'common/router.dart';
 import 'landing/landing_screen.dart';
 import 'root/navigator_tablet.dart';
 
 import 'song/bloc/filtered_songs_bloc.dart';
+import 'song/bloc/song_bloc.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -68,9 +68,13 @@ class MyApp extends StatelessWidget {
             providers: [
               BlocProvider(
                 create: (context) => SongsBloc(
-                    // firestoreDatabase: firestoreDatabas,
-                    )
-                  ..add(SongsFetch([])),
+                  firestoreDatabase: FirestoreDatabase(uid: ""),
+                )..add(SongsFetch([])),
+              ),
+              BlocProvider(
+                create: (context) => SongBloc(
+                  firestoreDatabase: FirestoreDatabase(uid: ""),
+                ),
               ),
               BlocProvider<FilteredSongsBloc>(
                 create: (context) => FilteredSongsBloc(
@@ -78,11 +82,10 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               BlocProvider<FavoriteBloc>(
-                  create: (context) => FavoriteBloc(
-                        firestoreDatabase: FirestoreDatabase(uid: ""),
-                      )
-                  // ..add((FavoritesLoad())),
-                  ),
+                create: (context) => FavoriteBloc(
+                  firestoreDatabase: FirestoreDatabase(uid: ""),
+                ),
+              ),
             ],
             child: Consumer<ThemeChanger>(
               builder: (context, theme, child) {

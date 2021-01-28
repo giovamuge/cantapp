@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/responsive/screen_type_layout.dart';
-import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/bloc/song_bloc.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/utils/song_util.dart';
@@ -11,16 +11,16 @@ import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
 
 import 'song_full_screen.dart';
 
 class SongScreen extends StatefulWidget {
-  final String _id;
+  final String id;
 
-  const SongScreen({@required String id}) : _id = id;
+  const SongScreen({@required this.id});
 
   @override
   _SongScreenState createState() => _SongScreenState();
@@ -31,18 +31,17 @@ class _SongScreenState extends State<SongScreen> {
       const EdgeInsets.symmetric(horizontal: 25);
 
   StreamSubscription<dynamic> _sessionTask;
-  FirestoreDatabase _database;
   SongUtil _songUtil;
 
   @override
   void initState() {
+    // call event to fetcg song in song_bloc
+    BlocProvider.of<SongBloc>(context).add(SongFetched(widget.id));
+
     _songUtil = SongUtil();
     _sessionTask = Future.delayed(Duration(seconds: 10))
         .asStream()
         .listen((res) => _incrementViews());
-
-    _database = GetIt.instance<
-        FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
 
     super.initState();
   }
@@ -57,96 +56,100 @@ class _SongScreenState extends State<SongScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      body: StreamBuilder<Song>(
+      body: BlocBuilder<SongBloc, SongState>(
         // possibile sostituzione in future perché viene rebuild
         // quando inserisco una nuova visualizzazione in più
-        stream: _database.songStream(widget._id),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final Song _song = snapshot.data;
-            return Consumer<SongLyric>(
-              builder: (context, lyricData, child) {
-                return CustomScrollView(
-                  slivers: <Widget>[
-                    SliverAppBar(
-                      floating: true,
-                      pinned: false,
-                      snap: true,
-                      leading: ScreenTypeLayout(
-                        mobile: BackButton(
-                          onPressed: () {
-                            // Future.microtask(() => sessionTask.cancel());
-                            Navigator.pop(context);
-                          },
+        // stream: _database.songStream(widget._id),
+        builder: (context, state) {
+          if (state is SongLoaded) {
+            Song song = state.song;
+            if (song == null) {
+              return Center(
+                child: Text("Errore nel caricamento."),
+              );
+            } else {
+              return Consumer<SongLyric>(
+                builder: (context, lyricData, child) {
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      SliverAppBar(
+                        floating: true,
+                        pinned: false,
+                        snap: true,
+                        leading: ScreenTypeLayout(
+                          mobile: BackButton(
+                            onPressed: () {
+                              // Future.microtask(() => sessionTask.cancel());
+                              Navigator.pop(context);
+                            },
+                          ),
+                          tablet: Container(),
                         ),
-                        tablet: Container(),
-                      ),
-                      title: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          _buildServiziButton(context, lyricData, _song),
+                        title: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            _buildServiziButton(context, lyricData, song),
+                          ],
+                        ),
+                        actions: <Widget>[
+                          // todo: da riabilitare
+                          IconButton(
+                            icon: Icon(Icons.fullscreen),
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => SongFullScreen(
+                                        body: song.lyric,
+                                        title: song.title,
+                                        child: _songUtil.buildFutureBannerAd(),
+                                      ),
+                                  fullscreenDialog: true),
+                            ),
+                          ),
+                          FavoriteIconButtonWidget(songId: song.id),
+                          IconButton(
+                            icon: Icon(Icons.format_size),
+                            onPressed: lyricData.collaspe,
+                          ),
                         ],
                       ),
-                      actions: <Widget>[
-                        // todo: da riabilitare
-                        IconButton(
-                          icon: Icon(Icons.fullscreen),
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => SongFullScreen(
-                                      body: _song.lyric,
-                                      title: _song.title,
-                                      child: _songUtil.buildFutureBannerAd(),
-                                    ),
-                                fullscreenDialog: true),
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          FontSizeSliderWidget(
+                              collasped: lyricData.isCollapsed),
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: safeAreaChildScroll,
+                            child: Text(
+                              song.title,
+                              style: TextStyle(
+                                  fontSize: lyricData.fontSize * 1.25,
+                                  fontWeight: FontWeight.w800),
+                            ),
                           ),
-                        ),
-                        FavoriteIconButtonWidget(songId: _song.id),
-                        IconButton(
-                          icon: Icon(Icons.format_size),
-                          onPressed: lyricData.collaspe,
-                        ),
-                      ],
-                    ),
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                        FontSizeSliderWidget(collasped: lyricData.isCollapsed),
-                        SizedBox(height: 20),
-                        Padding(
-                          padding: safeAreaChildScroll,
-                          child: Text(
-                            _song.title,
-                            style: TextStyle(
-                                fontSize: lyricData.fontSize * 1.25,
-                                fontWeight: FontWeight.w800),
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: safeAreaChildScroll,
+                            child: LyricWidget(
+                              text: song.lyric,
+                              fontSize: lyricData.fontSize,
+                              child: _songUtil.buildFutureBannerAd(),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        Padding(
-                          padding: safeAreaChildScroll,
-                          child: LyricWidget(
-                            text: _song.lyric,
-                            fontSize: lyricData.fontSize,
-                            child: _songUtil.buildFutureBannerAd(),
-                          ),
-                        ),
-                        // Padding(
-                        //   padding: safeAreaChildScroll,
-                        //   child: service.banner,
-                        // ),
-                        SizedBox(height: 80),
-                      ]),
-                    ),
-                    // SliverFixedExtentList(
-                    //     delegate: SliverChildListDelegate.fixed([BannerAdsWidget()]),
-                    //     itemExtent: 1)
-                  ],
-                );
-              },
-            );
+                          // Padding(
+                          //   padding: safeAreaChildScroll,
+                          //   child: service.banner,
+                          // ),
+                          SizedBox(height: 80),
+                        ]),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
           } else {
-            return Container();
+            return Container(); // da sostituire con shimmer
           }
         },
       ),
@@ -185,13 +188,6 @@ class _SongScreenState extends State<SongScreen> {
     }
   }
 
-  void _incrementViews() {
-    // final database = GetIt.instance<
-    //     FirestoreDatabase>(); // Provider.of<FirestoreDatabase>(context, listen: false); // potrebbe essere true, da verificare
-
-    // Future.delayed(Duration(seconds: 5))
-    //     .asStream()
-    //     .listen((res) => database.incrementView(widget._id));
-    _database.incrementView(widget._id);
-  }
+  void _incrementViews() =>
+      BlocProvider.of<SongBloc>(context).add(SongViewIncremented(widget.id));
 }

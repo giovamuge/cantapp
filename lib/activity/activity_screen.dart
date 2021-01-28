@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:cantapp/services/firestore_database.dart';
+import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ActivityScreen extends StatefulWidget {
   final int index;
@@ -47,7 +46,6 @@ class _ActivityScreenState extends State<ActivityScreen>
   Widget build(BuildContext context) {
     // Per correggere l'animazione rimuovere scaffold
     // Trovare soluzione per iconData
-    final database = GetIt.instance<FirestoreDatabase>();
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -67,7 +65,8 @@ class _ActivityScreenState extends State<ActivityScreen>
             ),
           ),
           StreamBuilder<List<SongLight>>(
-            stream: database.activitySongsStream(widget.index),
+            stream: BlocProvider.of<SongsBloc>(context)
+                .activitySongsStream(widget.index),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData && snapshot.data.length > 0) {
                 final List<SongLight> items = snapshot.data;
@@ -140,18 +139,19 @@ class _ActivityScreenState extends State<ActivityScreen>
                       children: <Widget>[
                         Text("C'è un errore 😖 riprova tra qualche istante."),
                         FlatButton(
-                            child: Text(
-                              "Chiudi",
-                              style: TextStyle(
-                                color: widget.color[800],
-                              ),
+                          child: Text(
+                            "Chiudi",
+                            style: TextStyle(
+                              color: widget.color[800],
                             ),
-                            textColor: widget.color[800],
-                            onPressed: () {
-                              _animationController
-                                  .reverse()
-                                  .then((value) => Navigator.pop(context));
-                            }),
+                          ),
+                          textColor: widget.color[800],
+                          onPressed: () {
+                            _animationController
+                                .reverse()
+                                .then((value) => Navigator.pop(context));
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -174,13 +174,14 @@ class _ActivityScreenState extends State<ActivityScreen>
                       ),
                     ),
                     FlatButton(
-                        child: Text("Chiudi"),
-                        textColor: widget.color[800],
-                        onPressed: () {
-                          _animationController
-                              .reverse()
-                              .then((value) => Navigator.pop(context));
-                        })
+                      child: Text("Chiudi"),
+                      textColor: widget.color[800],
+                      onPressed: () {
+                        _animationController
+                            .reverse()
+                            .then((value) => Navigator.pop(context));
+                      },
+                    )
                   ],
                 ),
               );

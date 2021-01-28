@@ -1,7 +1,5 @@
-import 'package:cantapp/category/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 // potrei usarlo come abstract class
 // da inserrire come classe base di song
@@ -128,11 +126,11 @@ abstract class SongBase extends Equatable {
   SongBase.fromSnapshot(DocumentSnapshot snapshot, String number, String artist)
       : id = snapshot.id, //snapshot.documentID,
         title = snapshot.data()["title"],
-        artist = snapshot.data()["artist"],
+        artist = snapshot.data()["artist"] ?? "Artista conosciuto",
         links = new List<Link>();
 
   SongBase.fromJson(Map<String, dynamic> maps)
-      : artist = maps["artist"],
+      : artist = maps["artist"] ?? "Artista conosciuto",
         title = maps["title"],
         id = maps["objectID"],
         links = new List<Link>();
@@ -198,25 +196,6 @@ class Song extends Equatable {
         artist = snapshot.data()["artist"],
         isFavorite = false;
 
-  // Song.fromMap(Map maps, String id)
-  //     : id = id,
-  //       title = maps["title"],
-  //       lyric = maps["lyric"],
-  //       chord = maps["chord"],
-  //       numberViews = maps["numberViews"],
-  //       createdAt = maps["createdAd"],
-  //       updatedAt = maps["updatedAt"],
-  //       categories = maps["categories"] != null
-  //           ? new List<String>.from(maps["categories"])
-  //           : new List<String>(),
-  //       links = maps["links"] != null
-  //           ? new List<Map<String, String>>.from(maps["links"])
-  //           : new List<Map<String, String>>(),
-  //       // links = new List<Link>(),
-  //       artist = maps["artist"],
-  //       number = maps["number"],
-  //       isFavorite = false;
-
   static fromMap(Map maps, String id) {
     final links = new List<Link>();
     if (maps["links"] != null) {
@@ -267,95 +246,6 @@ class Song extends Equatable {
   String toString() =>
       'Song { id: $id, title: $title, lyric: $lyric, chord: $chord, categories: ${categories.join(",")} }';
 }
-
-// class Songs with ChangeNotifier {
-//   final FirebaseFirestore databaseReference;
-
-//   Songs({@required this.databaseReference}) {
-//     // _selected = Categories().items[0];
-//   }
-
-//   List<Song> _items = [];
-
-//   List<Song> get items => [..._items];
-//   set items(List<Song> value) {
-//     _items = value;
-//   }
-
-//   List<Song> findByCategory(Category category) {
-//     var k = _items
-//         .where((s) => s.categories.indexOf(category.toString()) > -1)
-//         .toList();
-//     return k;
-//   }
-
-//   List<Song> findByFavorite(List<String> favs) {
-//     // SharedPreferences prefs = await SharedPreferences.getInstance();
-//     // var favs = prefs.getStringList("Favorites");
-//     return _items.where((s) => favs.any((f) => f == s.id)).toList();
-//   }
-
-//   Category _selected;
-//   Category get selected => _selected ?? Categories.first();
-//   set selected(Category value) {
-//     _selected = value;
-//     // streamController.add(_selected);
-//     notifyListeners();
-//   }
-
-// // esempio di stream
-//   // StreamController<Category> streamController = StreamController<Category>();
-
-//   // Stream<Stream<List<SongLight>>> streamByCategoryStream() async* {
-//   //   await for (final category in streamController.stream) {
-//   //     var stream = GetIt.instance<FirestoreDatabase>()
-//   //         .songsFromCategorySearchStream(category: category);
-
-//   //     yield stream;
-//   //   }
-//   // }
-
-//   // secondo esempio di stream
-//   // Stream<List<SongLight>> prova() {
-//   //   //async*
-//   //   final StreamController<List<SongLight>> resultStreamController =
-//   //       new StreamController();
-
-//   //   // initial stream
-//   //   resultStreamController
-//   //       .addStream(GetIt.instance<FirestoreDatabase>().songsLightStream());
-
-//   //   streamController.stream.listen((Category value) {
-//   //     if (value == null) {
-//   //       resultStreamController.sink
-//   //           .addStream(GetIt.instance<FirestoreDatabase>().songsLightStream());
-//   //       return;
-//   //     }
-
-//   //     resultStreamController.sink.addStream(GetIt.instance<FirestoreDatabase>()
-//   //         .songsFromCategorySearchStream(category: value));
-//   //   }, onDone: () {
-//   //     print("Task Done");
-//   //   }, onError: (error) {
-//   //     print("Some Error");
-//   //   });
-
-//   //   return resultStreamController.stream;
-//   // }
-
-//   // esempio di firestore
-//   // Future fetchSongs() async {
-//   //   var count = 0;
-//   //   final docs = await databaseReference
-//   //       .collection("songs")
-//   //       .orderBy("title")
-//   //       // .limit(15)
-//   //       .getDocuments();
-//   //   final songs = docs.documents.map((doc) => Song.fromSnapshot(doc)).toList();
-//   //   _items = songs;
-//   //   notifyListeners();
-//   // }
-// }
 
 class Link {
   final String type;

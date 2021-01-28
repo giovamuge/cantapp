@@ -1,5 +1,6 @@
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/utils/lyric_util.dart';
+import 'package:cantapp/song/widgets/header_lyric.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -28,12 +29,24 @@ class SongFullScreen extends StatelessWidget {
   // }
 
   final String _title;
+  final String _number;
+  final String _artist;
   final String _body;
+  final List<String> _categories;
   final Widget _child;
-  const SongFullScreen(
-      {@required String body, @required String title, Widget child})
-      : _body = body,
+
+  const SongFullScreen({
+    @required String body,
+    @required String title,
+    @required String number,
+    Widget child,
+    String artist,
+    List<String> categories,
+  })  : _body = body,
         _title = title,
+        _number = number,
+        _categories = categories,
+        _artist = artist,
         _child = child;
 
   @override
@@ -65,12 +78,18 @@ class SongFullScreen extends StatelessWidget {
               runSpacing: 25,
               spacing: 0,
               children: [
-                Text(
-                  _title,
-                  style: TextStyle(
-                    fontSize: lyricData.fontSize * 1.25,
-                    fontWeight: FontWeight.w800,
-                  ),
+                // Text(
+                //   _title,
+                //   style: TextStyle(
+                //     fontSize: lyricData.fontSize * 1.25,
+                //     fontWeight: FontWeight.w800,
+                //   ),
+                // ),
+                HeaderLyric(
+                  title: _title,
+                  number: _number,
+                  categories: _categories,
+                  artist: _artist,
                 ),
                 SizedBox(height: 20),
                 ...LyricUtil()

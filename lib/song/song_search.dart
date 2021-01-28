@@ -73,19 +73,20 @@ class SongSearchDelegate extends SearchDelegate<String> {
                 final songs = snapshot.data;
                 return ListView.builder(
                   itemCount: songs.length,
-                  itemBuilder: (ctx, i) => ListTile(
-                    // leading: Text("numero"),
-                    title: Text(songs[i].title),
-                    subtitle: Text(songs[i].lyric, maxLines: 1),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          print('id:' + songs[i].objectID);
-                          return SongScreen(id: songs[i].objectID);
-                        },
+                  itemBuilder: (ctx, i) {
+                    return ListTile(
+                      title: Text(songs[i].title),
+                      subtitle: Text(songs[i].lyric, maxLines: 1),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            print('id:' + songs[i].objectID);
+                            return SongScreen(id: songs[i].objectID);
+                          },
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               } else if (snapshot.hasError) {
                 return Center(
@@ -156,11 +157,13 @@ class SongSearchDelegate extends SearchDelegate<String> {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                        title: Text(items[index].title),
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    SongScreen(id: items[index].id))));
+                      title: Text(items[index].title),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SongScreen(id: items[index].id),
+                        ),
+                      ),
+                    );
                   },
                 );
               } else {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
+import 'package:cantapp/common/utils.dart';
 import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/responsive/screen_type_layout.dart';
@@ -10,14 +11,19 @@ import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/utils/song_util.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
+import 'package:cantapp/song/widgets/header_lyric.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:cantapp/song/servizi/servizi_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'servizi/chord_screen.dart';
+import 'servizi/youtube_card.dart';
 import 'song_full_screen.dart';
 
 class SongScreen extends StatefulWidget {
@@ -35,12 +41,14 @@ class _SongScreenState extends State<SongScreen> {
 
   StreamSubscription<dynamic> _sessionTask;
   SongUtil _songUtil;
+  PageController _controller;
 
   @override
   void initState() {
     // call event to fetcg song in song_bloc
     BlocProvider.of<SongBloc>(context).add(SongFetched(widget.id));
 
+    _controller = PageController(initialPage: 0, viewportFraction: .9);
     _songUtil = SongUtil();
     _sessionTask = Future.delayed(Duration(seconds: 10))
         .asStream()
@@ -67,6 +75,12 @@ class _SongScreenState extends State<SongScreen> {
           if (asyncSnapshot.hasData &&
               asyncSnapshot.connectionState != ConnectionState.waiting) {
             Song song = asyncSnapshot.data;
+
+            final List<Link> videos =
+                song.links.where((l) => l.type == 'youtube').toList();
+            final List<Link> audios =
+                song.links.where((l) => l.type == 'audio').toList();
+
             if (song == null) {
               return Center(
                 child: Text("Errore nel caricamento."),
@@ -89,13 +103,13 @@ class _SongScreenState extends State<SongScreen> {
                           ),
                           tablet: Container(),
                         ),
-                        title: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            _buildServiziButton(context, lyricData, song),
-                          ],
-                        ),
+                        // title: Row(
+                        //   mainAxisSize: MainAxisSize.max,
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   children: <Widget>[
+                        //     _buildServiziButton(context, lyricData, song),
+                        //   ],
+                        // ),
                         actions: <Widget>[
                           // todo: da riabilitare
                           IconButton(
@@ -106,6 +120,9 @@ class _SongScreenState extends State<SongScreen> {
                                     builder: (context) => SongFullScreen(
                                       body: song.lyric,
                                       title: song.title,
+                                      number: song.number,
+                                      artist: song.artist,
+                                      categories: song.categories,
                                       child: _songUtil.buildFutureBannerAd(),
                                     ),
                                     fullscreenDialog: true,
@@ -120,36 +137,73 @@ class _SongScreenState extends State<SongScreen> {
                         ],
                       ),
                       SliverList(
-                        delegate: SliverChildListDelegate([
-                          FontSizeSliderWidget(
-                            collasped: lyricData.isCollapsed,
-                          ),
-                          SizedBox(height: 20),
-                          Padding(
-                            padding: safeAreaChildScroll,
-                            child: Text(
-                              song.title,
-                              style: TextStyle(
-                                fontSize: lyricData.fontSize * 1.25,
-                                fontWeight: FontWeight.w800,
+                        delegate: SliverChildListDelegate(
+                          [
+                            FontSizeSliderWidget(
+                              collasped: lyricData.isCollapsed,
+                            ),
+                            SizedBox(height: 20),
+                            Padding(
+                              padding: safeAreaChildScroll,
+                              child: HeaderLyric(
+                                title: song.title,
+                                number: song.number,
+                                artist: song.artist,
+                                categories: song.categories,
                               ),
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          Padding(
-                            padding: safeAreaChildScroll,
-                            child: LyricWidget(
-                              text: song.lyric,
-                              fontSize: lyricData.fontSize,
-                              child: _songUtil.buildFutureBannerAd(),
+                            SizedBox(height: 25),
+                            Padding(
+                              padding: safeAreaChildScroll,
+                              child: LyricWidget(
+                                text: song.lyric,
+                                fontSize: lyricData.fontSize,
+                                child: _songUtil.buildFutureBannerAd(),
+                              ),
                             ),
-                          ),
-                          // Padding(
-                          //   padding: safeAreaChildScroll,
-                          //   child: service.banner,
-                          // ),
-                          SizedBox(height: 80),
-                        ]),
+                            // Padding(
+                            //   padding: safeAreaChildScroll,
+                            //   child: service.banner,
+                            // ),
+                            SizedBox(height: 30),
+                            Padding(
+                              padding: safeAreaChildScroll,
+                              child: Text(
+                                "Accordi",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .fontSize),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: _buildListChords(song),
+                            ),
+
+                            if (videos.isNotEmpty) SizedBox(height: 30),
+                            if (videos.isNotEmpty)
+                              Padding(
+                                padding: safeAreaChildScroll,
+                                child: Container(
+                                  height: 90,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: [
+                                      ..._buildVideos(videos),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                            if (audios.isNotEmpty) SizedBox(height: 10),
+                            if (audios.isNotEmpty) ..._buildAudios(audios),
+
+                            // SizedBox(height: 80.00)
+                          ],
+                        ),
                       ),
                     ],
                   );
@@ -214,7 +268,8 @@ class _SongScreenState extends State<SongScreen> {
     );
   }
 
-  _buildServiziButton(BuildContext context, SongLyric lyricData, Song song) {
+  Widget _buildServiziButton(
+      BuildContext context, SongLyric lyricData, Song song) {
     if (song.links.length > 0 || !song.chord.isNullOrEmpty()) {
       return SizedBox(
         width: 80.00,
@@ -244,6 +299,162 @@ class _SongScreenState extends State<SongScreen> {
     } else {
       return Container();
     }
+  }
+
+  List<Widget> _buildVideos(List<Link> videos) {
+    if (videos.length > 0) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "YouTube",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              // FlatButton(
+              //   child: Text("visualizza tutto"),
+              //   textColor: Colors.yellow,
+              //   padding: const EdgeInsets.all(0),
+              //   onPressed: () {},
+              // )
+            ],
+          ),
+        ),
+        // SizedBox(height: 10),
+        Container(
+          height: 300.00,
+          child: PageView.builder(
+            controller: _controller,
+            physics: BouncingScrollPhysics(),
+            // onPageChanged: (index) => setState(() => _currentIndex = index),
+            itemCount: videos.length,
+            itemBuilder: (ctx, index) =>
+                YouTubeCard(heigth: 300.00, url: videos[index].url),
+          ),
+        ),
+      ];
+    } else {
+      return [Container()];
+    }
+  }
+
+  List<Widget> _buildAudios(List<Link> audios) {
+    if (audios.length > 0) {
+      return [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Audio mp3",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              // FlatButton(
+              //   child: Text("visualizza tutto"),
+              //   textColor: Colors.yellow,
+              //   padding: const EdgeInsets.all(0),
+              //   onPressed: () {},
+              // )
+            ],
+          ),
+        ),
+        // SizedBox(height: 10),
+        Container(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              final double cardHeigth = 200;
+              final double cardWidth = 150;
+
+              final double titleHeigth = cardHeigth * 66 / 100;
+              final double subHeight = cardHeigth * 34 / 100;
+
+              final double paddingLeft = (index == 0) ? 20.00 : 5.00;
+
+              return Padding(
+                padding: EdgeInsets.only(left: paddingLeft, right: 5),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () => Utils.launchURL(
+                      'https://www.youtube.com/watch?v=CReCKHj8GTk'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Column(children: [
+                      Container(
+                        width: cardWidth,
+                        height: titleHeigth,
+                        color: Colors.yellow,
+                        child: Center(
+                          child: Icon(
+                            FontAwesomeIcons.headphones,
+                            color: Colors.white,
+                            size: 50.00,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: cardWidth,
+                        height: subHeight,
+                        color: Colors.white,
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                            "MOSCA in 40ena e l'INCIDENTE DIPLOMATICO RUSSIA-ITALIA"),
+                      )
+                    ]),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ];
+    } else {
+      return [Container()];
+    }
+  }
+
+  Widget _buildListChords(song) {
+    if (song == null || song.chord == null) {
+      return Container(
+        padding: const EdgeInsets.only(left: 20),
+        child: Text("Non ci sono accordi"),
+      );
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 1,
+      itemBuilder: (context, index) {
+        return ListTile(
+          onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => ChordScreen(song: song))),
+          title: Text("Versione 1"),
+          leading: CircleAvatar(
+            maxRadius: 20,
+            backgroundColor: Colors.purple[100],
+            child: Text(
+              '1',
+              style: TextStyle(
+                  color: Colors.purple[900],
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _incrementViews() =>

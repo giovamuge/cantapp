@@ -1,7 +1,7 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../song_lyric.dart';
@@ -11,7 +11,7 @@ class SongUtil {
 
   FutureBuilder<Widget> buildFutureBannerAd() {
     return FutureBuilder(
-      future: GetIt.instance<FirebaseAdsService>().createBannerAdAsync(),
+      future: FirebaseAdsService().createBannerAdAsync(),
       builder: (context, data) {
         if (data.hasData && data.data is Widget) {
           return Padding(
@@ -25,6 +25,49 @@ class SongUtil {
         }
       },
     );
+  }
+
+  // ignore: slash_for_doc_comments
+  /**
+   *  [onBannerCreatedCallback] Function(AdmobBannerController)
+   *   Dispose is called automatically for you when Flutter removes the banner from the widget tree.
+   *   Normally you don't need to worry about disposing this yourself, it's handled.
+   *   If you need direct access to dispose, this is your guy!
+   *   controller.dispose();
+   *},
+   */
+  Widget buildBannerAd(
+      Function(AdmobBannerController) onBannerCreatedCallback) {
+    return AdmobBanner(
+      adUnitId: FirebaseAdsService.getBannerAdUnitId(),
+      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        handleEvent(event, args, 'Banner');
+      },
+      onBannerCreated: onBannerCreatedCallback,
+    );
+  }
+
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('New Admob $adType Ad loaded!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad opened!');
+        break;
+      case AdmobAdEvent.closed:
+        print('Admob $adType Ad closed!');
+        break;
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType failed to load. :(');
+        break;
+      case AdmobAdEvent.rewarded:
+        print('New Admob $adType Ad rewarded!');
+        break;
+      default:
+    }
   }
 
   Future<void> settingModalBottomSheet(context) async {

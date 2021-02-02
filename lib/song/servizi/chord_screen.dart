@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/utils/song_util.dart';
@@ -19,6 +20,14 @@ class ChordScreen extends StatefulWidget {
 class _ChordScreenState extends State<ChordScreen> {
   EdgeInsets safeAreaChildScroll = const EdgeInsets.symmetric(horizontal: 25);
 
+  AdmobBannerController _controllerBanner;
+
+  @override
+  void dispose() {
+    _controllerBanner?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final SongLyric lyricData = Provider.of<SongLyric>(context);
@@ -38,7 +47,12 @@ class _ChordScreenState extends State<ChordScreen> {
                     builder: (context) => SongFullScreen(
                           body: widget._song.chord,
                           title: widget._song.title,
-                          child: songUtil.buildFutureBannerAd(),
+                          number: widget._song.number,
+                          artist: widget._song.artist,
+                          categories: widget._song.categories,
+                          child: songUtil.buildBannerAd((controllerBanner) {
+                            _controllerBanner = controllerBanner;
+                          }),
                         ),
                     fullscreenDialog: true)),
               ),

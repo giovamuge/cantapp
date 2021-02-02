@@ -31,14 +31,14 @@ class MyApp extends StatelessWidget {
   // navigator from outside it's widget tree subtree
   // GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+  // final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  // NavigatorState get _navigator => _navigatorKey.currentState;
+
   final ThemeData _theme;
   final String _themeName;
   final AuthenticationRepository authenticationRepository;
-  final _navigatorKey = GlobalKey<NavigatorState>();
 
-  NavigatorState get _navigator => _navigatorKey.currentState;
-
-  /*const*/ MyApp({
+  const MyApp({
     @required ThemeData theme,
     @required String themeName,
     @required this.authenticationRepository,
@@ -48,8 +48,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // initialize firebase ads
-    GetIt.instance<FirebaseAdsService>()..initialaze();
-    // final firestoreDatabas = GetIt.instance<FirestoreDatabase>();
+    FirebaseAdsService()..initialaze();
 
     return RepositoryProvider.value(
       value: authenticationRepository,

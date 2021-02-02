@@ -1,6 +1,5 @@
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
-import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/common/utils.dart';
@@ -8,12 +7,14 @@ import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/responsive/screen_type_layout.dart';
 import 'package:cantapp/song/bloc/song_bloc.dart';
+import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/utils/song_util.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/header_lyric.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -43,6 +44,13 @@ class _SongScreenState extends State<SongScreen> {
   StreamSubscription<dynamic> _sessionTask;
   SongUtil _songUtil;
   PageController _controller;
+  BannerAd _bannerAd;
+
+  void _loadBannerAd() {
+    _bannerAd
+      ..load()
+      ..show(anchorType: AnchorType.bottom);
+  }
 
   @override
   void initState() {
@@ -55,12 +63,20 @@ class _SongScreenState extends State<SongScreen> {
         .asStream()
         .listen((res) => _incrementViews());
 
+    _bannerAd = BannerAd(
+      adUnitId: AdManager.bannerAdUnitId,
+      size: AdSize.banner,
+    );
+
+    _loadBannerAd();
+
     super.initState();
   }
 
   @override
   void dispose() {
-    _sessionTask.cancel();
+    _sessionTask?.cancel();
+    _bannerAd?.dispose();
     super.dispose();
   }
 

@@ -20,33 +20,13 @@ import 'package:shimmer/shimmer.dart';
 
 class SongWidget extends StatelessWidget {
   final SongLight song;
-  final MaterialColor _avatarColor;
-  final MaterialColor _textColor;
   final Function(BuildContext) _onNavigateSong;
 
   // static const Color _defaultPrimaryColor = Theme.of(context).primaryColor;
 
-  static const MaterialColor _defaultTextColor = MaterialColor(
-    0xFF000000,
-    <int, Color>{
-      50: Color(0xFF000000),
-      100: Color(0xFF000000),
-      200: Color(0xFF000000),
-      300: Color(0xFF000000),
-      400: Color(0xFF000000),
-      500: Color(0xFF000000),
-      600: Color(0xFF000000),
-      700: Color(0xFF000000),
-      800: Color(0xFF000000),
-      900: Color(0xFF000000),
-    },
-  );
-
   const SongWidget(
       {Key key, @required this.song, avatarColor, textColor, onNavigateSong})
-      : _avatarColor = avatarColor ?? Colors.purple,
-        _textColor = textColor ?? _defaultTextColor,
-        _onNavigateSong = onNavigateSong,
+      : _onNavigateSong = onNavigateSong,
         super(key: key);
 
   @override
@@ -82,7 +62,8 @@ class SongWidget extends StatelessWidget {
       subtitle: Container(
         child: Row(children: _buildSubtitle()),
       ),
-      dense: true,
+      // isThreeLine: true,
+      dense: true, // TODO: sicuro?
       onTap: () => _navigateToSong(context, song),
       trailing: IconButton(
         icon: Icon(Icons.menu),
@@ -293,6 +274,11 @@ class SongWidget extends StatelessWidget {
     final DeviceScreenType device = getDeviceType(mediaQuery);
 
     if (device == DeviceScreenType.Mobile) {
+      if (_onNavigateSong != null) {
+        _onNavigateSong.call(context);
+        return;
+      }
+
       Navigator.of(context).push(
         MaterialPageRoute(
             // fullscreenDialog: true, // sono sicuro?

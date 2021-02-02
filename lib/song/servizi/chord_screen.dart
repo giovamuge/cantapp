@@ -75,7 +75,7 @@ class _ChordScreenState extends State<ChordScreen> {
                 child: LyricWidget(
                   text: widget._song.chord,
                   fontSize: lyricData.fontSize,
-                  child: songUtil.buildFutureBannerAd(),
+                  child: Container(),
                 ),
               ),
             ]),

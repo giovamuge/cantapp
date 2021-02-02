@@ -3,6 +3,8 @@ import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/locator.dart';
 import 'package:cantapp/simple_bloc_observer.dart';
+import 'package:cantapp/services/firebase_ads_service.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,6 +39,8 @@ void main() async {
 
   FirebaseInAppMessaging.instance.triggerEvent("donate");
   FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
+
+  FirebaseAdMob.instance.initialize(appId: AdManager.appId);
 
   setupLocator();
   runApp(MyApp(

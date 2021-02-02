@@ -43,7 +43,6 @@ class _SongScreenState extends State<SongScreen> {
   StreamSubscription<dynamic> _sessionTask;
   SongUtil _songUtil;
   PageController _controller;
-  AdmobBannerController _controllerBanner;
 
   @override
   void initState() {
@@ -62,7 +61,6 @@ class _SongScreenState extends State<SongScreen> {
   @override
   void dispose() {
     _sessionTask.cancel();
-    _controllerBanner?.dispose();
     super.dispose();
   }
 
@@ -126,11 +124,7 @@ class _SongScreenState extends State<SongScreen> {
                                       number: song.number,
                                       artist: song.artist,
                                       categories: song.categories,
-                                      child: _songUtil
-                                          .buildBannerAd((controllerBanner) {
-                                        _controllerBanner = controllerBanner;
-                                      }),
-                                      // child: _songUtil.buildFutureBannerAd(),
+                                      child: Container(),
                                     ),
                                     fullscreenDialog: true,
                                   ),
@@ -165,9 +159,7 @@ class _SongScreenState extends State<SongScreen> {
                               child: LyricWidget(
                                 text: song.lyric,
                                 fontSize: lyricData.fontSize,
-                                child: _songUtil
-                                    .buildBannerAd((controllerBanner) {}),
-                                // child: _songUtil.buildFutureBannerAd(),
+                                child: Container(),
                               ),
                             ),
                             // Padding(

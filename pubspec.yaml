@@ -20,16 +20,21 @@ dependencies:
   flutter:
     sdk: flutter
   # Add the dependency for the Firebase Core Flutter SDK
-  firebase_core: ^0.5.2
-  firebase_analytics: ^6.2.0
-  firebase_crashlytics: ^0.2.3
-  firebase_auth: ^0.18.3
-  firebase_in_app_messaging: ^0.2.2
-  cloud_firestore: ^0.14.3
+  firebase_core: ^0.7.0
+  firebase_analytics: ^7.0.1
+  firebase_crashlytics: ^0.4.0+1
+  firebase_auth: ^0.20.0+1
+  firebase_in_app_messaging: ^0.3.0+1
+  cloud_firestore: ^0.16.0
 
   # Add the dependency for adb mob, set key for iOS and Android
+<<<<<<< Updated upstream
   # firebase_admob: ^0.9.3+1
   admob_flutter: ^1.0.1
+=======
+  firebase_admob: ^0.11.0+1
+  # admob_flutter: ^1.0.1
+>>>>>>> Stashed changes
 
   # Full text search algolia
   algolia: ^0.1.7

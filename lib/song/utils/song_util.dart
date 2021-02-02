@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+import 'package:firebase_admob/firebase_admob.dart';
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';

@@ -6,7 +6,11 @@ import 'package:cantapp/favorite/favorite_screen.dart';
 import 'package:cantapp/responsive/device_screen_type.dart';
 import 'package:cantapp/responsive/responsive_utils.dart';
 import 'package:cantapp/root/navigator_tablet.dart';
+<<<<<<< Updated upstream
 import 'package:cantapp/services/firestore_database.dart';
+=======
+import 'package:cantapp/services/firestore_path.dart';
+>>>>>>> Stashed changes
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/song/widgets/badget.dart';

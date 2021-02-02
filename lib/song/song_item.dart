@@ -8,7 +8,6 @@ import 'package:cantapp/responsive/device_screen_type.dart';
 import 'package:cantapp/responsive/responsive_utils.dart';
 import 'package:cantapp/root/navigator_tablet.dart';
 import 'package:cantapp/services/firestore_path.dart';
-import 'package:cantapp/song/bloc/song_bloc.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
 import 'package:cantapp/song/widgets/badget.dart';
@@ -21,12 +20,19 @@ import 'package:shimmer/shimmer.dart';
 class SongWidget extends StatelessWidget {
   final SongLight song;
   final Function(BuildContext) _onNavigateSong;
+  final Function(BuildContext) _onCallback;
 
   // static const Color _defaultPrimaryColor = Theme.of(context).primaryColor;
 
-  const SongWidget(
-      {Key key, @required this.song, avatarColor, textColor, onNavigateSong})
-      : _onNavigateSong = onNavigateSong,
+  const SongWidget({
+    Key key,
+    @required this.song,
+    avatarColor,
+    textColor,
+    onNavigateSong,
+    onCallback,
+  })  : _onNavigateSong = onNavigateSong,
+        _onCallback = onCallback,
         super(key: key);
 
   @override
@@ -279,6 +285,9 @@ class SongWidget extends StatelessWidget {
         return;
       }
 
+      // chiama call back su click canzone
+      _onCallback?.call(context);
+
       Navigator.of(context).push(
         MaterialPageRoute(
             // fullscreenDialog: true, // sono sicuro?
@@ -290,7 +299,9 @@ class SongWidget extends StatelessWidget {
       Provider.of<NavigatorTablet>(context, listen: false).view =
           SongScreen(id: song.id);
 
-      if (_onNavigateSong != null) _onNavigateSong.call(context);
+      // chiama call back su click canzone
+      _onCallback?.call(context);
+      _onNavigateSong?.call(context);
     }
   }
 }

@@ -5,13 +5,11 @@ import 'package:cantapp/song/bloc/filtered_songs_bloc.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:cantapp/services/firebase_ads_service.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -26,37 +24,6 @@ class _HomeScreenState extends State<HomeScreen>
   ScrollController _controller;
   Animation _animation;
   AnimationController _animationController;
-  InterstitialAd _interstitialAd;
-  bool _isInterstitialAdReady;
-  String _songIdSelected;
-
-  void _loadInterstitialAd() {
-    _interstitialAd.load();
-  }
-
-  void _onInterstitialAdEvent(MobileAdEvent event) {
-    switch (event) {
-      case MobileAdEvent.loaded:
-        _isInterstitialAdReady = true;
-        break;
-      case MobileAdEvent.failedToLoad:
-        _isInterstitialAdReady = false;
-        print('Failed to load an interstitial ad');
-        break;
-      case MobileAdEvent.closed:
-        // _moveToHome();
-        // if (_songIdSelected != null) {
-        //   Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //         // fullscreenDialog: true, // sono sicuro?
-        //         builder: (context) => SongScreen(id: _songIdSelected)),
-        //   );
-        // }
-        break;
-      default:
-      // do nothing
-    }
-  }
 
   @override
   void initState() {
@@ -67,13 +34,6 @@ class _HomeScreenState extends State<HomeScreen>
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-    _isInterstitialAdReady = false;
-    _interstitialAd = InterstitialAd(
-      adUnitId: AdManager.interstitialAdUnitId,
-      listener: _onInterstitialAdEvent,
-    );
-
-    _loadInterstitialAd();
   }
 
   @override

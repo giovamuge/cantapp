@@ -29,16 +29,11 @@ class LyricUtil {
 
       result.add(
         Container(
-          // color: Colors.red,
-          // child:
-          // ConstrainedBox(
-          //   constraints: BoxConstraints(maxWidth: maxWidth),
           child: RichText(
             text: TextSpan(
                 style: DefaultTextStyle.of(context).style,
                 children: [...fontWeight(paragraphArray[i], fontSize)]),
           ),
-          // ),
         ),
       );
     }

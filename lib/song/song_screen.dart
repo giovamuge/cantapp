@@ -45,11 +45,39 @@ class _SongScreenState extends State<SongScreen> {
   SongUtil _songUtil;
   PageController _controller;
   BannerAd _bannerAd;
+  InterstitialAd _interstitialAd;
 
   void _loadBannerAd() {
     _bannerAd
       ..load()
       ..show(anchorType: AnchorType.bottom);
+  }
+
+  void _loadInterstitialAd() {
+    _interstitialAd.load();
+  }
+
+  void _onInterstitialAdEvent(MobileAdEvent event) {
+    switch (event) {
+      case MobileAdEvent.loaded:
+        _interstitialAd.show();
+        break;
+      case MobileAdEvent.failedToLoad:
+        print('Failed to load an interstitial ad');
+        break;
+      case MobileAdEvent.closed:
+        // _moveToHome();
+        // if (_songIdSelected != null) {
+        //   Navigator.of(context).push(
+        //     MaterialPageRoute(
+        //         // fullscreenDialog: true, // sono sicuro?
+        //         builder: (context) => SongScreen(id: _songIdSelected)),
+        //   );
+        // }
+        break;
+      default:
+      // do nothing
+    }
   }
 
   @override
@@ -63,12 +91,19 @@ class _SongScreenState extends State<SongScreen> {
         .asStream()
         .listen((res) => _incrementViews());
 
-    _bannerAd = BannerAd(
-      adUnitId: AdManager.bannerAdUnitId,
-      size: AdSize.banner,
+    // _bannerAd = BannerAd(
+    //   adUnitId: AdManager.bannerAdUnitId,
+    //   size: AdSize.banner,
+    // );
+
+    // _loadBannerAd();
+
+    _interstitialAd = InterstitialAd(
+      adUnitId: AdManager.interstitialAdUnitId,
+      listener: _onInterstitialAdEvent,
     );
 
-    _loadBannerAd();
+    _loadInterstitialAd();
 
     super.initState();
   }

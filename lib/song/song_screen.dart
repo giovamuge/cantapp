@@ -91,10 +91,10 @@ class _SongScreenState extends State<SongScreen> {
         .asStream()
         .listen((res) => _incrementViews());
 
-    // _bannerAd = BannerAd(
-    //   adUnitId: AdManager.bannerAdUnitId,
-    //   size: AdSize.banner,
-    // );
+    _bannerAd = BannerAd(
+      adUnitId: AdManager.bannerAdUnitId,
+      size: AdSize.banner,
+    );
 
     // _loadBannerAd();
 
@@ -105,6 +105,8 @@ class _SongScreenState extends State<SongScreen> {
 
     _loadInterstitialAd();
 
+    _loadBannerAd();
+
     super.initState();
   }
 
@@ -112,6 +114,7 @@ class _SongScreenState extends State<SongScreen> {
   void dispose() {
     _sessionTask?.cancel();
     _bannerAd?.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -253,7 +256,7 @@ class _SongScreenState extends State<SongScreen> {
                             if (audios.isNotEmpty) SizedBox(height: 10),
                             if (audios.isNotEmpty) ..._buildAudios(audios),
 
-                            // SizedBox(height: 80.00)
+                            SizedBox(height: 100.00)
                           ],
                         ),
                       ),
@@ -365,9 +368,9 @@ class _SongScreenState extends State<SongScreen> {
               Text(
                 "YouTube",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: Theme.of(context).textTheme.headline6.fontSize),
+              )
               // FlatButton(
               //   child: Text("visualizza tutto"),
               //   textColor: Colors.yellow,

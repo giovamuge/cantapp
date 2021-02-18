@@ -1,7 +1,6 @@
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
-import 'package:cantapp/locator.dart';
 import 'package:cantapp/simple_bloc_observer.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:firebase_admob/firebase_admob.dart';
@@ -42,7 +41,6 @@ void main() async {
 
   FirebaseAdMob.instance.initialize(appId: AdManager.appId);
 
-  setupLocator();
   runApp(MyApp(
       theme: theme,
       themeName: themeString,

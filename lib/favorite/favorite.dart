@@ -2,7 +2,6 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/services/firestore_path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Favorite {

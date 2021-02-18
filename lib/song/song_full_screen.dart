@@ -2,32 +2,13 @@ import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/utils/lyric_util.dart';
 import 'package:cantapp/song/widgets/header_lyric.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'utils/song_util.dart';
 
-class SongFullScreen extends StatelessWidget {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   SystemChrome.setPreferredOrientations([
-  //     DeviceOrientation.landscapeRight,
-  //     DeviceOrientation.landscapeLeft,
-  //   ]);
-  // }
-
-  // @override
-  // dispose() {
-  //   SystemChrome.setPreferredOrientations([
-  //     DeviceOrientation.landscapeRight,
-  //     DeviceOrientation.landscapeLeft,
-  //     DeviceOrientation.portraitUp,
-  //     DeviceOrientation.portraitDown,
-  //   ]);
-  //   super.dispose();
-  // }
-
+class SongFullScreen extends StatefulWidget {
   final String _title;
   final String _number;
   final String _artist;
@@ -48,6 +29,31 @@ class SongFullScreen extends StatelessWidget {
         _categories = categories,
         _artist = artist,
         _child = child;
+
+  @override
+  _SongFullScreenState createState() => _SongFullScreenState();
+}
+
+class _SongFullScreenState extends State<SongFullScreen> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +92,14 @@ class SongFullScreen extends StatelessWidget {
                 //   ),
                 // ),
                 HeaderLyric(
-                  title: _title,
-                  number: _number,
-                  categories: _categories,
-                  artist: _artist,
+                  title: widget._title,
+                  number: widget._number,
+                  categories: widget._categories,
+                  artist: widget._artist,
                 ),
                 SizedBox(height: 20),
-                ...LyricUtil()
-                    .buildLyric(context, _body, lyricData.fontSize, _child)
+                ...LyricUtil().buildLyric(
+                    context, widget._body, lyricData.fontSize, widget._child)
                 // ..._buildLyric(context, lyricData.fontSize),
               ],
             );

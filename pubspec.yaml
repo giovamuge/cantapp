@@ -38,7 +38,7 @@ dependencies:
   connectivity_wrapper: ^1.0.4
 
   # service locator
-  get_it: ^5.0.1
+  # get_it: ^5.0.1
 
   # bloc
   flutter_bloc: ^6.1.1
@@ -143,11 +143,11 @@ flutter:
   #         weight: 700
   #
 
-  fonts:
-    - family: Corben
-      fonts:
-          - asset: fonts/Corben/Corben-Bold.ttf
-            weight: 700
+  # fonts:
+  #   - family: Corben
+  #     fonts:
+  #         - asset: fonts/Corben/Corben-Bold.ttf
+  #           weight: 700
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -2,13 +2,11 @@ import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/favorite/bloc/favorite_bloc.dart';
 import 'package:cantapp/favorite/favorite.dart';
-import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 

@@ -21,17 +21,17 @@ class _PlaylistScreenState extends State<PlaylistScreen>
         index: 0,
         title: "Popolari",
         color: Colors.orange,
-        assetsImage: "icons/popularity.png"),
+        assetsImage: "icons/popularity.svg"),
     Playlist(
         index: 1,
         title: "Novità",
         color: Colors.orange,
-        assetsImage: "icons/new.png"),
+        assetsImage: "icons/popularity.svg"),
     Playlist(
         index: 2,
         title: "Proposte",
         color: Colors.orange,
-        assetsImage: "icons/plant_tree.png"),
+        assetsImage: "icons/popularity.svg"),
   ];
 
   @override

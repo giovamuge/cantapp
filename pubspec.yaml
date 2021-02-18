@@ -109,11 +109,11 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
-    - icons/new.png
-    - icons/plant_tree.png
-    - icons/popularity.png
-    - icons/constellation.png
-    - icons/music.png
+    # - icons/new.png
+    # - icons/plant_tree.png
+    # - icons/popularity.png
+    # - icons/constellation.png
+    # - icons/music.png
 
     - assets/new.svg
     - assets/plant_tree.svg

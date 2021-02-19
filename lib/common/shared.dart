@@ -4,6 +4,7 @@ class Shared {
   static const String favorites = 'favorites';
   static const String font_size = 'font_size';
   static const String theme_mode = 'theme_mode';
+  static const String reminder = 'reminder';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -38,5 +39,14 @@ class Shared {
 
   Future<String> getThemeMode() async {
     return await get(theme_mode);
+  }
+
+  Future<void> setRemind(DateTime remind) async {
+    return await set(reminder, remind.millisecondsSinceEpoch);
+  }
+
+  Future<int> getRemind() async {
+    return await get(reminder,
+        defaultValue: DateTime.now().millisecondsSinceEpoch);
   }
 }

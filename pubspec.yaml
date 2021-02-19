@@ -48,6 +48,7 @@ dependencies:
 
   # manager form
   formz: ^0.3.2
+  
 
   # Non ho inserito il numero di versione, nella speranza che siano compatibili
   # Avere sempre un riguardo particolare a questi pacchetti
@@ -70,6 +71,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  # In app review
+  in_app_review: ^1.0.4
 
   # packages repository
   authentication_repository:

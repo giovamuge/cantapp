@@ -120,205 +120,208 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawerScrimColor: Colors.transparent,
-      body: FutureBuilder<Song>(
-        // possibile sostituzione in future perché viene rebuild
-        // quando inserisco una nuova visualizzazione in più
-        future: BlocProvider.of<SongBloc>(context).fetchSong(widget.id),
-        builder: (context, asyncSnapshot) {
-          if (asyncSnapshot.hasData &&
-              asyncSnapshot.connectionState != ConnectionState.waiting) {
-            Song song = asyncSnapshot.data;
+    return SafeArea(
+      bottom: false,
+      child: Scaffold(
+        drawerScrimColor: Colors.transparent,
+        body: FutureBuilder<Song>(
+          // possibile sostituzione in future perché viene rebuild
+          // quando inserisco una nuova visualizzazione in più
+          future: BlocProvider.of<SongBloc>(context).fetchSong(widget.id),
+          builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.hasData &&
+                asyncSnapshot.connectionState != ConnectionState.waiting) {
+              Song song = asyncSnapshot.data;
 
-            final List<Link> videos =
-                song.links.where((l) => l.type == 'youtube').toList();
-            final List<Link> audios =
-                song.links.where((l) => l.type == 'audio').toList();
+              final List<Link> videos =
+                  song.links.where((l) => l.type == 'youtube').toList();
+              final List<Link> audios =
+                  song.links.where((l) => l.type == 'audio').toList();
 
-            if (song == null) {
-              return Center(
-                child: Text("Errore nel caricamento."),
-              );
-            } else {
-              return Consumer<SongLyric>(
-                builder: (context, lyricData, child) {
-                  return CustomScrollView(
-                    slivers: <Widget>[
-                      SliverAppBar(
-                        floating: true,
-                        pinned: false,
-                        snap: true,
-                        leading: ScreenTypeLayout(
-                          mobile: BackButton(
-                            onPressed: () {
-                              // Future.microtask(() => sessionTask.cancel());
-                              Navigator.pop(context);
-                            },
-                          ),
-                          tablet: Container(),
-                        ),
-                        // title: Row(
-                        //   mainAxisSize: MainAxisSize.max,
-                        //   mainAxisAlignment: MainAxisAlignment.end,
-                        //   children: <Widget>[
-                        //     _buildServiziButton(context, lyricData, song),
-                        //   ],
-                        // ),
-                        actions: <Widget>[
-                          // todo: da riabilitare
-                          IconButton(
-                              icon: Icon(Icons.fullscreen),
+              if (song == null) {
+                return Center(
+                  child: Text("Errore nel caricamento."),
+                );
+              } else {
+                return Consumer<SongLyric>(
+                  builder: (context, lyricData, child) {
+                    return CustomScrollView(
+                      slivers: <Widget>[
+                        SliverAppBar(
+                          floating: true,
+                          pinned: false,
+                          snap: true,
+                          leading: ScreenTypeLayout(
+                            mobile: BackButton(
                               onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => SongFullScreen(
-                                      body: song.lyric,
-                                      title: song.title,
-                                      number: song.number,
-                                      artist: song.artist,
-                                      categories: song.categories,
-                                      child: Container(),
-                                    ),
-                                    fullscreenDialog: true,
-                                  ),
-                                );
-                              }),
-                          FavoriteIconButtonWidget(songId: song.id),
-                          IconButton(
-                            icon: Icon(Icons.format_size),
-                            onPressed: lyricData.collaspe,
+                                // Future.microtask(() => sessionTask.cancel());
+                                Navigator.pop(context);
+                              },
+                            ),
+                            tablet: Container(),
                           ),
-                        ],
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            FontSizeSliderWidget(
-                              collasped: lyricData.isCollapsed,
+                          // title: Row(
+                          //   mainAxisSize: MainAxisSize.max,
+                          //   mainAxisAlignment: MainAxisAlignment.end,
+                          //   children: <Widget>[
+                          //     _buildServiziButton(context, lyricData, song),
+                          //   ],
+                          // ),
+                          actions: <Widget>[
+                            // todo: da riabilitare
+                            IconButton(
+                                icon: Icon(Icons.fullscreen),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => SongFullScreen(
+                                        body: song.lyric,
+                                        title: song.title,
+                                        number: song.number,
+                                        artist: song.artist,
+                                        categories: song.categories,
+                                        child: Container(),
+                                      ),
+                                      fullscreenDialog: true,
+                                    ),
+                                  );
+                                }),
+                            FavoriteIconButtonWidget(songId: song.id),
+                            IconButton(
+                              icon: Icon(Icons.format_size),
+                              onPressed: lyricData.collaspe,
                             ),
-                            SizedBox(height: 20),
-                            Padding(
-                              padding: safeAreaChildScroll,
-                              child: HeaderLyric(
-                                title: song.title,
-                                number: song.number,
-                                artist: song.artist,
-                                categories: song.categories,
-                              ),
-                            ),
-                            SizedBox(height: 25),
-                            Padding(
-                              padding: safeAreaChildScroll,
-                              child: LyricWidget(
-                                text: song.lyric,
-                                fontSize: lyricData.fontSize,
-                                child: Container(),
-                              ),
-                            ),
-                            // Padding(
-                            //   padding: safeAreaChildScroll,
-                            //   child: service.banner,
-                            // ),
-                            SizedBox(height: 30),
-                            Padding(
-                              padding: safeAreaChildScroll,
-                              child: Text(
-                                "Accordi",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .fontSize),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: _buildListChords(song),
-                            ),
-
-                            if (videos.isNotEmpty) SizedBox(height: 30),
-                            if (videos.isNotEmpty)
-                              Padding(
-                                padding: safeAreaChildScroll,
-                                child: Container(
-                                  height: 90,
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      ..._buildVideos(videos),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                            if (audios.isNotEmpty) SizedBox(height: 10),
-                            if (audios.isNotEmpty) ..._buildAudios(audios),
-
-                            SizedBox(height: 100.00)
                           ],
                         ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
-          } else {
-            final theme = Provider.of<ThemeChanger>(context, listen: false);
-            final double sizeHeight = MediaQuery.of(context).size.height;
-            final double titleHeight = sizeHeight * 0.10;
-            final double subtitleHeight = sizeHeight * 0.05;
-            final double bodyHeight = sizeHeight * 0.80;
+                        SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              FontSizeSliderWidget(
+                                collasped: lyricData.isCollapsed,
+                              ),
+                              SizedBox(height: 20),
+                              Padding(
+                                padding: safeAreaChildScroll,
+                                child: HeaderLyric(
+                                  title: song.title,
+                                  number: song.number,
+                                  artist: song.artist,
+                                  categories: song.categories,
+                                ),
+                              ),
+                              SizedBox(height: 25),
+                              Padding(
+                                padding: safeAreaChildScroll,
+                                child: LyricWidget(
+                                  text: song.lyric,
+                                  fontSize: lyricData.fontSize,
+                                  child: Container(),
+                                ),
+                              ),
+                              // Padding(
+                              //   padding: safeAreaChildScroll,
+                              //   child: service.banner,
+                              // ),
+                              SizedBox(height: 30),
+                              Padding(
+                                padding: safeAreaChildScroll,
+                                child: Text(
+                                  "Accordi",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .fontSize),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: _buildListChords(song),
+                              ),
 
-            return Shimmer.fromColors(
-              // baseColor: Theme.of(context).primaryColorLight,
-              // highlightColor: Theme.of(context).primaryColor,
-              baseColor: theme.getThemeName() == Constants.themeLight
-                  ? Colors.grey[100]
-                  : Colors.grey[600],
-              highlightColor: theme.getThemeName() == Constants.themeLight
-                  ? Colors.grey[300]
-                  : Colors.grey[900],
-              child: SafeArea(
-                child: ListView(
-                  // mainAxisSize: MainAxisSize.max,
-                  padding: const EdgeInsets.all(20),
-                  // physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    Container(
-                      height: titleHeight,
-                      width: MediaQuery.of(context).size.width * .5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
+                              if (videos.isNotEmpty) SizedBox(height: 30),
+                              if (videos.isNotEmpty)
+                                Padding(
+                                  padding: safeAreaChildScroll,
+                                  child: Container(
+                                    height: 90,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: [
+                                        ..._buildVideos(videos),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              if (audios.isNotEmpty) SizedBox(height: 10),
+                              if (audios.isNotEmpty) ..._buildAudios(audios),
+
+                              SizedBox(height: 100.00)
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            } else {
+              final theme = Provider.of<ThemeChanger>(context, listen: false);
+              final double sizeHeight = MediaQuery.of(context).size.height;
+              final double titleHeight = sizeHeight * 0.10;
+              final double subtitleHeight = sizeHeight * 0.05;
+              final double bodyHeight = sizeHeight * 0.80;
+
+              return Shimmer.fromColors(
+                // baseColor: Theme.of(context).primaryColorLight,
+                // highlightColor: Theme.of(context).primaryColor,
+                baseColor: theme.getThemeName() == Constants.themeLight
+                    ? Colors.grey[100]
+                    : Colors.grey[600],
+                highlightColor: theme.getThemeName() == Constants.themeLight
+                    ? Colors.grey[300]
+                    : Colors.grey[900],
+                child: SafeArea(
+                  child: ListView(
+                    // mainAxisSize: MainAxisSize.max,
+                    padding: const EdgeInsets.all(20),
+                    // physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      Container(
+                        height: titleHeight,
+                        width: MediaQuery.of(context).size.width * .5,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      height: subtitleHeight,
-                      width: MediaQuery.of(context).size.width * .25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
+                      SizedBox(height: 10),
+                      Container(
+                        height: subtitleHeight,
+                        width: MediaQuery.of(context).size.width * .25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      height: bodyHeight,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                      ),
-                    )
-                  ],
+                      SizedBox(height: 20),
+                      Container(
+                        height: bodyHeight,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ); // da sostituire con shimmer
-          }
-        },
+              ); // da sostituire con shimmer
+            }
+          },
+        ),
       ),
     );
   }

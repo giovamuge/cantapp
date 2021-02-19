@@ -1,5 +1,6 @@
 import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/common/constants.dart';
+import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/song/bloc/filtered_songs_bloc.dart';
 import 'package:cantapp/song/song_search.dart';
@@ -8,6 +9,7 @@ import 'package:cantapp/song/song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -19,11 +21,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin
     implements AutomaticKeepAliveClientMixin<HomeScreen> {
-  // Songs _songsData;
+  // properties;
   bool _visible;
   ScrollController _controller;
   Animation _animation;
   AnimationController _animationController;
+  Shared _shared;
+
+  // finals
+  final InAppReview _inAppReview = InAppReview.instance;
 
   @override
   void initState() {
@@ -34,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen>
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _shared = Shared();
+
+    WidgetsBinding.instance.addPostFrameCallback(_onPostFrameCallback);
   }
 
   @override
@@ -59,6 +68,18 @@ class _HomeScreenState extends State<HomeScreen>
     if (_controller.offset > offset && !_visible) {
       _visible = true;
       _animationController.forward();
+    }
+  }
+
+  void _onPostFrameCallback(Duration duration) async {
+    final remindTimestamp = await _shared.getRemind();
+    final remindeDateTime =
+        DateTime.fromMillisecondsSinceEpoch(remindTimestamp);
+    final isLessOrEqualRemind = remindeDateTime.isBefore(DateTime.now());
+
+    if (isLessOrEqualRemind && await _inAppReview.isAvailable()) {
+      _inAppReview.requestReview().then(
+          (value) => _shared.setRemind(DateTime.now().add(Duration(days: 5))));
     }
   }
 

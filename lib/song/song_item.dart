@@ -272,7 +272,8 @@ class SongWidget extends StatelessWidget {
             ),
     );
 
-    Scaffold.of(context).showSnackBar(snackBar);
+    // Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   _navigateToSong(context, song) {
@@ -280,11 +281,6 @@ class SongWidget extends StatelessWidget {
     final DeviceScreenType device = getDeviceType(mediaQuery);
 
     if (device == DeviceScreenType.Mobile) {
-      if (_onNavigateSong != null) {
-        _onNavigateSong.call(context);
-        return;
-      }
-
       // chiama call back su click canzone
       _onCallback?.call(context);
 

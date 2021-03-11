@@ -2,6 +2,7 @@ import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/common/utils.dart';
+import 'package:cantapp/setting/note_legali/disclaimer_screen.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/utils/song_util.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +95,18 @@ class _SettingScreenState extends State<SettingScreen> {
                 leading: Icon(Icons.security),
                 onTap: () async => await Utils.launchURL(
                     'https://us-central1-mgc-cantapp.cloudfunctions.net/privacyAndPolicy'),
+              ),
+              SettingsTile(
+                title: 'Disclaimer',
+                leading: Icon(Icons.warning_rounded),
+                onTap: () async => await Utils.launchURL(
+                    'https://us-central1-mgc-cantapp.cloudfunctions.net/disclaimer'),
+                // onTap: () async => Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => DisclaimerScreen(),
+                //   ),
+                // ),
               ),
             ],
           ),

@@ -11,7 +11,7 @@ description: un'applicazione dedicata ai canti liturgici.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.3+9 #1.0.1+1
+version: 1.2.5+11 #1.0.1+1
 
 environment:
   sdk: ">=2.6.0 <3.0.0" #before >=2.1.0 <3.0.0
@@ -29,7 +29,8 @@ dependencies:
 
   # Add the dependency for adb mob, set key for iOS and Android
   firebase_admob: ^0.10.2
-  # admob_flutter: ^1.0.1
+  # Tracking Trasparency for admob
+  app_tracking_transparency: ^2.0.0
 
   # Full text search algolia
   algolia: ^0.1.7

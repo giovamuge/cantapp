@@ -18,6 +18,7 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -82,6 +83,13 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   void initState() {
+    final theme = Provider.of<ThemeChanger>(context, listen: false);
+    if (theme.getThemeName() == Constants.themeLight) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    } else {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    }
+
     // call event to fetcg song in song_bloc
     BlocProvider.of<SongBloc>(context).add(SongFetched(widget.id));
 
@@ -120,11 +128,11 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: Scaffold(
-        drawerScrimColor: Colors.transparent,
-        body: FutureBuilder<Song>(
+    return Scaffold(
+      drawerScrimColor: Colors.transparent,
+      body: SafeArea(
+        bottom: false,
+        child: FutureBuilder<Song>(
           // possibile sostituzione in future perché viene rebuild
           // quando inserisco una nuova visualizzazione in più
           future: BlocProvider.of<SongBloc>(context).fetchSong(widget.id),

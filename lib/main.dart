@@ -1,3 +1,4 @@
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
@@ -39,7 +40,10 @@ void main() async {
   FirebaseInAppMessaging.instance.triggerEvent("donate");
   FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
 
-  FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  AppTrackingTransparency.requestTrackingAuthorization().then((status) => {
+        if (status != TrackingStatus.denied)
+          FirebaseAdMob.instance.initialize(appId: AdManager.appId)
+      });
 
   runApp(MyApp(
       theme: theme,

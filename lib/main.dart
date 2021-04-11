@@ -1,16 +1,12 @@
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/common/theme.dart';
-import 'package:cantapp/simple_bloc_observer.dart';
-import 'package:cantapp/services/firebase_ads_service.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'app.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -22,7 +18,8 @@ void main() async {
   await Firebase.initializeApp();
 
   // simple observer bloc
-  Bloc.observer = SimpleBlocObserver();
+  // todo: da riabilitare
+  // Bloc.observer = SimpleBlocObserver();
 
   final shared = new Shared();
   final themeString = await shared.getThemeMode() ?? Constants.themeLight;
@@ -40,10 +37,12 @@ void main() async {
   FirebaseInAppMessaging.instance.triggerEvent("donate");
   FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
 
-  AppTrackingTransparency.requestTrackingAuthorization().then((status) => {
-        if (status != TrackingStatus.denied)
-          FirebaseAdMob.instance.initialize(appId: AdManager.appId)
-      });
+  // AppTrackingTransparency.requestTrackingAuthorization().then((status) => {
+  //       if (status != TrackingStatus.denied)
+  //         FirebaseAdMob.instance.initialize(appId: AdManager.appId)
+  //     });
+
+  MobileAds.instance.initialize();
 
   runApp(MyApp(
       theme: theme,

@@ -3,18 +3,16 @@ import 'dart:async';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/theme.dart';
 import 'package:cantapp/common/utils.dart';
-import 'package:cantapp/extensions/string.dart';
 import 'package:cantapp/favorite/favorite_icon_button.dart';
 import 'package:cantapp/responsive/screen_type_layout.dart';
 import 'package:cantapp/song/bloc/song_bloc.dart';
 import 'package:cantapp/services/firebase_ads_service.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:cantapp/song/song_model.dart';
-import 'package:cantapp/song/utils/song_util.dart';
 import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/header_lyric.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
-import 'package:firebase_admob/firebase_admob.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -22,7 +20,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:cantapp/song/servizi/servizi_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'servizi/chord_screen.dart';
@@ -43,42 +40,40 @@ class _SongScreenState extends State<SongScreen> {
       const EdgeInsets.symmetric(horizontal: 25);
 
   StreamSubscription<dynamic> _sessionTask;
-  SongUtil _songUtil;
   PageController _controller;
   BannerAd _bannerAd;
   InterstitialAd _interstitialAd;
 
   void _loadBannerAd() {
-    _bannerAd
-      ..load()
-      ..show(anchorType: AnchorType.bottom);
+    _bannerAd.load();
   }
 
   void _loadInterstitialAd() {
     _interstitialAd.load();
   }
 
-  void _onInterstitialAdEvent(MobileAdEvent event) {
-    switch (event) {
-      case MobileAdEvent.loaded:
+  AdListener _createInterstitialAdEvent() {
+    return AdListener(
+      // Called when an ad is successfully received.
+      onAdLoaded: (Ad ad) {
+        print('Ad loaded.');
         _interstitialAd.show();
-        break;
-      case MobileAdEvent.failedToLoad:
-        print('Failed to load an interstitial ad');
-        break;
-      case MobileAdEvent.closed:
-        // _moveToHome();
-        // if (_songIdSelected != null) {
-        //   Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //         // fullscreenDialog: true, // sono sicuro?
-        //         builder: (context) => SongScreen(id: _songIdSelected)),
-        //   );
-        // }
-        break;
-      default:
-      // do nothing
-    }
+      },
+      // Called when an ad request failed.
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        ad.dispose();
+        print('Ad failed to load: $error');
+      },
+      // Called when an ad opens an overlay that covers the screen.
+      onAdOpened: (Ad ad) => print('Ad opened.'),
+      // Called when an ad removes an overlay that covers the screen.
+      onAdClosed: (Ad ad) {
+        ad.dispose();
+        print('Ad closed.');
+      },
+      // Called when an ad is in the process of leaving the application.
+      onApplicationExit: (Ad ad) => print('Left application.'),
+    );
   }
 
   @override
@@ -94,21 +89,36 @@ class _SongScreenState extends State<SongScreen> {
     BlocProvider.of<SongBloc>(context).add(SongFetched(widget.id));
 
     _controller = PageController(initialPage: 0, viewportFraction: .9);
-    _songUtil = SongUtil();
     _sessionTask = Future.delayed(Duration(seconds: 10))
         .asStream()
         .listen((res) => _incrementViews());
 
     _bannerAd = BannerAd(
       adUnitId: AdManager.bannerAdUnitId,
-      size: AdSize.banner,
+      request: AdRequest(),
+      size: AdSize.mediumRectangle,
+      listener: AdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (Ad ad) => print('Ad loaded.'),
+        // Called when an ad request failed.
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Ad failed to load: $error');
+        },
+        // Called when an ad opens an overlay that covers the screen.
+        onAdOpened: (Ad ad) => print('Ad opened.'),
+        // Called when an ad removes an overlay that covers the screen.
+        onAdClosed: (Ad ad) => print('Ad closed.'),
+        // Called when an ad is in the process of leaving the application.
+        onApplicationExit: (Ad ad) => print('Left application.'),
+      ),
     );
 
     // _loadBannerAd();
 
     _interstitialAd = InterstitialAd(
       adUnitId: AdManager.interstitialAdUnitId,
-      listener: _onInterstitialAdEvent,
+      request: AdRequest(),
+      listener: _createInterstitialAdEvent(),
     );
 
     _loadInterstitialAd();
@@ -226,10 +236,15 @@ class _SongScreenState extends State<SongScreen> {
                                   child: Container(),
                                 ),
                               ),
-                              // Padding(
-                              //   padding: safeAreaChildScroll,
-                              //   child: service.banner,
-                              // ),
+                              Padding(
+                                padding: safeAreaChildScroll,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: AdWidget(ad: _bannerAd),
+                                  width: _bannerAd.size.width.toDouble(),
+                                  height: _bannerAd.size.height.toDouble(),
+                                ),
+                              ),
                               SizedBox(height: 30),
                               Padding(
                                 padding: safeAreaChildScroll,
@@ -247,7 +262,6 @@ class _SongScreenState extends State<SongScreen> {
                                 padding: const EdgeInsets.all(10),
                                 child: _buildListChords(song),
                               ),
-
                               if (videos.isNotEmpty) SizedBox(height: 30),
                               if (videos.isNotEmpty)
                                 Padding(
@@ -262,10 +276,8 @@ class _SongScreenState extends State<SongScreen> {
                                     ),
                                   ),
                                 ),
-
                               if (audios.isNotEmpty) SizedBox(height: 10),
                               if (audios.isNotEmpty) ..._buildAudios(audios),
-
                               SizedBox(height: 100.00)
                             ],
                           ),
@@ -334,38 +346,39 @@ class _SongScreenState extends State<SongScreen> {
     );
   }
 
-  Widget _buildServiziButton(
-      BuildContext context, SongLyric lyricData, Song song) {
-    if (song.links.length > 0 || !song.chord.isNullOrEmpty()) {
-      return SizedBox(
-        width: 80.00,
-        height: 25.00,
-        child: RaisedButton(
-          child: Text(
-            "servizi",
-            overflow: TextOverflow.ellipsis,
-          ),
-          color: Theme.of(context).backgroundColor,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2),
-            side: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          onPressed: () {
-            // adsData.hide();
-            lyricData.isCollapsed = false;
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ServiziScreen(song: song),
-              ),
-            );
-          },
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
+  // todo: da cancellare
+  // Widget _buildServiziButton(
+  //     BuildContext context, SongLyric lyricData, Song song) {
+  //   if (song.links.length > 0 || !song.chord.isNullOrEmpty()) {
+  //     return SizedBox(
+  //       width: 80.00,
+  //       height: 25.00,
+  //       child: ElevatedButton(
+  //         child: Text(
+  //           "servizi",
+  //           overflow: TextOverflow.ellipsis,
+  //         ),
+  //         // color: Theme.of(context).backgroundColor,
+  //         // elevation: 0,
+  //         // shape: RoundedRectangleBorder(
+  //         //   borderRadius: BorderRadius.circular(2),
+  //         //   side: BorderSide(color: Theme.of(context).primaryColor),
+  //         // ),
+  //         onPressed: () {
+  //           // adsData.hide();
+  //           lyricData.isCollapsed = false;
+  //           Navigator.of(context).push(
+  //             MaterialPageRoute(
+  //               builder: (context) => ServiziScreen(song: song),
+  //             ),
+  //           );
+  //         },
+  //       ),
+  //     );
+  //   } else {
+  //     return Container();
+  //   }
+  // }
 
   List<Widget> _buildVideos(List<Link> videos) {
     if (videos.length > 0) {

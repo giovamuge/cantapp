@@ -1,7 +1,6 @@
-import 'package:cantapp/services/firebase_ads_service.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import '../song_lyric.dart';
@@ -9,13 +8,13 @@ import '../song_lyric.dart';
 class SongUtil {
   const SongUtil();
 
+  // todo: da cancellare
   BannerAd buildBannerAd() {
     return BannerAd(
       adUnitId: BannerAd.testAdUnitId,
       size: AdSize.smartBanner,
-      listener: (MobileAdEvent event) {
-        print("BannerAd event is $event");
-      },
+      request: AdRequest(),
+      listener: AdListener(),
     );
   }
 

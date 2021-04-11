@@ -7,8 +7,8 @@ class YouTubeApi {
   // get video info of youtube
   // response youtube video model
   Future<YouTubeModel> fetchVideo(String url) async {
-    final response =
-        await http.get('https://www.youtube.com/oembed?url=$url&format=json');
+    final response = await http
+        .get(Uri(path: 'https://www.youtube.com/oembed?url=$url&format=json'));
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,

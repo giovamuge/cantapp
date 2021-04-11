@@ -20,20 +20,21 @@ dependencies:
   flutter:
     sdk: flutter
   # Add the dependency for the Firebase Core Flutter SDK
-  firebase_core: ^0.5.2
-  firebase_analytics: ^6.2.0
-  firebase_crashlytics: ^0.2.3
-  firebase_auth: ^0.18.3
-  firebase_in_app_messaging: ^0.2.2
-  cloud_firestore: ^0.14.3
+  firebase_core: ^1.0.3
+  firebase_analytics: ^7.1.1
+  firebase_crashlytics: ^2.0.0
+  firebase_auth: ^1.0.3
+  firebase_in_app_messaging: ^0.4.0+1
+  cloud_firestore: ^1.0.4
 
   # Add the dependency for adb mob, set key for iOS and Android
-  firebase_admob: ^0.10.2
+  # firebase_admob: ^0.10.2
+  google_mobile_ads: ^0.12.1
   # Tracking Trasparency for admob
-  app_tracking_transparency: ^2.0.0
+  # app_tracking_transparency: ^2.0.0
 
   # Full text search algolia
-  algolia: ^0.1.7
+  algolia: ^1.0.1
 
   # Connection state
   connectivity_wrapper: ^1.0.4
@@ -42,7 +43,7 @@ dependencies:
   # get_it: ^5.0.1
 
   # bloc
-  flutter_bloc: ^6.1.1
+  flutter_bloc: ^7.0.0
 
   # rxdart reactive ui
   rxdart: ^0.24.1
@@ -73,7 +74,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   # In app review
-  in_app_review: ^1.0.4
+  in_app_review: ^2.0.1
 
   # packages repository
   authentication_repository:
@@ -85,7 +86,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   
-  flutter_launcher_icons: ^0.8.1
+  flutter_launcher_icons: ^0.9.0
  
     
 flutter_icons:

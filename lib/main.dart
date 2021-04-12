@@ -42,7 +42,8 @@ void main() async {
   //         FirebaseAdMob.instance.initialize(appId: AdManager.appId)
   //     });
 
-  MobileAds.instance.initialize();
+  MobileAds.instance.initialize().then((status) =>
+      print('MobileAds initialization done: ${status.adapterStatuses}'));
 
   runApp(MyApp(
       theme: theme,

@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     if (isLessOrEqualRemind && await _inAppReview.isAvailable()) {
       _inAppReview.requestReview().then(
-          (value) => _shared.setRemind(DateTime.now().add(Duration(days: 5))));
+          (value) => _shared.setRemind(DateTime.now().add(Duration(days: 15))));
     }
   }
 

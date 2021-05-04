@@ -21,15 +21,21 @@ enum CategoryEnum {
 }
 
 class Category {
-  const Category({@required this.title, @required this.value, this.songs});
-
   final String title;
   final CategoryEnum value;
-  final List<Song> songs;
+  final List<Song>? songs;
+
+  const Category({
+    required this.title,
+    required this.value,
+    this.songs,
+  });
 
   @override
-  bool operator ==(other) {
-    return (other.value == value);
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+    return other is Category && other.value == value && other.title == title;
   }
 
   toString() {

@@ -8,37 +8,37 @@ class FirestoreService {
   static final instance = FirestoreService._();
 
   Future<void> addData(
-      {@required String path, @required Map<String, dynamic> data}) async {
+      {required String path, required Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.collection(path);
     print('$path: $data');
     await reference.add(data);
   }
 
   Future<void> setData(
-      {@required String path, @required Map<String, dynamic> data}) async {
+      {required String path, required Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     print('$path: $data');
     await reference.set(data);
   }
 
   Future<void> updateData({
-    @required String path,
-    @required Map<String, dynamic> data,
+    required String path,
+    required Map<String, dynamic> data,
   }) async {
     final reference = FirebaseFirestore.instance.doc(path);
     print('$path: $data');
     await reference.update(data);
   }
 
-  Future<void> deleteData({@required String path}) async {
+  Future<void> deleteData({required String path}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     print('delete: $path');
     await reference.delete();
   }
 
   Stream<List<T>> collectionStream<T>({
-    @required String path,
-    @required T builder(Map<String, dynamic> data, String documentID),
+    required String path,
+    required T builder(Map<String, dynamic> data, String documentID),
     Query queryBuilder(Query query),
     int sort(T lhs, T rhs),
   }) {
@@ -60,8 +60,8 @@ class FirestoreService {
   }
 
   Stream<T> documentStream<T>({
-    @required String path,
-    @required T builder(Map<String, dynamic> data, String documentID),
+    required String path,
+    required T builder(Map<String, dynamic> data, String documentID),
   }) {
     final DocumentReference reference = FirebaseFirestore.instance.doc(path);
     final Stream<DocumentSnapshot> snapshots = reference.snapshots();
@@ -70,8 +70,8 @@ class FirestoreService {
 
   // può essere una soluzione?
   Future<QuerySnapshot> documentFuture<T>(
-      {@required String path,
-      @required T builder(Map<String, dynamic> data, String documentID)}) {
+      {required String path,
+      required T builder(Map<String, dynamic> data, String documentID)}) {
     final DocumentReference reference = FirebaseFirestore.instance.doc(path);
     final Future<QuerySnapshot> snapshot = reference.collection(path).get();
     return snapshot;

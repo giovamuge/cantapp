@@ -13,7 +13,7 @@ import 'firebase_auth_service.dart';
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
 class FirestoreDatabase {
-  FirestoreDatabase({@required this.uid}) : assert(uid != null);
+  FirestoreDatabase({required this.uid}) : assert(uid != null);
   final String uid;
 
   final _service = FirestoreService.instance;

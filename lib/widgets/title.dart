@@ -6,7 +6,7 @@ class TitleWidget extends StatelessWidget {
 
   const TitleWidget(
     String title, {
-    Key key,
+    Key? key,
     EdgeInsetsGeometry padding = const EdgeInsets.symmetric(horizontal: 15),
   })  : _title = title,
         _padding = padding;

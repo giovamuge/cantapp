@@ -5,7 +5,6 @@ import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 part 'filtered_songs_event.dart';
 part 'filtered_songs_state.dart';
@@ -14,13 +13,12 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
   // FilteredsongsBloc() : super(FilteredsongsInitial());
 
   final SongsBloc _songsBloc;
-  StreamSubscription _songsSubscription;
+  StreamSubscription? _songsSubscription;
 
-  FilteredSongsBloc({@required SongsBloc songsBloc})
-      : assert(songsBloc != null),
-        _songsBloc = songsBloc,
+  FilteredSongsBloc({required SongsBloc songsBloc})
+      : _songsBloc = songsBloc,
         super(initialState(songsBloc)) {
-    _songsSubscription = songsBloc.listen((state) {
+    _songsSubscription = songsBloc.stream.listen((state) {
       if (state is SongsLoaded) {
         add(UpdateSongs((songsBloc.state as SongsLoaded).songs));
       }

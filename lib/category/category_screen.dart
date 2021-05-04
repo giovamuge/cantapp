@@ -12,11 +12,11 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen>
     with TickerProviderStateMixin {
-  bool _visible;
-  ScrollController _controller;
-  String _title;
-  AnimationController _animationController;
-  Animation _animation;
+  bool? _visible;
+  ScrollController? _controller;
+  String? _title;
+  AnimationController? _animationController;
+  Animation? _animation;
 
   @override
   void initState() {
@@ -24,36 +24,38 @@ class _CategoryScreenState extends State<CategoryScreen>
     _visible = false;
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController!);
     _controller = new ScrollController();
-    _controller.addListener(_onScrolling);
+    _controller?.addListener(_onScrolling);
     super.initState();
   }
 
   void _onScrolling() {
+    // if (_controller == null) return;
+
     // valore di offset costante
     const offset = 40;
     // Mostra il bottone search quando raggiungo
     // 120 di altezza, dove si trovara il bottone
     // grande search.
-    if (_controller.offset <= offset && _visible) {
+    if (_controller!.offset <= offset && _visible!) {
       _visible = false;
-      _animationController.reverse();
+      _animationController?.reverse();
     }
 
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
-    if (_controller.offset > offset && !_visible) {
+    if (_controller!.offset > offset && !(_visible!)) {
       _visible = true;
-      _animationController.forward();
+      _animationController!.forward();
     }
   }
 
   @override
   void dispose() {
     _animation = null;
-    _animationController.dispose();
-    _controller.dispose();
+    _animationController?.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -64,10 +66,10 @@ class _CategoryScreenState extends State<CategoryScreen>
     return Scaffold(
       appBar: AppBar(
         title: AnimatedBuilder(
-          animation: _animationController,
+          animation: _animationController!,
           builder: (context, child) =>
-              Opacity(opacity: _animation.value, child: child),
-          child: Text(_title),
+              Opacity(opacity: _animation!.value, child: child),
+          child: Text(_title!),
         ),
         actions: <Widget>[
           Center(
@@ -90,7 +92,7 @@ class _CategoryScreenState extends State<CategoryScreen>
           Padding(
             padding: EdgeInsets.only(right: 20),
             child: Text(
-              _title,
+              _title!,
               style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
@@ -156,7 +158,7 @@ class _CategoryScreenState extends State<CategoryScreen>
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text('Chiudi'),
               onPressed: () {
                 Navigator.of(context).pop();

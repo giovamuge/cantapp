@@ -17,9 +17,9 @@ class SongFullScreen extends StatefulWidget {
   final Widget _child;
 
   const SongFullScreen({
-    @required String body,
-    @required String title,
-    @required String number,
+    required String body,
+    required String title,
+    required String number,
     Widget child,
     String artist,
     List<String> categories,

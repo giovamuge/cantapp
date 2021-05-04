@@ -26,7 +26,7 @@ class SongWidget extends StatelessWidget {
 
   const SongWidget({
     Key key,
-    @required this.song,
+    required this.song,
     avatarColor,
     textColor,
     onNavigateSong,

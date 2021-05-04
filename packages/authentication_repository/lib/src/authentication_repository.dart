@@ -46,8 +46,8 @@ class AuthenticationRepository {
   ///
   /// Throws a [SignUpFailure] if an exception occurs.
   Future<void> signUp({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
     assert(email != null && password != null);
     try {
@@ -81,8 +81,8 @@ class AuthenticationRepository {
   ///
   /// Throws a [LogInWithEmailAndPasswordFailure] if an exception occurs.
   Future<void> logInWithEmailAndPassword({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
     assert(email != null && password != null);
     try {

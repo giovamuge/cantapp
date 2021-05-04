@@ -9,8 +9,8 @@ class HeaderLyric extends StatelessWidget {
   final String number;
 
   const HeaderLyric({
-    @required this.title,
-    @required this.number,
+    required this.title,
+    required this.number,
     this.categories,
     this.artist,
   });

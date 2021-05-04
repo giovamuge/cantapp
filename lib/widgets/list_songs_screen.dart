@@ -5,27 +5,26 @@ import 'package:flutter/material.dart';
 class ListSongsScreen extends StatefulWidget {
   final String title;
   final List<SongLight> items;
-  final MaterialColor avatarColor;
-  final MaterialColor textColor;
+  final MaterialColor? avatarColor;
+  final MaterialColor? textColor;
 
-  const ListSongsScreen(
-      {@required this.items,
-      @required this.title,
-      this.avatarColor,
-      this.textColor});
+  const ListSongsScreen({
+    required this.items,
+    required this.title,
+    this.avatarColor,
+    this.textColor,
+  });
 
   @override
   _ListSongsScreenState createState() => _ListSongsScreenState();
 }
 
 class _ListSongsScreenState extends State<ListSongsScreen> {
-  bool _visible;
-  ScrollController _controller;
+  bool _visible = false;
+  ScrollController _controller = new ScrollController();
 
   @override
   void initState() {
-    _visible = false;
-    _controller = new ScrollController();
     _controller.addListener(_onScrolling);
     super.initState();
   }

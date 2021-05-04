@@ -11,12 +11,11 @@ part 'favorite_state.dart';
 
 class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   FirestoreDatabase _firestoreDatabase;
-  StreamSubscription _favoritesSubscription;
-  StreamSubscription _favoriteExistSubscription;
+  StreamSubscription? _favoritesSubscription;
+  StreamSubscription? _favoriteExistSubscription;
 
-  FavoriteBloc({@required FirestoreDatabase firestoreDatabase})
-      : assert(firestoreDatabase != null),
-        _firestoreDatabase = firestoreDatabase,
+  FavoriteBloc({required FirestoreDatabase firestoreDatabase})
+      : _firestoreDatabase = firestoreDatabase,
         super(FavoriteInitial());
 
   @override

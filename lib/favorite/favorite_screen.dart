@@ -18,11 +18,11 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen>
     with TickerProviderStateMixin
     implements AutomaticKeepAliveClientMixin<FavoriteScreen> {
-  String _title;
+  String? _title;
   bool _visible = false;
-  Animation _animation;
-  AnimationController _animationController;
-  ScrollController _controller;
+  Animation? _animation;
+  AnimationController? _animationController;
+  ScrollController? _controller;
 
   @override
   void initState() {
@@ -30,17 +30,17 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     _title = "Preferiti";
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController!);
     _controller = new ScrollController();
-    _controller.addListener(_onScrolling);
+    _controller?.addListener(_onScrolling);
     super.initState();
   }
 
   @override
   void dispose() {
     _animation = null;
-    _animationController.dispose();
-    _controller.dispose();
+    _animationController?.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -50,16 +50,16 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     // Mostra il bottone search quando raggiungo
     // 120 di altezza, dove si trovara il bottone
     // grande search.
-    if (_controller.offset <= offset && _visible) {
+    if (_controller!.offset <= offset && _visible) {
       _visible = false;
-      _animationController.reverse();
+      _animationController?.reverse();
     }
 
     // Nascondi in caso contrario
     // Controllo su _visible per non ripete il set continuamente
-    if (_controller.offset > offset && !_visible) {
+    if (_controller!.offset > offset && !_visible) {
       _visible = true;
-      _animationController.forward();
+      _animationController?.forward();
     }
   }
 
@@ -68,10 +68,10 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     return Scaffold(
       appBar: AppBar(
         title: AnimatedBuilder(
-          animation: _animationController,
+          animation: _animationController!,
           builder: (context, child) =>
-              Opacity(opacity: _animation.value, child: child),
-          child: Text(_title),
+              Opacity(opacity: _animation!.value, child: child),
+          child: Text(_title!),
         ),
       ),
       body: ListView(
@@ -82,7 +82,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
           Padding(
             padding: EdgeInsets.only(right: 20),
             child: Text(
-              _title,
+              _title!,
               style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
@@ -116,7 +116,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                       final DocumentSnapshot songMapData = data2.data;
                       if (songMapData.exists) {
                         final SongLight song = SongLight.fromMap(
-                            songMapData.data(), songMapData.id);
+                            songMapData.data()!, songMapData.id);
                         return SongWidget(song: song);
                       } else {
                         return Container(

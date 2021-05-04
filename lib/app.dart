@@ -38,10 +38,10 @@ class MyApp extends StatelessWidget {
   final AuthenticationRepository authenticationRepository;
 
   const MyApp({
-    @required ThemeData theme,
-    @required String themeName,
-    @required this.authenticationRepository,
-  })  : _theme = theme,
+    required ThemeData theme,
+    required String themeName,
+    required this.authenticationRepository,
+  })   : _theme = theme,
         _themeName = themeName;
 
   @override
@@ -114,7 +114,7 @@ class MyApp extends StatelessWidget {
   }
 
   Locale onLocaleResolutionCallback(
-      Locale locale, Iterable<Locale> supportedLocales) {
+      Locale? locale, Iterable<Locale> supportedLocales) {
     if (locale == null) {
       debugPrint("*language locale is null!!!");
       return supportedLocales.first;

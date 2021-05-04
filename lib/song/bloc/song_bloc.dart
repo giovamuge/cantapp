@@ -13,7 +13,7 @@ class SongBloc extends Bloc<SongEvent, SongState> {
   FirestoreDatabase _firestoreDatabase;
   StreamSubscription _songSubscrition;
 
-  SongBloc({@required FirestoreDatabase firestoreDatabase})
+  SongBloc({required FirestoreDatabase firestoreDatabase})
       : assert(firestoreDatabase != null),
         _firestoreDatabase = firestoreDatabase,
         super(SongLoading());

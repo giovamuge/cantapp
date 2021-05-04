@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 @immutable
 class User {
   const User({
-    @required this.uid,
+    required this.uid,
     this.email,
     this.photoUrl,
     this.displayName,

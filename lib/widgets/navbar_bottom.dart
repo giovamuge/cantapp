@@ -8,7 +8,7 @@ class NavbarBottomWidget extends StatelessWidget {
   final Color _highlightColor = Color(0xffffb230); //Colors.yellow[50];
 
   NavbarBottomWidget(
-      {@required ValueChanged<int> itemTapped, @required int currentIndex})
+      {required ValueChanged<int> itemTapped, required int currentIndex})
       : _currentIndex = currentIndex,
         _itemTapped = itemTapped;
 

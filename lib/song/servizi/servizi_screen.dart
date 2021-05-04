@@ -7,22 +7,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ServiziScreen extends StatefulWidget {
   final Song song;
-  const ServiziScreen({this.song});
+  const ServiziScreen({required this.song});
 
   @override
   _ServiziScreenState createState() => _ServiziScreenState();
 }
 
 class _ServiziScreenState extends State<ServiziScreen> {
-  PageController _controller;
-  // int _currentIndex;
+  PageController _controller =
+      PageController(initialPage: 0, viewportFraction: .9);
 
   @override
-  void initState() {
-    // _currentIndex = 0;
-    _controller = PageController(initialPage: 0, viewportFraction: .9);
-    super.initState();
-  }
+  void initState() => super.initState();
 
   @override
   void dispose() {
@@ -79,7 +75,7 @@ class _ServiziScreenState extends State<ServiziScreen> {
             ..._buildVideos(videos),
 
             SizedBox(height: 10),
-            
+
             ..._buildAudios(audios),
 
             SizedBox(height: 80.00)

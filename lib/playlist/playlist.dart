@@ -7,9 +7,9 @@ class Playlist {
   final String assetsImage;
 
   const Playlist({
-    @required this.index,
-    @required this.color,
-    @required this.title,
+    required this.index,
+    required this.color,
+    required this.title,
     this.assetsImage,
   });
 

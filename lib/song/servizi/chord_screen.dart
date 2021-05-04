@@ -10,7 +10,7 @@ import '../song_full_screen.dart';
 
 class ChordScreen extends StatefulWidget {
   final Song _song;
-  const ChordScreen({@required Song song}) : _song = song;
+  const ChordScreen({required Song song}) : _song = song;
 
   @override
   _ChordScreenState createState() => _ChordScreenState();

@@ -47,7 +47,7 @@ class SongLight extends Equatable {
         links = new List<Link>();
 
   static fromMap(Map maps, String id) {
-    final links = new List<Link>();
+    final links = [];
     if (maps["links"] != null) {
       final items = List.from(maps["links"]);
       for (var i = 0; i < items.length; i++) {

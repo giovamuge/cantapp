@@ -9,8 +9,8 @@ class LyricWidget extends StatelessWidget {
 
   const LyricWidget({
     Key key,
-    @required String text,
-    @required double fontSize,
+    required String text,
+    required double fontSize,
     Widget child,
   })  : _fontSize = fontSize,
         _text = text,

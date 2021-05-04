@@ -9,7 +9,7 @@ import 'bloc/favorite_bloc.dart';
 class FavoriteIconButtonWidget extends StatelessWidget {
   final String songId;
 
-  const FavoriteIconButtonWidget({@required this.songId});
+  const FavoriteIconButtonWidget({required this.songId});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,13 @@ class FavoriteIconButtonWidget extends StatelessWidget {
           .favoriteIdFromSongStream(songId),
       builder: (context, state) {
         if (state.connectionState != ConnectionState.waiting) {
-          final String favoriteId = state.data;
+          final String? favoriteId = state.data;
           final bool exist = state.hasData;
           return IconButton(
             icon: Icon(exist ? Icons.favorite : Icons.favorite_border),
             onPressed: () => exist
                 ? BlocProvider.of<FavoriteBloc>(context)
-                    .add(RemoveFavorite(favoriteId))
+                    .add(RemoveFavorite(favoriteId!))
                 : BlocProvider.of<FavoriteBloc>(context).add(
                     AddFavorite(
                       FavoriteFire(

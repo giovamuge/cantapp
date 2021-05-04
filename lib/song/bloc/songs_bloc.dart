@@ -5,18 +5,16 @@ import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 part 'songs_event.dart';
 part 'songs_state.dart';
 
 class SongsBloc extends Bloc<SongEvent, SongState> {
   FirestoreDatabase _firestoreDatabase;
-  StreamSubscription _songsSubscription;
+  StreamSubscription? _songsSubscription;
 
-  SongsBloc({@required FirestoreDatabase firestoreDatabase})
-      : assert(firestoreDatabase != null),
-        _firestoreDatabase = firestoreDatabase,
+  SongsBloc({required FirestoreDatabase firestoreDatabase})
+      : _firestoreDatabase = firestoreDatabase,
         super(SongsLoading());
 
   @override

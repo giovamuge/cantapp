@@ -11,10 +11,10 @@ class PlaylistCardWidget extends StatelessWidget {
   final String _description;
 
   PlaylistCardWidget(
-      {@required int index,
-      @required MaterialColor color,
-      @required String title,
-      @required String assetsImage,
+      {required int index,
+      required MaterialColor color,
+      required String title,
+      required String assetsImage,
       String description = ""})
       : _title = title,
         _index = index,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class IconBadge extends StatefulWidget {
   final IconData icon;
-  const IconBadge({Key key, @required this.icon}) : super(key: key);
+  const IconBadge({Key key, required this.icon}) : super(key: key);
 
   @override
   _IconBadgeState createState() => _IconBadgeState();

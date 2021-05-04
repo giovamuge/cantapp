@@ -188,7 +188,7 @@ class AppShell extends StatefulWidget {
   final BooksAppState appState;
 
   AppShell({
-    @required this.appState,
+    required this.appState,
   });
 
   @override
@@ -333,8 +333,8 @@ class BooksListScreen extends StatelessWidget {
   final ValueChanged<Book> onTapped;
 
   BooksListScreen({
-    @required this.books,
-    @required this.onTapped,
+    required this.books,
+    required this.onTapped,
   });
 
   @override
@@ -358,7 +358,7 @@ class BookDetailsScreen extends StatelessWidget {
   final Book book;
 
   BookDetailsScreen({
-    @required this.book,
+    required this.book,
   });
 
   @override

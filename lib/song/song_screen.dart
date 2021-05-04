@@ -29,7 +29,7 @@ import 'song_full_screen.dart';
 class SongScreen extends StatefulWidget {
   final String id;
 
-  const SongScreen({@required this.id});
+  const SongScreen({required this.id});
 
   @override
   _SongScreenState createState() => _SongScreenState();

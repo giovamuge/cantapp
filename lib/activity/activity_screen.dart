@@ -12,7 +12,7 @@ class ActivityScreen extends StatefulWidget {
   final MaterialColor color;
 
   ActivityScreen(
-      {@required this.index, @required this.color, @required this.title});
+      {required this.index, required this.color, required this.title});
 
   @override
   _ActivityScreenState createState() => _ActivityScreenState();
@@ -20,17 +20,17 @@ class ActivityScreen extends StatefulWidget {
 
 class _ActivityScreenState extends State<ActivityScreen>
     with TickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation _animation;
+  AnimationController? _animationController;
+  Animation? _animation;
 
   @override
   void initState() {
     Timer(const Duration(milliseconds: 500),
-        () => _animationController.forward());
+        () => _animationController?.forward());
 
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController!);
 
     super.initState();
   }
@@ -38,7 +38,7 @@ class _ActivityScreenState extends State<ActivityScreen>
   @override
   void dispose() {
     _animation = null;
-    _animationController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 
@@ -57,7 +57,7 @@ class _ActivityScreenState extends State<ActivityScreen>
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [widget.color[200], widget.color[400]],
+                  colors: [widget.color[200]!, widget.color[400]!],
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                 ),
@@ -71,9 +71,9 @@ class _ActivityScreenState extends State<ActivityScreen>
               if (snapshot.hasData && snapshot.data.length > 0) {
                 final List<SongLight> items = snapshot.data;
                 return AnimatedBuilder(
-                  animation: _animation,
+                  animation: _animation!,
                   builder: (context, child) {
-                    return Opacity(opacity: _animation.value, child: child);
+                    return Opacity(opacity: _animation?.value, child: child);
                   },
                   child: SingleChildScrollView(
                     child: Column(
@@ -86,7 +86,7 @@ class _ActivityScreenState extends State<ActivityScreen>
                               icon: Icon(Icons.close),
                               color: widget.color[800],
                               onPressed: () {
-                                _animationController
+                                _animationController!
                                     .reverse()
                                     .then((value) => Navigator.pop(context));
                               }),
@@ -114,7 +114,7 @@ class _ActivityScreenState extends State<ActivityScreen>
                                 avatarColor: widget.color,
                                 textColor: widget.color,
                                 onNavigateSong: (context) {
-                                  _animationController.reverse().then(
+                                  _animationController?.reverse().then(
                                       (value) => Navigator.of(context).pop());
                                 },
                               );
@@ -128,9 +128,9 @@ class _ActivityScreenState extends State<ActivityScreen>
                 );
               } else if (snapshot.hasError) {
                 return AnimatedBuilder(
-                  animation: _animation,
+                  animation: _animation!,
                   builder: (context, child) {
-                    return Opacity(opacity: _animation.value, child: child);
+                    return Opacity(opacity: _animation?.value, child: child);
                   },
                   child: Center(
                     child: Column(
@@ -138,16 +138,14 @@ class _ActivityScreenState extends State<ActivityScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text("C'è un errore 😖 riprova tra qualche istante."),
-                        FlatButton(
+                        TextButton(
                           child: Text(
                             "Chiudi",
-                            style: TextStyle(
-                              color: widget.color[800],
-                            ),
+                            style: TextStyle(color: widget.color[800]),
                           ),
-                          textColor: widget.color[800],
+                          // textColor: widget.color[800],
                           onPressed: () {
-                            _animationController
+                            _animationController!
                                 .reverse()
                                 .then((value) => Navigator.pop(context));
                           },
@@ -159,9 +157,9 @@ class _ActivityScreenState extends State<ActivityScreen>
               }
 
               return AnimatedBuilder(
-                animation: _animation,
+                animation: _animation!,
                 builder: (context, child) {
-                  return Opacity(opacity: _animation.value, child: child);
+                  return Opacity(opacity: _animation?.value, child: child);
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -173,11 +171,11 @@ class _ActivityScreenState extends State<ActivityScreen>
                         color: widget.color[800],
                       ),
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text("Chiudi"),
-                      textColor: widget.color[800],
+                      // color: widget.color[800]),
                       onPressed: () {
-                        _animationController
+                        _animationController!
                             .reverse()
                             .then((value) => Navigator.pop(context));
                       },

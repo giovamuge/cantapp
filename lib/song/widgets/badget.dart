@@ -7,7 +7,7 @@ class BadgetWidget extends StatelessWidget {
   final String title;
   final Color color;
 
-  const BadgetWidget({Key key, @required this.color, @required this.title})
+  const BadgetWidget({Key key, required this.color, required this.title})
       : super(key: key);
 
   @override

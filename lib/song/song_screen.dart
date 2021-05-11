@@ -267,9 +267,10 @@ class _SongScreenState extends State<SongScreen> {
                                 Padding(
                                   padding: safeAreaChildScroll,
                                   child: Container(
-                                    height: 90,
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
+                                    // height: 90,
+                                    child: Column(
+                                      // scrollDirection: Axis.horizontal,
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         ..._buildVideos(videos),
                                       ],
@@ -384,7 +385,7 @@ class _SongScreenState extends State<SongScreen> {
     if (videos.length > 0) {
       return [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -404,11 +405,12 @@ class _SongScreenState extends State<SongScreen> {
             ],
           ),
         ),
-        // SizedBox(height: 10),
+        SizedBox(height: 10),
         Container(
           height: 300.00,
           child: PageView.builder(
             controller: _controller,
+            scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),
             // onPageChanged: (index) => setState(() => _currentIndex = index),
             itemCount: videos.length,

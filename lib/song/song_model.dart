@@ -78,6 +78,10 @@ class SongLight extends Equatable {
     };
   }
 
+  toMap() {
+    return {"title": title, "artist": artist};
+  }
+
   @override
   List<Object> get props => [id, title];
 

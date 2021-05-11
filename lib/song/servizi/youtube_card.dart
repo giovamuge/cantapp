@@ -77,8 +77,10 @@ class _YouTubeCardState extends State<YouTubeCard>
                       padding: const EdgeInsets.all(15),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(video.title,
+                              textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w800)),
                           Row(

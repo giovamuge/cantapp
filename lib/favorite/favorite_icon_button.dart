@@ -1,10 +1,10 @@
-import 'package:cantapp/favorite/favorite.dart';
 import 'package:cantapp/services/firestore_path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/favorite_bloc.dart';
+import 'favorite.dart';
 
 class FavoriteIconButtonWidget extends StatelessWidget {
   final String songId;

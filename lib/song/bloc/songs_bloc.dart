@@ -37,11 +37,16 @@ class SongsBloc extends Bloc<SongEvent, SongState> {
     _songsSubscription?.cancel();
     _songsSubscription = _firestoreDatabase
         .songsLightStream()
+        // necessario per non dove ricaricare
+        // ogni volta la lista intera delle canzoni
+        .take(1)
         .listen((songs) => add(SongsUpdated(songs)));
   }
 
   Stream<SongState> _mapSongsUpdateToState(SongsUpdated event) async* {
     yield SongsLoaded(event.songs);
+
+    // qui potrei salvare in fulltextsearch_songs
   }
 
   _mapUpdateAuthIdToState(UpdateAuthIdSong event) {

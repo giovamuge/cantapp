@@ -43,6 +43,8 @@ class HeaderLyric extends StatelessWidget {
         ),
         SizedBox(height: 5),
         Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               width: 25,
@@ -62,15 +64,24 @@ class HeaderLyric extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10),
-            Text(
-              artist.isNullOrEmpty() ? "Artista sconosciuto" : artist,
-              style: TextStyle(
-                // fontSize: lyricData.fontSize * 1.25,
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
-                color: Theme.of(context).primaryColor.withOpacity(.5),
+            Expanded(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                direction: Axis.horizontal,
+                children: [
+                  Text(
+                    artist.isNullOrEmpty() ? "Artista sconosciuto" : artist,
+                    style: TextStyle(
+                      // fontSize: lyricData.fontSize * 1.25,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: Theme.of(context).primaryColor.withOpacity(.5),
+                    ),
+                  ),
+                ],
               ),
-            ),
+            )
           ],
         ),
       ],

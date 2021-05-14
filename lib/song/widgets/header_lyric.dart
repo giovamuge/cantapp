@@ -66,8 +66,8 @@ class HeaderLyric extends StatelessWidget {
             SizedBox(width: 10),
             Expanded(
               child: Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
                 direction: Axis.horizontal,
                 children: [
                   Text(

@@ -12,6 +12,8 @@ class SongLight extends Equatable {
   final List<Link> links;
   final bool isChord;
   final List<String> categories;
+  final DateTime updatedAt;
+  final DateTime createdAt;
 
   SongLight({
     this.title,
@@ -21,6 +23,8 @@ class SongLight extends Equatable {
     this.number,
     this.isChord = false,
     this.categories,
+    this.updatedAt,
+    this.createdAt,
   });
 
   SongLight.fromSnapshot(
@@ -29,25 +33,29 @@ class SongLight extends Equatable {
         title = snapshot.data()["title"],
         artist = snapshot.data()["artist"],
         number = snapshot.data()["number"],
+        updatedAt = snapshot.data()["updatedAt"],
+        createdAt = snapshot.data()["createdAt"],
         isChord = snapshot.data()["chord"] != null,
         categories = snapshot.data()["categories"] != null
             ? new List<String>.from(snapshot.data()["categories"])
-            : new List<String>(),
-        links = new List<Link>();
+            : [],
+        links = [];
 
   SongLight.fromJson(Map<String, dynamic> maps)
       : artist = maps["artist"],
         title = maps["title"],
         id = maps["id"],
         number = maps["number"],
+        updatedAt = maps["updatedAt"],
+        createdAt = maps["createdAt"],
         isChord = maps["chord"] != null,
         categories = maps["categories"] != null
             ? new List<String>.from(maps["categories"])
-            : new List<String>(),
-        links = new List<Link>();
+            : [],
+        links = [];
 
   static fromMap(Map maps, String id) {
-    final links = new List<Link>();
+    final List<Link> links = [];
     if (maps["links"] != null) {
       final items = List.from(maps["links"]);
       for (var i = 0; i < items.length; i++) {
@@ -60,11 +68,13 @@ class SongLight extends Equatable {
         id: id,
         title: maps["title"],
         artist: maps["artist"],
+        updatedAt: maps["updatedAt"],
+        createdAt: maps["createdAt"],
         links: links,
         isChord: maps["chord"] != null,
         categories: maps["categories"] != null
             ? new List<String>.from(maps["categories"])
-            : new List<String>(),
+            : [],
         number: maps["number"]);
   }
 
@@ -74,16 +84,24 @@ class SongLight extends Equatable {
       "title": title,
       "artist": artist,
       "links": links,
-      "number": number
+      "number": number,
+      "updatedAt": updatedAt,
+      "createdAt": createdAt,
     };
   }
 
   toMap() {
-    return {"title": title, "artist": artist};
+    return {
+      "title": title,
+      "artist": artist,
+      "id": id,
+      // "updatedAt": updatedAt,
+      // "createdAt": createdAt,
+    };
   }
 
   @override
-  List<Object> get props => [id, title];
+  List<Object> get props => [id, title, artist, links, number, updatedAt];
 
   @override
   String toString() =>
@@ -104,7 +122,7 @@ class SongResult extends Equatable {
         title = maps["title"],
         lyric = maps["lyric"],
         number = maps["number"],
-        artist = maps["artist"] ?? "";
+        artist = maps["artist"] ?? "Artista sconosciuto";
 
   const SongResult({
     this.id,
@@ -131,13 +149,13 @@ abstract class SongBase extends Equatable {
       : id = snapshot.id, //snapshot.documentID,
         title = snapshot.data()["title"],
         artist = snapshot.data()["artist"] ?? "Artista conosciuto",
-        links = new List<Link>();
+        links = [];
 
   SongBase.fromJson(Map<String, dynamic> maps)
       : artist = maps["artist"] ?? "Artista conosciuto",
         title = maps["title"],
         id = maps["objectID"],
-        links = new List<Link>();
+        links = [];
 
   // static fromMap(Map maps, String id);
 
@@ -192,16 +210,16 @@ class Song extends Equatable {
         updatedAt = snapshot.data()["updatedAt"],
         categories = snapshot.data()["categories"] != null
             ? new List<String>.from(snapshot.data()["categories"])
-            : new List<String>(),
+            : [],
         // links = snapshot.data()["links"] != null
         //     ? new List<Link>.from(snapshot.data()["links"])
-        //     : new List<Link>(),
-        links = new List<Link>(),
+        //     : [],
+        links = [],
         artist = snapshot.data()["artist"],
         isFavorite = false;
 
   static fromMap(Map maps, String id) {
-    final links = new List<Link>();
+    final List<Link> links = [];
     if (maps["links"] != null) {
       final items = List.from(maps["links"]);
       for (var i = 0; i < items.length; i++) {
@@ -220,7 +238,7 @@ class Song extends Equatable {
         updatedAt: maps["updatedAt"],
         categories: maps["categories"] != null
             ? new List<String>.from(maps["categories"])
-            : new List<String>(),
+            : [],
         links: links,
         artist: maps["artist"],
         number: maps["number"],

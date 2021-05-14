@@ -22,7 +22,7 @@ class Shared {
 
   Future<dynamic> get(String key, {dynamic defaultValue}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return await sharedPreferences.get(key) ?? defaultValue;
+    return sharedPreferences.get(key) ?? defaultValue;
   }
 
   Future<void> setFavorites(String value) async {
@@ -46,7 +46,6 @@ class Shared {
   }
 
   Future<int> getRemind() async {
-    return await get(reminder,
-        defaultValue: DateTime.now().millisecondsSinceEpoch);
+    return await get(reminder);
   }
 }

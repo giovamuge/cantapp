@@ -42,38 +42,9 @@ class _SongScreenState extends State<SongScreen> {
   StreamSubscription<dynamic> _sessionTask;
   PageController _controller;
   BannerAd _bannerAd;
-  InterstitialAd _interstitialAd;
 
   void _loadBannerAd() {
     _bannerAd.load();
-  }
-
-  void _loadInterstitialAd() {
-    _interstitialAd.load();
-  }
-
-  AdListener _createInterstitialAdEvent() {
-    return AdListener(
-      // Called when an ad is successfully received.
-      onAdLoaded: (Ad ad) {
-        print('Ad loaded.');
-        _interstitialAd.show();
-      },
-      // Called when an ad request failed.
-      onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        ad.dispose();
-        print('Ad failed to load: $error');
-      },
-      // Called when an ad opens an overlay that covers the screen.
-      onAdOpened: (Ad ad) => print('Ad opened.'),
-      // Called when an ad removes an overlay that covers the screen.
-      onAdClosed: (Ad ad) {
-        ad.dispose();
-        print('Ad closed.');
-      },
-      // Called when an ad is in the process of leaving the application.
-      onApplicationExit: (Ad ad) => print('Left application.'),
-    );
   }
 
   @override
@@ -113,16 +84,6 @@ class _SongScreenState extends State<SongScreen> {
       ),
     );
 
-    // _loadBannerAd();
-
-    _interstitialAd = InterstitialAd(
-      adUnitId: AdManager.interstitialAdUnitId,
-      request: AdRequest(),
-      listener: _createInterstitialAdEvent(),
-    );
-
-    _loadInterstitialAd();
-
     _loadBannerAd();
 
     super.initState();
@@ -132,7 +93,6 @@ class _SongScreenState extends State<SongScreen> {
   void dispose() {
     _sessionTask?.cancel();
     _bannerAd?.dispose();
-    _interstitialAd?.dispose();
     super.dispose();
   }
 

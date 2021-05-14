@@ -5,8 +5,8 @@ class LyricUtil {
       BuildContext context, String text, double fontSize, Widget child) {
     // final maxWidth = MediaQuery.of(context).size.width * .33; // oppure .5
     // print(fontSize);
+    List<Widget> result = [];
     var lines = text.split('\n');
-    var result = new List<Widget>();
 
     var paragraphArray = [];
     var paragraphValue = "";
@@ -49,7 +49,7 @@ class LyricUtil {
     var j = 0;
     var fontweightSplitted = lineText.split('{b}');
 
-    var result = List<TextSpan>();
+    List<TextSpan> result = [];
 
     fontweightSplitted.forEach((value) {
       var marckupClosedExp = new RegExp('(\{\/b\})');

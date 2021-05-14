@@ -80,6 +80,7 @@ class _YouTubeCardState extends State<YouTubeCard>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(video.title,
+                              maxLines: 3,
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w800)),

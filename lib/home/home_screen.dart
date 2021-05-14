@@ -72,7 +72,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _onPostFrameCallback(Duration duration) async {
-    final remindTimestamp = await _shared.getRemind();
+    var remindTimestamp = await _shared.getRemind();
+    if (remindTimestamp == null) {
+      final remindDate = DateTime.now().add(Duration(minutes: 5));
+      remindTimestamp = remindDate.millisecondsSinceEpoch;
+      _shared.setRemind(remindDate);
+    }
+
     final remindeDateTime =
         DateTime.fromMillisecondsSinceEpoch(remindTimestamp);
     final isLessOrEqualRemind = remindeDateTime.isBefore(DateTime.now());
@@ -131,29 +137,33 @@ class _HomeScreenState extends State<HomeScreen>
           SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () => showSearch(
                 context: context,
                 delegate: SongSearchDelegate(),
               ),
-              elevation: .5,
-              hoverElevation: .5,
-              focusElevation: .5,
-              highlightElevation: .5,
-              color: Theme.of(context).dialogBackgroundColor,
-              padding: const EdgeInsets.all(12),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              style: ButtonStyle(
+                elevation: MaterialStateProperty.all(.5),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10))),
+                backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).dialogBackgroundColor),
+                padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+              ),
               child: Row(
                 children: <Widget>[
                   Icon(
                     Icons.search,
                     size: 17.00,
+                    color: Theme.of(context).primaryColor,
                   ),
                   SizedBox(
                     width: 5,
                   ),
-                  Text("Cerca")
+                  Text(
+                    "Cerca",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  )
                 ],
               ),
             ),

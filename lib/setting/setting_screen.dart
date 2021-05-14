@@ -66,7 +66,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 title: 'Testo',
                 subtitle: Provider.of<SongLyric>(context).toStringFontSize(),
                 leading: Icon(Icons.format_size),
-                onTap: () async =>
+                onPressed: (context) async =>
                     await SongUtil().settingModalBottomSheet(context),
               ),
               SettingsTile.switchTile(
@@ -93,13 +93,13 @@ class _SettingScreenState extends State<SettingScreen> {
               SettingsTile(
                 title: 'Policy & Privacy',
                 leading: Icon(Icons.security),
-                onTap: () async => await Utils.launchURL(
+                onPressed: (context) async => await Utils.launchURL(
                     'https://us-central1-mgc-cantapp.cloudfunctions.net/privacyAndPolicy'),
               ),
               SettingsTile(
                 title: 'Disclaimer',
                 leading: Icon(Icons.warning_rounded),
-                onTap: () async => await Utils.launchURL(
+                onPressed: (context) async => await Utils.launchURL(
                     'https://us-central1-mgc-cantapp.cloudfunctions.net/disclaimer'),
                 // onTap: () async => Navigator.push(
                 //   context,
@@ -116,7 +116,7 @@ class _SettingScreenState extends State<SettingScreen> {
               SettingsTile(
                 title: 'Nuovo canto',
                 leading: Icon(Icons.add_circle),
-                onTap: () async => await Utils.launchURL(
+                onPressed: (context) async => await Utils.launchURL(
                     'https://forms.gle/H2HFQ8EpaWgQJs7d6'),
               ),
             ],

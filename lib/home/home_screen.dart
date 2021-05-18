@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen>
   Animation _animation;
   AnimationController _animationController;
   Shared _shared;
+  FilteredSongsBloc _filteredSongsBloc;
 
   // finals
   final InAppReview _inAppReview = InAppReview.instance;
@@ -42,7 +43,16 @@ class _HomeScreenState extends State<HomeScreen>
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     _shared = Shared();
 
+    _filteredSongsBloc = context.read<FilteredSongsBloc>();
+
     WidgetsBinding.instance.addPostFrameCallback(_onPostFrameCallback);
+  }
+
+  bool get _isBottom {
+    if (!_controller.hasClients) return false;
+    final maxScroll = _controller.position.maxScrollExtent;
+    final currentScroll = _controller.offset;
+    return currentScroll >= (maxScroll * 0.9);
   }
 
   @override
@@ -68,6 +78,12 @@ class _HomeScreenState extends State<HomeScreen>
     if (_controller.offset > offset && !_visible) {
       _visible = true;
       _animationController.forward();
+    }
+
+    if (_isBottom && _filteredSongsBloc.state is FilteredSongsLoaded) {
+      final filteredLoded = _filteredSongsBloc.state as FilteredSongsLoaded;
+      final last = filteredLoded.songsFiltered.last;
+      _filteredSongsBloc.add(FetchFilter(last));
     }
   }
 
@@ -181,48 +197,48 @@ class _HomeScreenState extends State<HomeScreen>
           SizedBox(height: 20),
           BlocBuilder<FilteredSongsBloc, FilteredSongsState>(
             builder: (context, state) {
-              if (state is FilteredSongsLoaded) {
-                final List<Category> cats = Categories.items;
-                return Container(
-                  height: 30.00,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: cats.length,
-                    itemBuilder: (context, index) {
-                      final Category cat = cats[index];
-                      final double paddingLeft = index == 0 ? 22.5 : 2.5;
-                      final double paddingRight =
-                          index == cats.length - 1 ? 22.5 : 2.5;
-                      return Container(
-                        padding: EdgeInsets.only(
-                            left: paddingLeft, right: paddingRight),
-                        child: RaisedButton(
-                          color: state.activeFilter == cat
-                              ? AppTheme.accent
+              final List<Category> cats = Categories.items;
+              return Container(
+                height: 30.00,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: cats.length,
+                  itemBuilder: (context, index) {
+                    final Category cat = cats[index];
+                    final double paddingLeft = index == 0 ? 22.5 : 2.5;
+                    final double paddingRight =
+                        index == cats.length - 1 ? 22.5 : 2.5;
+                    return Container(
+                      padding: EdgeInsets.only(
+                          left: paddingLeft, right: paddingRight),
+                      child: ElevatedButton(
+                        // da cambiare con elevated button
+                        style: ElevatedButton.styleFrom(
+                          primary: state is FilteredSongsLoaded &&
+                                  state.activeFilter == cat
+                              // MaterialStateProperty.all(AppTheme.accent)
+                              ? Colors.orangeAccent
                               : Theme.of(context).buttonColor,
-                          child: Text(
-                            cat.title,
-                            style: TextStyle(color: AppTheme.background),
-                          ),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0)),
-                          onPressed: () {
-                            BlocProvider.of<FilteredSongsBloc>(context)
-                                .add(UpdateFilter(cat));
-                            // songs.selected = e;
-                            // songs.streamController.add(e);
-                          },
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                );
-                // } else if (state is FilteredSongsLoading) {
-                //   return CircularProgressIndicator();
-              } else {
-                return Container();
-              }
+                        child: Text(
+                          cat.title,
+                          style: TextStyle(color: AppTheme.background),
+                        ),
+                        onPressed: () {
+                          BlocProvider.of<FilteredSongsBloc>(context)
+                              .add(UpdateFilter(cat));
+                          // songs.selected = e;
+                          // songs.streamController.add(e);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              );
             },
           ),
 
@@ -239,59 +255,24 @@ class _HomeScreenState extends State<HomeScreen>
     return BlocBuilder<FilteredSongsBloc, FilteredSongsState>(
       builder: (context, state) {
         if (state is FilteredSongsLoading) {
-          return Consumer<ThemeChanger>(
-            builder: (context, theme, child) {
-              return Shimmer.fromColors(
-                // baseColor: Theme.of(context).primaryColorLight,
-                // highlightColor: Theme.of(context).primaryColor,
-                baseColor: theme.getThemeName() == Constants.themeLight
-                    ? Colors.grey[100]
-                    : Colors.grey[600],
-                highlightColor: theme.getThemeName() == Constants.themeLight
-                    ? Colors.grey[300]
-                    : Colors.grey[900],
-                child: child,
-              );
-            },
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  leading: Container(
-                    width: 35.00,
-                    height: 35.00,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: Container(
-                    width: MediaQuery.of(context).size.width - 35.00,
-                    height: 30.00,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              },
-              itemCount: List.generate(10, (i) => i++).length,
-            ),
-          );
+          return _buildLoader();
         } else if (state is FilteredSongsLoaded) {
           final List<SongLight> items = state.songsFiltered;
+          // final int length = state.songs.length - 1;
           // if (items.isNotEmpty) {
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: items.length,
+            itemCount: state.hasReachedMax
+                ? state.songsFiltered.length
+                : state.songsFiltered.length + 1,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              final SongLight item = items[index];
-              return SongWidget(song: item);
+              // final SongLight item = items[index];
+              return index >= state.songsFiltered.length
+                  ? _buildLoader()
+                  : SongWidget(song: items[index]);
             },
           );
-          // }
         } else {
           return Container(
             height: 300,
@@ -305,6 +286,49 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
+  Widget _buildLoader() {
+    return Consumer<ThemeChanger>(
+      builder: (context, theme, child) {
+        return Shimmer.fromColors(
+          // baseColor: Theme.of(context).primaryColorLight,
+          // highlightColor: Theme.of(context).primaryColor,
+          baseColor: theme.getThemeName() == Constants.themeLight
+              ? Colors.grey[100]
+              : Colors.grey[600],
+          highlightColor: theme.getThemeName() == Constants.themeLight
+              ? Colors.grey[300]
+              : Colors.grey[900],
+          child: child,
+        );
+      },
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            leading: Container(
+              width: 35.00,
+              height: 35.00,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7),
+                color: Colors.white,
+              ),
+            ),
+            title: Container(
+              width: MediaQuery.of(context).size.width - 35.00,
+              height: 30.00,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7),
+                color: Colors.white,
+              ),
+            ),
+          );
+        },
+        itemCount: List.generate(10, (i) => i++).length,
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _animation = null;
@@ -312,9 +336,6 @@ class _HomeScreenState extends State<HomeScreen>
     _controller.dispose();
     super.dispose();
   }
-
-  // @override
-  // Ticker createTicker(void Function(Duration elapsed) onTick) {}
 
   @override
   void updateKeepAlive() {}

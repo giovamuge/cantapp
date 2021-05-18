@@ -8,12 +8,14 @@ import 'package:cantapp/song/song_lyric.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 
 import 'authentication/authentication.dart';
+import 'category/category_model.dart';
 import 'landing/landing_screen.dart';
 import 'root/navigator_tablet.dart';
 
@@ -67,7 +69,7 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                 create: (context) => SongsBloc(
                   firestoreDatabase: FirestoreDatabase(uid: ""),
-                )..add(SongsFetch([])),
+                )..add(SongsFetch(null, Categories.first())),
               ),
               BlocProvider(
                 create: (context) => SongBloc(

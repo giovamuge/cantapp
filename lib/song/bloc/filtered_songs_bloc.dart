@@ -6,33 +6,43 @@ import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'filtered_songs_event.dart';
 part 'filtered_songs_state.dart';
 
 class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
-  // FilteredsongsBloc() : super(FilteredsongsInitial());
+  StreamSubscription _songsSubscription;
+  SongLight last;
+  Category activeFilter = Categories.first();
 
   final SongsBloc _songsBloc;
-  StreamSubscription _songsSubscription;
 
   FilteredSongsBloc({@required SongsBloc songsBloc})
       : assert(songsBloc != null),
         _songsBloc = songsBloc,
         super(initialState(songsBloc)) {
-    _songsSubscription = songsBloc.listen((state) {
-      if (state is SongsLoaded) {
-        add(UpdateSongs((songsBloc.state as SongsLoaded).songs));
-      }
-    });
+    _songsSubscription = songsBloc.stream.listen((SongState state) =>
+        state is SongsLoaded ? add(UpdateSongs(state.songs)) : {});
   }
 
+  // @override
+  // Stream<Transition<FilteredSongsEvent, FilteredSongsState>> transformEvents(
+  //   Stream<FilteredSongsEvent> events,
+  //   TransitionFunction<FilteredSongsEvent, FilteredSongsState> transitionFn,
+  // ) {
+  //   return super.transformEvents(
+  //     events.debounceTime(const Duration(milliseconds: 250)),
+  //     transitionFn,
+  //   );
+  // }
+
   static FilteredSongsState initialState(SongsBloc songsBloc) {
-    if (songsBloc.state is SongsLoaded) {
-      final songLoaded = songsBloc.state as SongsLoaded;
-      return FilteredSongsLoaded(songLoaded.songs, Categories.first());
+    final currentState = songsBloc.state;
+    if (currentState is SongsLoaded) {
+      return FilteredSongsLoaded(currentState.songs, false, Categories.first());
     } else {
-      return FilteredSongsLoading();
+      return FilteredSongsLoading(Categories.first());
     }
   }
 
@@ -40,6 +50,9 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
   Stream<FilteredSongsState> mapEventToState(FilteredSongsEvent event) async* {
     if (event is UpdateFilter) {
       yield* _mapUpdateFilterToState(event);
+    } else if (event is FetchFilter) {
+      _songsBloc.add(
+          SongsFetch(event.last, /*_visibilityFilter(state)*/ activeFilter));
     } else if (event is UpdateSongs) {
       yield* _mapSongsUpdatedToState(event);
     }
@@ -49,42 +62,36 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
     UpdateFilter event,
   ) async* {
     // start loading
-    yield FilteredSongsLoading();
-    final currentState = _songsBloc.state;
-    if (currentState is SongsLoaded) {
-      // end loading
-      yield FilteredSongsLoaded(
-        _mapSongsToFilteredSongs(currentState.songs, event.filter),
-        event.filter,
-      );
-    }
+    yield FilteredSongsLoading(event.filter);
+    _songsBloc.add(SongsFetch(null, event.filter));
+    activeFilter = event.filter;
+    // end loading
   }
 
   Stream<FilteredSongsState> _mapSongsUpdatedToState(
     UpdateSongs event,
   ) async* {
-    final Category visibilityFilter = state is FilteredSongsLoaded
-        ? (state as FilteredSongsLoaded).activeFilter
-        : Categories.first();
+    if (!(_songsBloc.state is SongsLoaded)) return;
+    final SongsLoaded currentSongState = _songsBloc.state;
+
     yield FilteredSongsLoaded(
-      _mapSongsToFilteredSongs(
-        (_songsBloc.state as SongsLoaded).songs,
-        visibilityFilter,
-      ),
-      visibilityFilter,
+      currentSongState.songs,
+      currentSongState.hasReachedMax,
+      activeFilter,
     );
   }
 
-  List<SongLight> _mapSongsToFilteredSongs(
-      List<SongLight> songs, Category filter) {
-    return songs.where((cat) {
-      if (filter.value == CategoryEnum.tutti) {
-        return true;
-      } else {
-        return cat.categories.any((element) => element == filter.toString());
-      }
-    }).toList();
-  }
+  // List<SongLight> _mapSongsToFilteredSongs(
+  //     List<SongLight> songs, Category filter) {
+  //   return songs
+  //       .where((cat) => filter.value != CategoryEnum.tutti
+  //           ? cat.categories.any((element) => element == filter.toString())
+  //           : true)
+  //       .toList();
+  // }
+
+  // Category _visibilityFilter(FilteredSongsState state) =>
+  //     state is FilteredSongsLoaded ? state.activeFilter : Categories.first();
 
   @override
   Future<void> close() {

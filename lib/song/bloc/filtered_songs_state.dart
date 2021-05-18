@@ -9,14 +9,19 @@ abstract class FilteredSongsState extends Equatable {
 
 class FilteredSongsInitial extends FilteredSongsState {}
 
-class FilteredSongsLoading extends FilteredSongsState {}
+class FilteredSongsLoading extends FilteredSongsState {
+  final Category activeFilter;
+  const FilteredSongsLoading(this.activeFilter);
+}
 
 class FilteredSongsLoaded extends FilteredSongsState {
   final List<SongLight> songsFiltered;
   final Category activeFilter;
+  final bool hasReachedMax;
 
   const FilteredSongsLoaded(
     this.songsFiltered,
+    this.hasReachedMax,
     this.activeFilter,
   );
 

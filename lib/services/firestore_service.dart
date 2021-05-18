@@ -59,6 +59,31 @@ class FirestoreService {
     });
   }
 
+  Future<List<T>> collectionFuture<T>({
+    @required String path,
+    @required T builder(Map<String, dynamic> data, String documentID),
+    Query queryBuilder(Query query),
+    int sort(T lhs, T rhs),
+  }) {
+    Query query = FirebaseFirestore.instance.collection(path);
+    if (queryBuilder != null) {
+      query = queryBuilder(query);
+    }
+    final Future<QuerySnapshot> snapshots = query.get();
+    return snapshots.then((QuerySnapshot value) {
+      final result = value.docs
+          .map((e) => builder(e.data(), e.id))
+          .where((v) => v != null)
+          .toList();
+
+      if (sort != null) {
+        result.sort(sort);
+      }
+
+      return result;
+    });
+  }
+
   Stream<T> documentStream<T>({
     @required String path,
     @required T builder(Map<String, dynamic> data, String documentID),

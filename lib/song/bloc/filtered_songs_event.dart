@@ -7,6 +7,18 @@ abstract class FilteredSongsEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class FetchFilter extends FilteredSongsEvent {
+  final SongLight last;
+
+  const FetchFilter(this.last);
+
+  @override
+  List<Object> get props => [last];
+
+  @override
+  String toString() => 'FetchFilter { filter: $last }';
+}
+
 class UpdateFilter extends FilteredSongsEvent {
   final Category filter;
 

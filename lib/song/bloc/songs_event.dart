@@ -8,27 +8,29 @@ abstract class SongEvent extends Equatable {
 }
 
 class SongsFetch extends SongEvent {
-  final List<Song> songs;
+  final SongLight last;
+  final Category category;
 
-  const SongsFetch(this.songs);
+  const SongsFetch(this.last, this.category);
 
   @override
-  List<Object> get props => [songs];
+  List<Object> get props => [last, category];
 }
 
 class SongsUpdated extends SongEvent {
   final List<SongLight> songs;
+  final bool isInitial;
 
-  const SongsUpdated(this.songs);
+  const SongsUpdated(this.songs, this.isInitial);
 
   @override
   List<Object> get props => [songs];
 }
 
-class UpdateAuthIdSong extends SongEvent {
+class SongsAuthIdUpdated extends SongEvent {
   final String authId;
 
-  const UpdateAuthIdSong(this.authId);
+  const SongsAuthIdUpdated(this.authId);
 
   @override
   List<Object> get props => [authId];

@@ -6,6 +6,7 @@ import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cantapp/song/utils/songs_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen>
     _shared = Shared();
 
     _songsBloc = context.read<SongsBloc>();
+    _songsBloc.add(UpdateFilter(Categories.first()));
 
     WidgetsBinding.instance.addPostFrameCallback(_onPostFrameCallback);
   }
@@ -195,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen>
           //   ),
           // ),
           SizedBox(height: 20),
-          BlocBuilder<SongsBloc, SongState>(
+          BlocBuilder<SongsBloc, SongsState>(
             builder: (context, state) {
               final List<Category> cats = Categories.items;
               return Container(
@@ -255,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildContents(BuildContext context) {
-    return BlocBuilder<SongsBloc, SongState>(
+    return BlocBuilder<SongsBloc, SongsState>(
       builder: (context, state) {
         if (state is SongsLoading) {
           return _buildLoader();
@@ -272,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen>
             itemBuilder: (BuildContext context, int index) {
               // final SongLight item = items[index];
               return index >= state.songs.length
-                  ? _buildLoader()
+                  ? SongUtils.buildLoader()
                   : SongWidget(song: items[index]);
             },
           );

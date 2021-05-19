@@ -12,7 +12,7 @@ import 'package:rxdart/rxdart.dart';
 part 'songs_event.dart';
 part 'songs_state.dart';
 
-class SongsBloc extends Bloc<SongsEvent, SongState> {
+class SongsBloc extends Bloc<SongsEvent, SongsState> {
   FirestoreDatabase _firestoreDatabase;
   Map<CategoryEnum, SongsLoaded> _mapFilteredSongs;
   Category activeFilter = Categories.first();
@@ -26,9 +26,9 @@ class SongsBloc extends Bloc<SongsEvent, SongState> {
   }
 
   @override
-  Stream<Transition<SongsEvent, SongState>> transformEvents(
+  Stream<Transition<SongsEvent, SongsState>> transformEvents(
     Stream<SongsEvent> events,
-    TransitionFunction<SongsEvent, SongState> transitionFn,
+    TransitionFunction<SongsEvent, SongsState> transitionFn,
   ) {
     return super.transformEvents(
       events.debounceTime(const Duration(milliseconds: 250)),
@@ -37,7 +37,7 @@ class SongsBloc extends Bloc<SongsEvent, SongState> {
   }
 
   @override
-  Stream<SongState> mapEventToState(
+  Stream<SongsState> mapEventToState(
     SongsEvent event,
   ) async* {
     if (event is SongsFetch &&
@@ -52,7 +52,7 @@ class SongsBloc extends Bloc<SongsEvent, SongState> {
     }
   }
 
-  Stream<SongState> _mapUpdateFilterToState(
+  Stream<SongsState> _mapUpdateFilterToState(
     UpdateFilter event,
   ) async* {
     activeFilter = event.filter;
@@ -72,13 +72,13 @@ class SongsBloc extends Bloc<SongsEvent, SongState> {
     // end loading
   }
 
-  Stream<SongState> _mapLoadSongsToState(SongsFetch event) async* {
+  Stream<SongsState> _mapLoadSongsToState(SongsFetch event) async* {
     _firestoreDatabase
         .songsLightFuture(event.last, activeFilter)
         .then((songs) => add(SongsUpdated(songs, _isInitial(event))));
   }
 
-  Stream<SongState> _mapSongsUpdateToState(SongsUpdated event) async* {
+  Stream<SongsState> _mapSongsUpdateToState(SongsUpdated event) async* {
     final songs = event.songs;
     final hasReachedMax =
         songs.isEmpty || songs.length < 15; // if minium of numOfPages
@@ -105,7 +105,7 @@ class SongsBloc extends Bloc<SongsEvent, SongState> {
     // FullTextSearch.instance.insertSongs(event.songs);
   }
 
-  Stream<SongState> _mapNewState(
+  Stream<SongsState> _mapNewState(
       List<SongLight> songs, bool hasReachedMax, Category activeFilter) async* {
     yield _mapFilteredSongs[activeFilter.value] =
         SongsLoaded(songs, hasReachedMax, activeFilter);

@@ -1,20 +1,20 @@
 part of 'songs_bloc.dart';
 
-abstract class SongState extends Equatable {
-  const SongState();
+abstract class SongsState extends Equatable {
+  const SongsState();
 
   @override
   List<Object> get props => [];
 }
 
-class SongInitial extends SongState {}
+class SongInitial extends SongsState {}
 
-class SongsLoading extends SongState {
+class SongsLoading extends SongsState {
   final Category activeFilter;
   const SongsLoading(this.activeFilter);
 }
 
-class SongsLoaded extends SongState {
+class SongsLoaded extends SongsState {
   final List<SongLight> songs;
   final bool hasReachedMax;
   final Category activeFilter;
@@ -25,7 +25,7 @@ class SongsLoaded extends SongState {
     this.activeFilter,
   ]);
 
-  SongState copyWith({
+  SongsState copyWith({
     List<SongLight> songs,
     bool hasReachedMax,
   }) {
@@ -43,4 +43,4 @@ class SongsLoaded extends SongState {
       '''SongsLoaded { songs: $songs, hasReachedMax: $hasReachedMax }''';
 }
 
-class SongsNotLoaded extends SongState {}
+class SongsNotLoaded extends SongsState {}

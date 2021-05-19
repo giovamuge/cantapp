@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                 create: (context) => SongsBloc(
                   firestoreDatabase: FirestoreDatabase(uid: ""),
-                )..add(SongsFetch.init()),
+                ),
               ),
               BlocProvider(
                 create: (context) => SongBloc(

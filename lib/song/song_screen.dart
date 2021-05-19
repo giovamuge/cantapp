@@ -24,6 +24,7 @@ import 'package:shimmer/shimmer.dart';
 
 import 'servizi/chord_screen.dart';
 import 'servizi/youtube_card.dart';
+import 'servizi/youtube_card_search.dart';
 import 'song_full_screen.dart';
 
 class SongScreen extends StatefulWidget {
@@ -42,9 +43,11 @@ class _SongScreenState extends State<SongScreen> {
   StreamSubscription<dynamic> _sessionTask;
   PageController _controller;
   BannerAd _bannerAd;
+  BannerAd _secondBannerAd;
 
   void _loadBannerAd() {
     _bannerAd.load();
+    _secondBannerAd.load();
   }
 
   @override
@@ -67,7 +70,27 @@ class _SongScreenState extends State<SongScreen> {
     _bannerAd = BannerAd(
       adUnitId: AdManager.bannerAdUnitId,
       request: AdRequest(),
-      size: AdSize.mediumRectangle,
+      size: AdSize.leaderboard,
+      listener: AdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (Ad ad) => print('Ad loaded.'),
+        // Called when an ad request failed.
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Ad failed to load: $error');
+        },
+        // Called when an ad opens an overlay that covers the screen.
+        onAdOpened: (Ad ad) => print('Ad opened.'),
+        // Called when an ad removes an overlay that covers the screen.
+        onAdClosed: (Ad ad) => print('Ad closed.'),
+        // Called when an ad is in the process of leaving the application.
+        onApplicationExit: (Ad ad) => print('Left application.'),
+      ),
+    );
+
+    _secondBannerAd = BannerAd(
+      adUnitId: AdManager.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.leaderboard,
       listener: AdListener(
         // Called when an ad is successfully received.
         onAdLoaded: (Ad ad) => print('Ad loaded.'),
@@ -93,6 +116,7 @@ class _SongScreenState extends State<SongScreen> {
   void dispose() {
     _sessionTask?.cancel();
     _bannerAd?.dispose();
+    _secondBannerAd?.dispose();
     super.dispose();
   }
 
@@ -190,6 +214,17 @@ class _SongScreenState extends State<SongScreen> {
                               SizedBox(height: 25),
                               Padding(
                                 padding: safeAreaChildScroll,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: AdWidget(ad: _secondBannerAd),
+                                  width: _secondBannerAd.size.width.toDouble(),
+                                  height:
+                                      _secondBannerAd.size.height.toDouble(),
+                                ),
+                              ),
+                              SizedBox(height: 25),
+                              Padding(
+                                padding: safeAreaChildScroll,
                                 child: LyricWidget(
                                   text: song.lyric,
                                   fontSize: lyricData.fontSize,
@@ -222,21 +257,21 @@ class _SongScreenState extends State<SongScreen> {
                                 padding: const EdgeInsets.all(10),
                                 child: _buildListChords(song),
                               ),
-                              if (videos.isNotEmpty) SizedBox(height: 30),
-                              if (videos.isNotEmpty)
-                                Padding(
-                                  padding: safeAreaChildScroll,
-                                  child: Container(
-                                    // height: 90,
-                                    child: Column(
-                                      // scrollDirection: Axis.horizontal,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ..._buildVideos(videos),
-                                      ],
-                                    ),
+                              SizedBox(height: 30),
+                              Padding(
+                                padding: safeAreaChildScroll,
+                                child: Container(
+                                  // height: 90,
+                                  child: Column(
+                                    // scrollDirection: Axis.horizontal,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ..._buildVideos(videos, song.title,
+                                          song?.artist ?? ''),
+                                    ],
                                   ),
                                 ),
+                              ),
                               if (audios.isNotEmpty) SizedBox(height: 10),
                               if (audios.isNotEmpty) ..._buildAudios(audios),
                               SizedBox(height: 100.00)
@@ -341,47 +376,44 @@ class _SongScreenState extends State<SongScreen> {
   //   }
   // }
 
-  List<Widget> _buildVideos(List<Link> videos) {
-    if (videos.length > 0) {
-      return [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                "YouTube",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: Theme.of(context).textTheme.headline6.fontSize),
-              )
-              // FlatButton(
-              //   child: Text("visualizza tutto"),
-              //   textColor: Colors.yellow,
-              //   padding: const EdgeInsets.all(0),
-              //   onPressed: () {},
-              // )
-            ],
-          ),
+  List<Widget> _buildVideos(List<Link> videos, String title, String artist) {
+    final queryEncoded = Uri.encodeComponent('$title $artist');
+    final youtubeUrlSearch =
+        'http://www.youtube.com/results?search_query=$queryEncoded';
+    print(youtubeUrlSearch);
+
+    return [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              "YouTube",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: Theme.of(context).textTheme.headline6.fontSize),
+            )
+          ],
         ),
-        SizedBox(height: 10),
-        Container(
-          height: 300.00,
-          child: PageView.builder(
-            controller: _controller,
-            scrollDirection: Axis.horizontal,
-            physics: BouncingScrollPhysics(),
-            // onPageChanged: (index) => setState(() => _currentIndex = index),
-            itemCount: videos.length,
-            itemBuilder: (ctx, index) =>
-                YouTubeCard(heigth: 300.00, url: videos[index].url),
-          ),
+      ),
+      SizedBox(height: 10),
+      // if (videos.length > 0)
+      Container(
+        height: 300.00,
+        child: PageView.builder(
+          controller: _controller,
+          scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
+          // onPageChanged: (index) => setState(() => _currentIndex = index),
+          itemCount: videos.length + 1,
+          itemBuilder: (ctx, index) => index < videos.length
+              ? YouTubeCard(heigth: 300.00, url: videos[index].url)
+              : YouTubeCardSearch(heigth: 300.00, url: youtubeUrlSearch),
         ),
-      ];
-    } else {
-      return [Container()];
-    }
+      ),
+    ];
   }
 
   List<Widget> _buildAudios(List<Link> audios) {

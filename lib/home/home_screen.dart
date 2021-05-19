@@ -7,6 +7,7 @@ import 'package:cantapp/song/song_search.dart';
 import 'package:cantapp/song/song_item.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/utils/songs_util.dart';
+import 'package:cantapp/song/utils/song_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,12 +148,12 @@ class _HomeScreenState extends State<HomeScreen>
             child: Text(
               "Quale canto stai\ncercando?",
               style: TextStyle(
-                fontSize: 35,
+                fontSize: 35.00,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          SizedBox(height: 15),
+          SizedBox(height: 15.00),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
@@ -160,13 +161,12 @@ class _HomeScreenState extends State<HomeScreen>
                 context: context,
                 delegate: SongSearchDelegate(),
               ),
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(.5),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10))),
-                backgroundColor: MaterialStateProperty.all(
-                    Theme.of(context).dialogBackgroundColor),
-                padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+              style: ElevatedButton.styleFrom(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                primary: Theme.of(context).dialogBackgroundColor,
+                padding: const EdgeInsets.all(12),
               ),
               child: Row(
                 children: <Widget>[
@@ -180,7 +180,10 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   Text(
                     "Cerca",
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 17.00,
+                    ),
                   )
                 ],
               ),
@@ -196,6 +199,24 @@ class _HomeScreenState extends State<HomeScreen>
           //     style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold),
           //   ),
           // ),
+          SizedBox(height: 35),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SongUtil.buildCircleServizi(context, Colors.orange),
+                Text("Accordi", style: Theme.of(context).textTheme.caption),
+                SizedBox(width: 10),
+                SongUtil.buildCircleServizi(context, Colors.purple),
+                Text("Video", style: Theme.of(context).textTheme.caption),
+                SizedBox(width: 10),
+                SongUtil.buildCircleServizi(context, Colors.pink),
+                Text("Audio", style: Theme.of(context).textTheme.caption),
+              ],
+            ),
+          ),
           SizedBox(height: 20),
           BlocBuilder<SongsBloc, SongsState>(
             builder: (context, state) {
@@ -245,7 +266,6 @@ class _HomeScreenState extends State<HomeScreen>
               );
             },
           ),
-
           SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

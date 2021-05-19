@@ -18,6 +18,25 @@ class SongUtil {
     );
   }
 
+  static Widget buildCircleServizi(BuildContext context, Color color) {
+    return Container(
+      width: 15,
+      height: 15,
+      margin: const EdgeInsets.only(right: 3),
+      padding: const EdgeInsets.all(1.5),
+      decoration: BoxDecoration(
+        color: Theme.of(context).backgroundColor,
+        shape: BoxShape.circle,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
   Future<void> settingModalBottomSheet(context) async {
     return showModalBottomSheet(
       context: context,

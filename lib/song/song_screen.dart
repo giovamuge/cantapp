@@ -266,7 +266,8 @@ class _SongScreenState extends State<SongScreen> {
                                     // scrollDirection: Axis.horizontal,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      ..._buildVideos(videos),
+                                      ..._buildVideos(videos, song.title,
+                                          song?.artist ?? ''),
                                     ],
                                   ),
                                 ),
@@ -375,7 +376,12 @@ class _SongScreenState extends State<SongScreen> {
   //   }
   // }
 
-  List<Widget> _buildVideos(List<Link> videos) {
+  List<Widget> _buildVideos(List<Link> videos, String title, String artist) {
+    final queryEncoded = Uri.encodeComponent('$title $artist');
+    final youtubeUrlSearch =
+        'http://www.youtube.com/results?search_query=$queryEncoded';
+    print(youtubeUrlSearch);
+
     return [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
@@ -404,10 +410,7 @@ class _SongScreenState extends State<SongScreen> {
           itemCount: videos.length + 1,
           itemBuilder: (ctx, index) => index < videos.length
               ? YouTubeCard(heigth: 300.00, url: videos[index].url)
-              : YouTubeCardSearch(
-                  heigth: 300.00,
-                  url:
-                      'http://www.youtube.com/results?search_query=the+show+must+go+on&oq=the+show+must+go+on'),
+              : YouTubeCardSearch(heigth: 300.00, url: youtubeUrlSearch),
         ),
       ),
     ];

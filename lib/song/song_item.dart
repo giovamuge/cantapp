@@ -10,12 +10,13 @@ import 'package:cantapp/root/navigator_tablet.dart';
 import 'package:cantapp/services/firestore_path.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:cantapp/song/song_screen.dart';
-import 'package:cantapp/song/widgets/badget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'utils/song_util.dart';
 
 class SongWidget extends StatelessWidget {
   final SongLight song;
@@ -59,6 +60,7 @@ class SongWidget extends StatelessWidget {
       ),
       title: Text(
         '${song.title}',
+        maxLines: 2,
         style: TextStyle(
             fontWeight: FontWeight.bold,
             // color: _textColor[900],
@@ -66,7 +68,8 @@ class SongWidget extends StatelessWidget {
             fontSize: 15),
       ),
       subtitle: Container(
-        child: Row(children: _buildSubtitle()),
+        // child: Row(children: _buildSubtitle(context)),
+        child: _buildSubtitle(context),
       ),
       // isThreeLine: true,
       dense: true, // TODO: sicuro?
@@ -78,58 +81,35 @@ class SongWidget extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildSubtitle() {
-    final result = new List<Widget>();
-
-    if (song.isChord) {
-      result.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 5),
-          child: BadgetWidget(
-            title: 'accordi',
-            color: AppTheme.accent,
+  Row _buildSubtitle(context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        if (song.isChord) SongUtil.buildCircleServizi(context, Colors.orange),
+        if (song.links.any((l) => l.type == 'youtube'))
+          Transform.translate(
+            offset: Offset(-10, 0),
+            child: SongUtil.buildCircleServizi(context, Colors.purple),
+          ),
+        if (song.links.any((l) => l.type == 'audio'))
+          Transform.translate(
+            offset: Offset(-10, 0),
+            child: SongUtil.buildCircleServizi(context, Colors.pink),
+          ),
+        Flexible(
+          child: Container(
+            // margin: const EdgeInsets.only(left: 2),
+            child: Text(
+                !song.artist.isNullOrEmpty()
+                    ? song.artist
+                    : 'Artista conosciuto',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 11)),
           ),
         ),
-      );
-    }
-
-    if (song.links.any((l) => l.type == 'youtube')) {
-      result.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 5),
-          child: BadgetWidget(
-            title: 'video',
-            color: AppTheme.accent,
-          ),
-        ),
-      );
-    }
-
-    if (song.links.any((l) => l.type == 'audio')) {
-      result.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 5),
-          child: BadgetWidget(
-            title: 'audio',
-            color: AppTheme.accent,
-          ),
-        ),
-      );
-    }
-
-    result.add(
-      Flexible(
-        child: Text(
-            !song.artist.isNullOrEmpty() ? song.artist : 'Artista conosciuto',
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 11)),
-      ),
+      ],
     );
-
-    // controlli per links e audio
-    // aggiungere alla lista se esistono
-
-    return result;
   }
 
   Future<void> _settingModalBottomSheet(

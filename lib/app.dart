@@ -18,8 +18,6 @@ import 'authentication/authentication.dart';
 import 'category/category_model.dart';
 import 'landing/landing_screen.dart';
 import 'root/navigator_tablet.dart';
-
-import 'song/bloc/filtered_songs_bloc.dart';
 import 'song/bloc/song_bloc.dart';
 
 class MyApp extends StatelessWidget {
@@ -69,16 +67,11 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                 create: (context) => SongsBloc(
                   firestoreDatabase: FirestoreDatabase(uid: ""),
-                )..add(SongsFetch(null, Categories.first())),
+                )..add(SongsFetch.init()),
               ),
               BlocProvider(
                 create: (context) => SongBloc(
                   firestoreDatabase: FirestoreDatabase(uid: ""),
-                ),
-              ),
-              BlocProvider<FilteredSongsBloc>(
-                create: (context) => FilteredSongsBloc(
-                  songsBloc: BlocProvider.of<SongsBloc>(context),
                 ),
               ),
               BlocProvider<FavoriteBloc>(

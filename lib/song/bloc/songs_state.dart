@@ -9,15 +9,20 @@ abstract class SongState extends Equatable {
 
 class SongInitial extends SongState {}
 
-class SongsLoading extends SongState {}
+class SongsLoading extends SongState {
+  final Category activeFilter;
+  const SongsLoading(this.activeFilter);
+}
 
 class SongsLoaded extends SongState {
   final List<SongLight> songs;
   final bool hasReachedMax;
+  final Category activeFilter;
 
   const SongsLoaded([
     this.songs = const [],
     this.hasReachedMax = false,
+    this.activeFilter,
   ]);
 
   SongState copyWith({

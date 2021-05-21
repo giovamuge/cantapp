@@ -163,9 +163,9 @@ class FullTextSearch {
         final shared = Shared();
         final latestUpdate = await shared.getSongsIndexUpdatedAt();
         final updatedAtDateTime = updatedAt.toDate();
-        final bool needUpdated = latestUpdate.isBefore(updatedAtDateTime);
+        final bool needUpdated = latestUpdate?.isBefore(updatedAtDateTime);
 
-        if (!needUpdated) return;
+        if (needUpdated != null && !needUpdated) return;
         if (await countSongs() > 0) await deleteSongs();
 
         // inserisco tutte le canzoni

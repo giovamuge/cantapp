@@ -1,10 +1,13 @@
 import 'dart:core';
 
+import 'package:cantapp/common/shared.dart';
 import 'package:cantapp/song/song_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../song/song_model.dart';
+import '../firestore_path.dart';
 import 'bm25.dart';
 
 class FullTextSearch {
@@ -144,6 +147,32 @@ class FullTextSearch {
     final Database db = await database;
     final result = await db.rawQuery('SELECT * FROM $table');
     print('songs lenght: ${result.length}');
+  }
+
+  Future<void> fetchFromFirestore(String uid, String version) async {
+    FirebaseFirestore.instance
+        .doc(FirestorePath.songsIndex(version))
+        .get()
+        .then(
+      (value) async {
+        final index = value.data()["index"];
+        final songs = List.from(index)
+            .map((maps) => SongLight.fromJsonIndexSongs(maps))
+            .toList();
+        final Timestamp updatedAt = value.data()["updatedAt"];
+        final shared = Shared();
+        final latestUpdate = await shared.getSongsIndexUpdatedAt();
+        final updatedAtDateTime = updatedAt.toDate();
+        final bool needUpdated = latestUpdate.isBefore(updatedAtDateTime);
+
+        if (!needUpdated) return;
+        if (await countSongs() > 0) await deleteSongs();
+
+        // inserisco tutte le canzoni
+        FullTextSearch.instance.insertSongs(songs);
+        await shared.setSongsIndexUpdatedAt(DateTime.now());
+      },
+    );
   }
 
   Future close() async => instance.close();

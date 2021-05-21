@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_database.dart';
-import 'package:cantapp/services/full_text_search/full_text_search.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -97,12 +96,6 @@ class SongsBloc extends Bloc<SongsEvent, SongsState> {
           ..addAll(songs.isNotEmpty ? event.songs : []);
 
     yield* _mapNewState(songAdded, hasReachedMax, activeFilter);
-
-    // qui potrei salvare in fulltextsearch_songs
-    // final numberOfSongs = await FullTextSearch.instance.countSongs();
-    // if (numberOfSongs == event.songs.length) return;
-    // if (numberOfSongs > 0) await FullTextSearch.instance.deleteSongs();
-    // FullTextSearch.instance.insertSongs(event.songs);
   }
 
   Stream<SongsState> _mapNewState(

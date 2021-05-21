@@ -1,6 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cantapp/authentication/bloc/authentication_bloc.dart';
 import 'package:cantapp/favorite/bloc/favorite_bloc.dart';
+import 'package:cantapp/services/full_text_search/full_text_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,6 +31,8 @@ class LandingScreen extends StatelessWidget {
             BlocProvider.of<FavoriteBloc>(context)
               ..add(UpdateAuthId(state.user.id))
               ..add(FavoritesLoad());
+
+            FullTextSearch.instance.fetchFromFirestore(state.user.id, 'v1');
 
             // errore strano di bloc
             // final SongsBloc sbloc = BlocProvider.of<SongsBloc>(context);

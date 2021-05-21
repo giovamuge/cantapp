@@ -18,4 +18,6 @@ class FirestorePath {
   static String favorites(String userId) => '${user(userId)}/favorites';
   static String favorite(String userId, String favoriteId) =>
       '${user(userId)}/favorites/$favoriteId';
+
+  static String songsIndex(String version) => 'songs_index/$version';
 }

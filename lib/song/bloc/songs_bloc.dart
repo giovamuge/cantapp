@@ -46,12 +46,6 @@ class SongsBloc extends Bloc<SongEvent, SongState> {
 
   Stream<SongState> _mapSongsUpdateToState(SongsUpdated event) async* {
     yield SongsLoaded(event.songs);
-
-    // qui potrei salvare in fulltextsearch_songs
-    final numberOfSongs = await FullTextSearch.instance.countSongs();
-    if (numberOfSongs == event.songs.length) return;
-    if (numberOfSongs > 0) await FullTextSearch.instance.deleteSongs();
-    FullTextSearch.instance.insertSongs(event.songs);
   }
 
   _mapUpdateAuthIdToState(UpdateAuthIdSong event) {

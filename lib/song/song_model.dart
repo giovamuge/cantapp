@@ -54,6 +54,17 @@ class SongLight extends Equatable {
             : [],
         links = [];
 
+  SongLight.fromJsonIndexSongs(Map<String, dynamic> maps)
+      : title = maps["title"],
+        artist = maps["artist"],
+        id = maps["id"],
+        categories = [],
+        createdAt = null,
+        links = [],
+        number = "",
+        updatedAt = null,
+        isChord = false;
+
   static fromMap(Map maps, String id) {
     final List<Link> links = [];
     if (maps["links"] != null) {

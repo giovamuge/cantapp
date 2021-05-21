@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Shared {
@@ -5,6 +6,7 @@ class Shared {
   static const String font_size = 'font_size';
   static const String theme_mode = 'theme_mode';
   static const String reminder = 'reminder';
+  static const String songs_index_updatedAt = 'updatedAt';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -47,5 +49,15 @@ class Shared {
 
   Future<int> getRemind() async {
     return await get(reminder);
+  }
+
+  Future<void> setSongsIndexUpdatedAt(DateTime updatedAt) async {
+    return await set(songs_index_updatedAt, updatedAt.millisecondsSinceEpoch);
+  }
+
+  Future<DateTime> getSongsIndexUpdatedAt() async {
+    final milliseconds =
+        await get(songs_index_updatedAt, defaultValue: DateTime.now());
+    return DateTime.fromMillisecondsSinceEpoch(milliseconds);
   }
 }

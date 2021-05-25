@@ -284,20 +284,31 @@ class _HomeScreenState extends State<HomeScreen>
         } else if (state is SongsLoaded) {
           final List<SongLight> items = state.songs;
           // final int length = state.songs.length - 1;
-          // if (items.isNotEmpty) {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: state.hasReachedMax
-                ? state.songs.length
-                : state.songs.length + 1,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              // final SongLight item = items[index];
-              return index >= state.songs.length
-                  ? SongUtils.buildLoader()
-                  : SongWidget(song: items[index]);
-            },
-          );
+          if (items.isNotEmpty) {
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: state.hasReachedMax
+                  ? state.songs.length
+                  : state.songs.length + 1,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                // final SongLight item = items[index];
+                return index >= state.songs.length
+                    ? SongUtils.buildLoader()
+                    : SongWidget(song: items[index]);
+              },
+            );
+          } else {
+            return Container(
+              height: 300,
+              child: Center(
+                child: Text(
+                  "Non ci sono canti.",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
         } else {
           return Container(
             height: 300,

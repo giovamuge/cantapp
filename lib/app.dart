@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 
 import 'authentication/authentication.dart';
-import 'category/category_model.dart';
 import 'landing/landing_screen.dart';
 import 'root/navigator_tablet.dart';
 import 'song/bloc/song_bloc.dart';

@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (!_controller.hasClients) return false;
     final maxScroll = _controller.position.maxScrollExtent;
     final currentScroll = _controller.offset;
-    return currentScroll >= (maxScroll * 0.9);
+    return currentScroll >= (maxScroll * 0.65);
   }
 
   @override

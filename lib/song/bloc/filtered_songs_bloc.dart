@@ -20,7 +20,10 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
       : assert(songsBloc != null),
         _songsBloc = songsBloc,
         super(initialState(songsBloc)) {
-    _songsSubscription = songsBloc.listen((state) {
+    on<UpdateFilter>(_onUpdateFilterToState);
+    on<UpdateSongs>(_onSongsUpdatedToState);
+
+    _songsSubscription = songsBloc.stream.listen((state) {
       if (state is SongsLoaded) {
         add(UpdateSongs((songsBloc.state as SongsLoaded).songs));
       }
@@ -36,38 +39,36 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
     }
   }
 
-  @override
-  Stream<FilteredSongsState> mapEventToState(FilteredSongsEvent event) async* {
-    if (event is UpdateFilter) {
-      yield* _mapUpdateFilterToState(event);
-    } else if (event is UpdateSongs) {
-      yield* _mapSongsUpdatedToState(event);
-    }
-  }
+  // @override
+  // Stream<FilteredSongsState> mapEventToState(FilteredSongsEvent event) async* {
+  //   if (event is UpdateFilter) {
+  //     yield* _mapUpdateFilterToState(event);
+  //   } else if (event is UpdateSongs) {
+  //     yield* _mapSongsUpdatedToState(event);
+  //   }
+  // }
 
-  Stream<FilteredSongsState> _mapUpdateFilterToState(
-    UpdateFilter event,
-  ) async* {
+  Stream<FilteredSongsState> _onUpdateFilterToState(
+      UpdateFilter event, Emitter<FilteredSongsState> emit) async* {
     // start loading
     yield FilteredSongsLoading();
     final currentState = _songsBloc.state;
     if (currentState is SongsLoaded) {
       // end loading
       yield FilteredSongsLoaded(
-        _mapSongsToFilteredSongs(currentState.songs, event.filter),
+        _onSongsToFilteredSongs(currentState.songs, event.filter),
         event.filter,
       );
     }
   }
 
-  Stream<FilteredSongsState> _mapSongsUpdatedToState(
-    UpdateSongs event,
-  ) async* {
+  Stream<FilteredSongsState> _onSongsUpdatedToState(
+      UpdateSongs event, Emitter<FilteredSongsState> emit) async* {
     final Category visibilityFilter = state is FilteredSongsLoaded
         ? (state as FilteredSongsLoaded).activeFilter
         : Categories.first();
     yield FilteredSongsLoaded(
-      _mapSongsToFilteredSongs(
+      _onSongsToFilteredSongs(
         (_songsBloc.state as SongsLoaded).songs,
         visibilityFilter,
       ),
@@ -75,7 +76,7 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
     );
   }
 
-  List<SongLight> _mapSongsToFilteredSongs(
+  List<SongLight> _onSongsToFilteredSongs(
       List<SongLight> songs, Category filter) {
     return songs.where((cat) {
       if (filter.value == CategoryEnum.tutti) {

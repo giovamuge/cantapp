@@ -27,7 +27,7 @@ class _RootScreenMobileState extends State<RootScreenMobile>
       HomeScreen(),
       CategoryScreen(),
       FavoriteScreen(),
-      SettingScreen(),
+      // SettingScreen(),
       PlaylistScreen()
     ];
     // _controller = TabController(

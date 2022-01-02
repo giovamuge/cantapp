@@ -27,19 +27,19 @@ class SongLight extends Equatable {
     this.createdAt,
   });
 
-  SongLight.fromSnapshot(
-      DocumentSnapshot snapshot, String number, String artist)
-      : id = snapshot.id, //snapshot.documentID,
-        title = snapshot.data()["title"],
-        artist = snapshot.data()["artist"],
-        number = snapshot.data()["number"],
-        updatedAt = snapshot.data()["updatedAt"],
-        createdAt = snapshot.data()["createdAt"],
-        isChord = snapshot.data()["chord"] != null,
-        categories = snapshot.data()["categories"] != null
-            ? new List<String>.from(snapshot.data()["categories"])
-            : [],
-        links = [];
+  // SongLight.fromSnapshot(
+  //     DocumentSnapshot snapshot, String number, String artist)
+  //     : id = snapshot.id, //snapshot.documentID,
+  //       title = (snapshot.data() as Map<String, dynamic>)["title"],
+  //       artist = snapshot.data()["artist"],
+  //       number = snapshot.data()["number"],
+  //       updatedAt = snapshot.data()["updatedAt"],
+  //       createdAt = snapshot.data()["createdAt"],
+  //       isChord = snapshot.data()["chord"] != null,
+  //       categories = snapshot.data()["categories"] != null
+  //           ? new List<String>.from(snapshot.data()["categories"])
+  //           : [],
+  //       links = [];
 
   SongLight.fromJson(Map<String, dynamic> maps)
       : artist = maps["artist"],
@@ -156,11 +156,11 @@ abstract class SongBase extends Equatable {
 
   SongBase({this.title, this.id, this.artist, this.links});
 
-  SongBase.fromSnapshot(DocumentSnapshot snapshot, String number, String artist)
-      : id = snapshot.id, //snapshot.documentID,
-        title = snapshot.data()["title"],
-        artist = snapshot.data()["artist"] ?? "Artista conosciuto",
-        links = [];
+  // SongBase.fromSnapshot(DocumentSnapshot snapshot, String number, String artist)
+  //     : id = snapshot.id, //snapshot.documentID,
+  //       title = snapshot.data()["title"],
+  //       artist = snapshot.data()["artist"] ?? "Artista conosciuto",
+  //       links = [];
 
   SongBase.fromJson(Map<String, dynamic> maps)
       : artist = maps["artist"] ?? "Artista conosciuto",
@@ -210,24 +210,24 @@ class Song extends Equatable {
     this.artist,
   });
 
-  Song.fromSnapshot(DocumentSnapshot snapshot)
-      : id = snapshot.id,
-        title = snapshot.data()["title"],
-        lyric = snapshot.data()["lyric"],
-        chord = snapshot.data()["chord"],
-        number = snapshot.data()["number"],
-        numberViews = snapshot.data()["numberViews"] ?? 0,
-        createdAt = snapshot.data()["createdAd"],
-        updatedAt = snapshot.data()["updatedAt"],
-        categories = snapshot.data()["categories"] != null
-            ? new List<String>.from(snapshot.data()["categories"])
-            : [],
-        // links = snapshot.data()["links"] != null
-        //     ? new List<Link>.from(snapshot.data()["links"])
-        //     : [],
-        links = [],
-        artist = snapshot.data()["artist"],
-        isFavorite = false;
+  // Song.fromSnapshot(DocumentSnapshot snapshot)
+  //     : id = snapshot.id,
+  //       title = snapshot.data()["title"],
+  //       lyric = snapshot.data()["lyric"],
+  //       chord = snapshot.data()["chord"],
+  //       number = snapshot.data()["number"],
+  //       numberViews = snapshot.data()["numberViews"] ?? 0,
+  //       createdAt = snapshot.data()["createdAd"],
+  //       updatedAt = snapshot.data()["updatedAt"],
+  //       categories = snapshot.data()["categories"] != null
+  //           ? new List<String>.from(snapshot.data()["categories"])
+  //           : [],
+  //       // links = snapshot.data()["links"] != null
+  //       //     ? new List<Link>.from(snapshot.data()["links"])
+  //       //     : [],
+  //       links = [],
+  //       artist = snapshot.data()["artist"],
+  //       isFavorite = false;
 
   static fromMap(Map maps, String id) {
     final List<Link> links = [];

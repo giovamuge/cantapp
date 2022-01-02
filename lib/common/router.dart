@@ -33,8 +33,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case routes.homeRoute:
       return MaterialPageRoute(builder: (context) => HomeScreen());
-    case routes.settingRoute:
-      return MaterialPageRoute(builder: (context) => SettingScreen());
+    // case routes.settingRoute:
+    //   return MaterialPageRoute(builder: (context) => SettingScreen());
     case routes.favoriteRoute:
       return MaterialPageRoute(builder: (context) => FavoriteScreen());
     case routes.playlistRoute:

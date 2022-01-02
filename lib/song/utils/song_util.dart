@@ -8,16 +8,6 @@ import '../song_lyric.dart';
 class SongUtil {
   const SongUtil();
 
-  // todo: da cancellare
-  BannerAd buildBannerAd() {
-    return BannerAd(
-      adUnitId: BannerAd.testAdUnitId,
-      size: AdSize.smartBanner,
-      request: AdRequest(),
-      listener: AdListener(),
-    );
-  }
-
   static Widget buildCircleServizi(BuildContext context, Color color) {
     return Container(
       width: 15,

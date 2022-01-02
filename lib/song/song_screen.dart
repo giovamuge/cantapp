@@ -13,9 +13,7 @@ import 'package:cantapp/song/widgets/font_size_slider.dart';
 import 'package:cantapp/song/widgets/header_lyric.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -71,7 +69,7 @@ class _SongScreenState extends State<SongScreen> {
       adUnitId: AdManager.bannerAdUnitId,
       request: AdRequest(),
       size: AdSize.leaderboard,
-      listener: AdListener(
+      listener: BannerAdListener(
         // Called when an ad is successfully received.
         onAdLoaded: (Ad ad) => print('Ad loaded.'),
         // Called when an ad request failed.
@@ -83,7 +81,7 @@ class _SongScreenState extends State<SongScreen> {
         // Called when an ad removes an overlay that covers the screen.
         onAdClosed: (Ad ad) => print('Ad closed.'),
         // Called when an ad is in the process of leaving the application.
-        onApplicationExit: (Ad ad) => print('Left application.'),
+        onAdWillDismissScreen: (Ad ad) => print('Left application.'),
       ),
     );
 
@@ -91,7 +89,7 @@ class _SongScreenState extends State<SongScreen> {
       adUnitId: AdManager.bannerAdUnitId,
       request: AdRequest(),
       size: AdSize.leaderboard,
-      listener: AdListener(
+      listener: BannerAdListener(
         // Called when an ad is successfully received.
         onAdLoaded: (Ad ad) => print('Ad loaded.'),
         // Called when an ad request failed.
@@ -103,7 +101,7 @@ class _SongScreenState extends State<SongScreen> {
         // Called when an ad removes an overlay that covers the screen.
         onAdClosed: (Ad ad) => print('Ad closed.'),
         // Called when an ad is in the process of leaving the application.
-        onApplicationExit: (Ad ad) => print('Left application.'),
+        onAdWillDismissScreen: (Ad ad) => print('Left application.'),
       ),
     );
 

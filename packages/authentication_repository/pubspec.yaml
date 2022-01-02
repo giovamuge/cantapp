@@ -8,13 +8,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  equatable: ^1.2.3
-  firebase_core: ^1.0.3
-  firebase_auth: ^1.0.3
-  google_sign_in: ^5.0.1
-  meta: ^1.1.8
+  equatable: ^2.0.3
+  firebase_core: ^1.10.6
+  firebase_auth: ^3.3.4
+  google_sign_in: ^5.2.1
+  meta: ^1.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^4.0.0
+  # mockito: ^5.0.17

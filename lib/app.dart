@@ -6,8 +6,6 @@ import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/bloc/songs_bloc.dart';
 import 'package:cantapp/song/song_lyric.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -97,7 +95,8 @@ class MyApp extends StatelessWidget {
                   theme: theme.getTheme(),
                   localeResolutionCallback: onLocaleResolutionCallback,
                   navigatorObservers: [
-                    FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+                    FirebaseAnalyticsObserver(
+                        analytics: FirebaseAnalytics.instance),
                   ],
                   // routes: appRoutes,
                   home: LandingScreen(

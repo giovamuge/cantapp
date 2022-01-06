@@ -48,7 +48,7 @@ class SongLight extends Equatable {
         number = maps["number"],
         updatedAt = maps["updatedAt"],
         createdAt = maps["createdAt"],
-        isChord = maps["chord"] != null,
+        isChord = maps["chord"] != null && (maps["chord"] as String).isNotEmpty,
         categories = maps["categories"] != null
             ? new List<String>.from(maps["categories"])
             : [],
@@ -82,10 +82,12 @@ class SongLight extends Equatable {
         updatedAt: maps["updatedAt"],
         createdAt: maps["createdAt"],
         links: links,
-        isChord: maps["chord"] != null,
-        categories: maps["categories"] != null
-            ? new List<String>.from(maps["categories"])
-            : [],
+        isChord: maps["chord"] == null
+            ? false
+            : (maps["chord"] as String).length > 2,
+        categories: maps["categories"] == null
+            ? []
+            : new List<String>.from(maps["categories"]),
         number: maps["number"]);
   }
 

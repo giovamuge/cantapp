@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_database.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';

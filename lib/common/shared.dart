@@ -56,8 +56,9 @@ class Shared {
   }
 
   Future<DateTime> getSongsIndexUpdatedAt() async {
-    final milliseconds =
-        await get(songs_index_updatedAt, defaultValue: DateTime.now());
-    return DateTime.fromMillisecondsSinceEpoch(milliseconds);
+    final milliseconds = await get(songs_index_updatedAt, defaultValue: null);
+    return milliseconds == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(milliseconds);
   }
 }

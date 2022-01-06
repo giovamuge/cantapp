@@ -1,9 +1,10 @@
-import 'package:cantapp/category/category_model.dart';
-import 'package:cantapp/song/bloc/songs_bloc.dart';
-import 'package:cantapp/song/song_search.dart';
-import 'package:cantapp/widgets/list_songs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../category/category_detail_screen.dart';
+import '../category/category_model.dart';
+import '../song/bloc/songs_bloc.dart';
+import '../song/song_search.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override
@@ -118,53 +119,15 @@ class _CategoryScreenState extends State<CategoryScreen>
     );
   }
 
-  void _onNavigateCategory(context, category) async {
-    BlocProvider.of<SongsBloc>(context)
-        .songsFromCategorySearchStream(category)
-        .first
-        .then(
-      (songs) async {
-        if (songs.isNotEmpty && songs.length > 0) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ListSongsScreen(items: songs, title: category.title),
-            ),
-          );
-        } else {
-          await _showMyDialog(category);
-        }
-      },
-    );
-  }
-
-  Future<void> _showMyDialog(
-    category,
-  ) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(category.title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('${category.title} non ha canzoni.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Chiudi'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+  void _onNavigateCategory(context, category) {
+    BlocProvider.of<SongsBloc>(context)..add(UpdateFilter(category));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoryDetailScreen(
+          category: category,
+        ),
+      ),
     );
   }
 }

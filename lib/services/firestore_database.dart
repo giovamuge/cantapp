@@ -77,6 +77,28 @@ class FirestoreDatabase {
           queryBuilder: (query) => query.orderBy('title'),
           builder: (data, documentId) => SongLight.fromMap(data, documentId));
 
+  Future<List<SongLight>> songsLightFuture(SongLight last, Category category) =>
+      _service.collectionFuture<SongLight>(
+          path: FirestorePath.songs(),
+          queryBuilder: (query) {
+            if (last == null && category.value == CategoryEnum.tutti) {
+              return query.orderBy('title').limit(15);
+            } else if (last != null && category.value == CategoryEnum.tutti) {
+              return query.orderBy('title').startAfter([last.title]).limit(15);
+            } else if (last == null && category.value != CategoryEnum.tutti) {
+              return query
+                  .where('categories', arrayContains: category.toString())
+                  .orderBy('title')
+                  .limit(15);
+            } else {
+              return query
+                  .where('categories', arrayContains: category.toString())
+                  .orderBy('title')
+                  .startAfter([last.title]).limit(15);
+            }
+          },
+          builder: (data, documentId) => SongLight.fromMap(data, documentId));
+
   Stream<Song> songStream(String id) => _service.documentStream<Song>(
       path: FirestorePath.song(id),
       builder: (data, documentId) => Song.fromMap(data, documentId));

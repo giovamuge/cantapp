@@ -82,6 +82,7 @@ class SongWidget extends StatelessWidget {
   }
 
   Row _buildSubtitle(context) {
+    final offsetNeeded = song.isChord ? Offset(-10, 0) : Offset(0, 0);
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -89,12 +90,12 @@ class SongWidget extends StatelessWidget {
         if (song.isChord) SongUtil.buildCircleServizi(context, Colors.orange),
         if (song.links.any((l) => l.type == 'youtube'))
           Transform.translate(
-            offset: Offset(-10, 0),
+            offset: offsetNeeded,
             child: SongUtil.buildCircleServizi(context, Colors.purple),
           ),
         if (song.links.any((l) => l.type == 'audio'))
           Transform.translate(
-            offset: Offset(-10, 0),
+            offset: offsetNeeded,
             child: SongUtil.buildCircleServizi(context, Colors.pink),
           ),
         Flexible(

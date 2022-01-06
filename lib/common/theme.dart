@@ -3,42 +3,46 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 final appTheme = ThemeData.light().copyWith(
   // primarySwatch: Colors.yellow,
   primaryColorLight: AppTheme.accent,
   primaryIconTheme: IconThemeData(color: AppTheme.primaryDark),
-  accentColor: AppTheme.accent,
-  accentColorBrightness: Brightness.light,
+  colorScheme: ThemeData.light()
+      .colorScheme
+      .copyWith(secondary: AppTheme.accent, brightness: Brightness.light),
   backgroundColor: AppTheme.background,
   primaryColor: AppTheme.primaryDark,
-  cursorColor: AppTheme.accent,
+  textSelectionTheme: ThemeData.light()
+      .textSelectionTheme
+      .copyWith(cursorColor: AppTheme.accent),
   scaffoldBackgroundColor: AppTheme.background,
   appBarTheme: AppBarTheme(
-    elevation: 0,
-    color: AppTheme.background,
-    brightness: Brightness.light,
-    textTheme:
-        TextTheme(headline6: TextStyle(color: Colors.black, fontSize: 18.0)),
-  ),
+      elevation: 0,
+      color: AppTheme.background,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      titleTextStyle: TextStyle(color: Colors.black, fontSize: 18.0)),
 );
 
 final appThemeDark = ThemeData.dark().copyWith(
   primaryColorDark: AppTheme.accent,
-  accentColor: AppTheme.accent,
-  buttonColor: Colors.grey,
-  accentColorBrightness: Brightness.dark,
+  colorScheme: ThemeData.dark()
+      .colorScheme
+      .copyWith(secondary: AppTheme.accent, brightness: Brightness.dark),
+  // buttonColor: Colors.grey,
   primaryIconTheme: IconThemeData(color: Colors.white),
   backgroundColor: AppTheme.backgroundDark,
   primaryColor: Colors.white,
-  cursorColor: AppTheme.accent,
+  textSelectionTheme: ThemeData.light()
+      .textSelectionTheme
+      .copyWith(cursorColor: AppTheme.accent),
   scaffoldBackgroundColor: AppTheme.backgroundDark,
   appBarTheme: AppBarTheme(
     elevation: 0,
     color: AppTheme.backgroundDark,
-    brightness: Brightness.dark,
-    textTheme:
-        TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18.0)),
+    systemOverlayStyle: SystemUiOverlayStyle.dark,
+    titleTextStyle: TextStyle(color: Colors.white, fontSize: 18.0),
   ),
 );
 

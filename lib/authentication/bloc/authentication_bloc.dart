@@ -15,6 +15,9 @@ class AuthenticationBloc
   })  : assert(authenticationRepository != null),
         _authenticationRepository = authenticationRepository,
         super(const AuthenticationState.unknown()) {
+    on<AuthenticationUserChanged>(_onAuthenticationUserChanged);
+    on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
+
     _userSubscription = _authenticationRepository.user.listen(
       (user) => add(AuthenticationUserChanged(user)),
     );
@@ -23,15 +26,10 @@ class AuthenticationBloc
   final AuthenticationRepository _authenticationRepository;
   StreamSubscription<User> _userSubscription;
 
-  @override
-  Stream<AuthenticationState> mapEventToState(
-    AuthenticationEvent event,
-  ) async* {
-    if (event is AuthenticationUserChanged) {
-      yield _mapAuthenticationUserChangedToState(event);
-    } else if (event is AuthenticationLogoutRequested) {
-      unawaited(_authenticationRepository.logOut());
-    }
+  FutureOr<void> _onAuthenticationLogoutRequested(
+      AuthenticationLogoutRequested event,
+      Emitter<AuthenticationState> emit) async {
+    unawaited(_authenticationRepository.logOut());
   }
 
   @override
@@ -40,11 +38,12 @@ class AuthenticationBloc
     return super.close();
   }
 
-  AuthenticationState _mapAuthenticationUserChangedToState(
-    AuthenticationUserChanged event,
-  ) {
-    return event.user != User.empty
-        ? AuthenticationState.authenticated(event.user)
-        : const AuthenticationState.unauthenticated();
+  FutureOr<void> _onAuthenticationUserChanged(
+      AuthenticationUserChanged event, Emitter<AuthenticationState> emit) {
+    if (event.user != User.empty) {
+      emit(AuthenticationState.authenticated(event.user));
+    } else {
+      emit(AuthenticationState.unauthenticated());
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'app.dart';
@@ -20,6 +21,13 @@ void main() async {
   // simple observer bloc
   // todo: da riabilitare
   // Bloc.observer = SimpleBlocObserver();
+  // BlocOverrides.runZoned(
+  //   () {
+  //     // ...
+  //   },
+  //   blocObserver: CustomBlocObserver(),
+  //   eventTransformer: customEventTransformer(),
+  // );
 
   final shared = new Shared();
   final themeString = await shared.getThemeMode() ?? Constants.themeLight;

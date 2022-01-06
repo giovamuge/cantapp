@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cantapp/category/category_model.dart';
 import 'package:cantapp/services/firestore_database.dart';
-import 'package:cantapp/services/full_text_search/full_text_search.dart';
+// import 'package:cantapp/services/full_text_search/full_text_search.dart';
 import 'package:cantapp/song/song_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -18,23 +18,13 @@ class SongsBloc extends Bloc<SongEvent, SongState> {
   SongsBloc({@required FirestoreDatabase firestoreDatabase})
       : assert(firestoreDatabase != null),
         _firestoreDatabase = firestoreDatabase,
-        super(SongsLoading());
-
-  @override
-  Stream<SongState> mapEventToState(
-    SongEvent event,
-  ) async* {
-    if (event is SongsFetch) {
-      yield* _mapLoadSongsToState();
-    } else if (event is SongsUpdated) {
-      yield* _mapSongsUpdateToState(event);
-    }
-    if (event is UpdateAuthIdSong) {
-      yield* _mapUpdateAuthIdToState(event);
-    }
+        super(SongsLoading()) {
+    on<SongsFetch>(_onLoadSongs);
+    on<SongsUpdated>(_onSongsUpdate);
+    on<UpdateAuthIdSong>(_onUpdateAuthId);
   }
 
-  Stream<SongState> _mapLoadSongsToState() async* {
+  FutureOr<void> _onLoadSongs(SongsFetch event, Emitter<SongState> emit) async {
     _songsSubscription?.cancel();
     _songsSubscription = _firestoreDatabase
         .songsLightStream()
@@ -44,11 +34,12 @@ class SongsBloc extends Bloc<SongEvent, SongState> {
         .listen((songs) => add(SongsUpdated(songs)));
   }
 
-  Stream<SongState> _mapSongsUpdateToState(SongsUpdated event) async* {
-    yield SongsLoaded(event.songs);
+  FutureOr<void> _onSongsUpdate(
+      SongsUpdated event, Emitter<SongState> emit) async {
+    return emit(SongsLoaded(event.songs));
   }
 
-  _mapUpdateAuthIdToState(UpdateAuthIdSong event) {
+  _onUpdateAuthId(UpdateAuthIdSong event, Emitter<SongState> emit) {
     _firestoreDatabase = FirestoreDatabase(uid: event.authId);
   }
 

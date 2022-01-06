@@ -20,8 +20,8 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
       : assert(songsBloc != null),
         _songsBloc = songsBloc,
         super(initialState(songsBloc)) {
-    on<UpdateFilter>(_onUpdateFilterToState);
-    on<UpdateSongs>(_onSongsUpdatedToState);
+    on<UpdateFilter>(_onUpdateFilter);
+    on<UpdateSongs>(_onSongsUpdated);
 
     _songsSubscription = songsBloc.stream.listen((state) {
       if (state is SongsLoaded) {
@@ -39,41 +39,32 @@ class FilteredSongsBloc extends Bloc<FilteredSongsEvent, FilteredSongsState> {
     }
   }
 
-  // @override
-  // Stream<FilteredSongsState> mapEventToState(FilteredSongsEvent event) async* {
-  //   if (event is UpdateFilter) {
-  //     yield* _mapUpdateFilterToState(event);
-  //   } else if (event is UpdateSongs) {
-  //     yield* _mapSongsUpdatedToState(event);
-  //   }
-  // }
-
-  Stream<FilteredSongsState> _onUpdateFilterToState(
-      UpdateFilter event, Emitter<FilteredSongsState> emit) async* {
+  FutureOr<void> _onUpdateFilter(
+      UpdateFilter event, Emitter<FilteredSongsState> emit) {
     // start loading
-    yield FilteredSongsLoading();
+    emit(FilteredSongsLoading());
     final currentState = _songsBloc.state;
     if (currentState is SongsLoaded) {
       // end loading
-      yield FilteredSongsLoaded(
+      emit(FilteredSongsLoaded(
         _onSongsToFilteredSongs(currentState.songs, event.filter),
         event.filter,
-      );
+      ));
     }
   }
 
-  Stream<FilteredSongsState> _onSongsUpdatedToState(
-      UpdateSongs event, Emitter<FilteredSongsState> emit) async* {
+  FutureOr<void> _onSongsUpdated(
+      UpdateSongs event, Emitter<FilteredSongsState> emit) {
     final Category visibilityFilter = state is FilteredSongsLoaded
         ? (state as FilteredSongsLoaded).activeFilter
         : Categories.first();
-    yield FilteredSongsLoaded(
+    emit(FilteredSongsLoaded(
       _onSongsToFilteredSongs(
         (_songsBloc.state as SongsLoaded).songs,
         visibilityFilter,
       ),
       visibilityFilter,
-    );
+    ));
   }
 
   List<SongLight> _onSongsToFilteredSongs(

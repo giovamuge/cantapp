@@ -16,41 +16,32 @@ class SongBloc extends Bloc<SongEvent, SongState> {
   SongBloc({@required FirestoreDatabase firestoreDatabase})
       : assert(firestoreDatabase != null),
         _firestoreDatabase = firestoreDatabase,
-        super(SongLoading());
-
-  @override
-  Stream<SongState> mapEventToState(
-    SongEvent event,
-  ) async* {
-    if (event is SongFetched) {
-      yield* _mapSongFetchedToState(event);
-    }
-    if (event is SongUpdated) {
-      yield* _mapUpdateSongToState(event);
-    }
-    if (event is SongViewIncremented) {
-      yield* _mapSongViewIncrementedToState(event);
-    }
+        super(SongLoading()) {
+    on<SongFetched>(_onSongFetched);
+    on<SongUpdated>(_onUpdateSong);
+    on<SongViewIncremented>(_onSongViewIncremented);
   }
 
-  Stream<SongState> _mapSongFetchedToState(SongFetched event) async* {
+  FutureOr<void> _onSongFetched(
+      SongFetched event, Emitter<SongState> emit) async {
     _songSubscrition?.cancel();
     _songSubscrition = _firestoreDatabase
         .songStream(event.songId)
         .listen((event) => add(SongUpdated(event)));
   }
 
-  Stream<SongState> _mapUpdateSongToState(SongUpdated event) async* {
+  FutureOr<void> _onUpdateSong(
+      SongUpdated event, Emitter<SongState> emit) async {
     print('titolo ' + event.updatedSong.title);
-    yield SongLoaded(event.updatedSong);
+    emit(SongLoaded(event.updatedSong));
   }
 
-  Stream<SongState> _mapSongViewIncrementedToState(
-      SongViewIncremented event) async* {
+  FutureOr<void> _onSongViewIncremented(
+      SongViewIncremented event, Emitter<SongState> emit) async {
     _firestoreDatabase
         .incrementView(/*_song.id*/ /* oppure */ event.songId)
-        .then((value) async* {
-      yield SongViewIncrementedSuccess();
+        .then((value) async {
+      emit(SongViewIncrementedSuccess());
     });
   }
 

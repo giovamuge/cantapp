@@ -48,6 +48,7 @@ dependencies:
 
   # bloc
   flutter_bloc: ^8.0.1
+  bloc_concurrency: ^0.2.0
 
   # rxdart reactive ui
   rxdart: ^0.27.3

@@ -21,8 +21,9 @@ final appTheme = ThemeData.light().copyWith(
   appBarTheme: AppBarTheme(
       elevation: 0,
       color: AppTheme.background,
-      systemOverlayStyle: SystemUiOverlayStyle.light,
-      titleTextStyle: TextStyle(color: Colors.black, fontSize: 18.0)),
+      foregroundColor: AppTheme.primaryDark,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      titleTextStyle: TextStyle(color: AppTheme.primaryDark, fontSize: 18.0)),
 );
 
 final appThemeDark = ThemeData.dark().copyWith(
@@ -41,8 +42,9 @@ final appThemeDark = ThemeData.dark().copyWith(
   appBarTheme: AppBarTheme(
     elevation: 0,
     color: AppTheme.backgroundDark,
-    systemOverlayStyle: SystemUiOverlayStyle.dark,
-    titleTextStyle: TextStyle(color: Colors.white, fontSize: 18.0),
+    systemOverlayStyle: SystemUiOverlayStyle.light,
+    foregroundColor: AppTheme.primary,
+    titleTextStyle: TextStyle(color: AppTheme.primary, fontSize: 18.0),
   ),
 );
 

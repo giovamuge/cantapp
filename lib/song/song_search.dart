@@ -15,10 +15,12 @@ class SongSearchDelegate extends SearchDelegate<String> {
     final result = themeData.getThemeName() == Constants.themeLight
         ? theme.copyWith(
             primaryColor: AppTheme.background,
-            primaryColorBrightness: Brightness.light)
+            inputDecorationTheme:
+                theme.inputDecorationTheme.copyWith(border: InputBorder.none))
         : theme.copyWith(
             primaryColor: AppTheme.backgroundDark,
-            primaryColorBrightness: Brightness.dark);
+            inputDecorationTheme:
+                theme.inputDecorationTheme.copyWith(border: InputBorder.none));
 
     return result;
   }

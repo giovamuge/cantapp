@@ -27,7 +27,7 @@ class _RootScreenMobileState extends State<RootScreenMobile>
       HomeScreen(),
       CategoryScreen(),
       FavoriteScreen(),
-      // SettingScreen(),
+      SettingScreen(),
       PlaylistScreen()
     ];
     // _controller = TabController(
@@ -54,7 +54,7 @@ class _RootScreenMobileState extends State<RootScreenMobile>
       // rebuild the widget (page_screen)
 
       body: Container(
-        width: double.infinity,
+        // width: double.infinity, // TODO: da controllare se effettivamente deve essere infinity
         //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
         child: contentView,
       ),

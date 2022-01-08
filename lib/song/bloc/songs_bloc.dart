@@ -46,22 +46,6 @@ class SongsBloc extends Bloc<SongsEvent, SongsState> {
         key: (c) => c.value, value: (c) => SongsLoaded());
   }
 
-  // @override
-  // FutureOr<void> mapEventToState(
-  //   SongsEvent event,
-  // ) async {
-  //   if (event is SongsFetch &&
-  //       (!_hasReachedMaxOfFilter(activeFilter) || _isInitial(event))) {
-  //     yield* _mapLoadSongsToState(event);
-  //   } else if (event is SongsUpdated) {
-  //     yield* _mapSongsUpdateToState(event);
-  //   } else if (event is SongsAuthIdUpdated) {
-  //     yield* _mapUpdateAuthIdToState(event);
-  //   } else if (event is UpdateFilter) {
-  //     yield* _mapUpdateFilterToState(event);
-  //   }
-  // }
-
   FutureOr<void> _onUpdateFilter(
       UpdateFilter event, Emitter<SongsState> emit) async {
     activeFilter = event.filter;

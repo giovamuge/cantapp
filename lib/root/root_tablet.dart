@@ -35,7 +35,7 @@ class _RootScreenTabletState extends State<RootScreenTablet>
       HomeScreen(),
       CategoryScreen(),
       FavoriteScreen(),
-      // SettingScreen(),
+      SettingScreen(),
       PlaylistScreen()
     ];
     // SystemChrome.setPreferredOrientations(

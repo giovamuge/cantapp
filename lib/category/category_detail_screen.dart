@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -111,7 +112,8 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
             itemBuilder: (BuildContext context, int index) {
               // final SongLight item = items[index];
               return index >= state.songs.length
-                  ? SongUtils.buildLoader()
+                  // ? SongUtils.buildLoader()
+                  ? CupertinoActivityIndicator()
                   : SongWidget(song: items[index]);
             },
           );

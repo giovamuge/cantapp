@@ -14,7 +14,6 @@ import 'package:cantapp/song/widgets/header_lyric.dart';
 import 'package:cantapp/song/widgets/lyric.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -50,12 +49,12 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   void initState() {
-    final theme = Provider.of<ThemeChanger>(context, listen: false);
-    if (theme.getThemeName() == Constants.themeLight) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    } else {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    }
+    // final theme = Provider.of<ThemeChanger>(context, listen: false);
+    // if (theme.getThemeName() == Constants.themeLight) {
+    //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    // } else {
+    //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    // }
 
     // call event to fetcg song in song_bloc
     BlocProvider.of<SongBloc>(context).add(SongFetched(widget.id));

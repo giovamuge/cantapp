@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:cantapp/common/constants.dart';
 import 'package:cantapp/common/shared.dart';
@@ -45,12 +47,16 @@ void main() async {
   FirebaseInAppMessaging.instance.triggerEvent("donate");
   FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
 
-  // Request system's tracking authorization dialog
-  AppTrackingTransparency.requestTrackingAuthorization().then((status) => {
-        if (status == TrackingStatus.notDetermined)
-          MobileAds.instance.initialize().then((status) =>
-              print('MobileAds initialization done: ${status.adapterStatuses}'))
-      });
+  if (Platform.isIOS)
+    // Request system's tracking authorization dialog
+    AppTrackingTransparency.requestTrackingAuthorization().then((status) => {
+          if (status == TrackingStatus.notDetermined)
+            MobileAds.instance.initialize().then((status) => print(
+                'MobileAds initialization done: ${status.adapterStatuses}'))
+        });
+  else
+    MobileAds.instance.initialize().then((status) => print(
+        'MobileAds initialization done: ${status.adapterStatuses.isNotEmpty}'));
 
   runApp(MyApp(
       theme: theme,

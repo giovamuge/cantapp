@@ -37,3 +37,8 @@ lib/generated_plugin_registrant.dart
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 --analyze-size
 .last_build_id
+
+
+# google service key
+./ios/Runner/GoogleService-Info.plist
+./android/app/google-services.json
